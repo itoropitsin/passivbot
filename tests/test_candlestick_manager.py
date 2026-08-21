@@ -20,6 +20,171 @@ from candlestick_manager import (
 )
 
 
+def _make_okx_archive_zip(
+    day_key: str,
+    *,
+    inst_id: str = "BTC-USDT-SWAP",
+    start_ts: int = 1719590400000,
+    malformed: bool = False,
+):
+    import zipfile
+    from io import BytesIO
+
+    header = (
+        "instrument_name,open,high,low,close,vol,vol_ccy,vol_quote,open_time,confirm"
+        if not malformed
+        else "instrument_name,open,high,low,close,vol,vol_quote,open_time,confirm"
+    )
+    rows = [header]
+    if not malformed:
+        rows.append(f"ETH-USDT-SWAP,1,1,1,1,1,99,99,{start_ts},0")
+    for i in range(1440):
+        ts = start_ts + i * ONE_MIN_MS
+        if malformed:
+            rows.append(f"{inst_id},100,101,99,100.5,7,700,{ts},0")
+        else:
+            rows.append(f"{inst_id},100,101,99,100.5,7,{i + 0.5},700,{ts},0")
+
+    raw = "\n".join(rows).encode()
+    bio = BytesIO()
+    with zipfile.ZipFile(bio, "w", compression=zipfile.ZIP_DEFLATED) as z:
+        z.writestr(f"allswap-candlesticks-{day_key}.csv", raw)
+    return bio.getvalue()
+
+
+def test_okx_archive_supported_when_enabled(tmp_path):
+    class _Ex:
+        id = "okx"
+
+    cm = CandlestickManager(exchange=_Ex(), exchange_name="okx", cache_dir=str(tmp_path / "caches"))
+
+    assert cm._archive_supported() is True
+
+    disabled = CandlestickManager(
+        exchange=_Ex(),
+        exchange_name="okx",
+        cache_dir=str(tmp_path / "disabled"),
+        archive_enabled=False,
+    )
+
+    assert disabled._archive_supported() is False
+
+
+@pytest.mark.asyncio
+async def test_okx_archive_fetch_day_builds_daily_allswap_url(tmp_path, monkeypatch):
+    class _Ex:
+        id = "okx"
+
+    cm = CandlestickManager(exchange=_Ex(), exchange_name="okx", cache_dir=str(tmp_path / "caches"))
+    captured = []
+
+    async def fake_okx_zip_rows(inst_id, url, *, start_ts, end_ts):
+        captured.append((inst_id, url, start_ts, end_ts))
+        return None
+
+    monkeypatch.setattr(cm, "_archive_fetch_okx_zip_rows", fake_okx_zip_rows)
+
+    await cm._archive_fetch_day("BTC/USDT:USDT", "2024-06-29")
+
+    assert captured == [
+        (
+            "BTC-USDT-SWAP",
+            (
+                "https://static.okx.com/cdn/okex/traderecords/candlesticks/"
+                "daily/20240629/allswap-candlesticks-2024-06-29.zip?v=999"
+            ),
+            1719619200000,
+            1719705540000,
+        ),
+        (
+            "BTC-USDT-SWAP",
+            (
+                "https://static.okx.com/cdn/okex/traderecords/candlesticks/"
+                "daily/20240630/allswap-candlesticks-2024-06-30.zip?v=999"
+            ),
+            1719619200000,
+            1719705540000,
+        ),
+    ]
+
+
+@pytest.mark.asyncio
+async def test_okx_archive_day_combines_two_utc8_zip_files(tmp_path, monkeypatch):
+    class _Ex:
+        id = "okx"
+
+    cm = CandlestickManager(exchange=_Ex(), exchange_name="okx", cache_dir=str(tmp_path / "caches"))
+    zips = {
+        (
+            "https://static.okx.com/cdn/okex/traderecords/candlesticks/"
+            "daily/20240629/allswap-candlesticks-2024-06-29.zip?v=999"
+        ): _make_okx_archive_zip("2024-06-29", start_ts=1719590400000),
+        (
+            "https://static.okx.com/cdn/okex/traderecords/candlesticks/"
+            "daily/20240630/allswap-candlesticks-2024-06-30.zip?v=999"
+        ): _make_okx_archive_zip("2024-06-30", start_ts=1719676800000),
+    }
+
+    async def fake_fetch_bytes(url):
+        return zips[url]
+
+    monkeypatch.setattr(cm, "_archive_fetch_bytes", fake_fetch_bytes)
+
+    arr = await cm._archive_fetch_okx_day("BTC-USDT-SWAP", "2024-06-29")
+
+    assert arr is not None
+    assert arr.size == 1440
+    assert int(arr[0]["ts"]) == 1719619200000
+    assert int(arr[-1]["ts"]) == 1719705540000
+    assert float(arr[0]["bv"]) == pytest.approx(480.5)
+    assert float(arr[-1]["bv"]) == pytest.approx(479.5)
+
+
+@pytest.mark.asyncio
+async def test_okx_archive_zip_returns_none_when_symbol_absent(tmp_path, monkeypatch):
+    class _Ex:
+        id = "okx"
+
+    cm = CandlestickManager(exchange=_Ex(), exchange_name="okx", cache_dir=str(tmp_path / "caches"))
+    raw = _make_okx_archive_zip("2024-06-29", inst_id="ETH-USDT-SWAP")
+
+    async def fake_fetch_bytes(_url):
+        return raw
+
+    monkeypatch.setattr(cm, "_archive_fetch_bytes", fake_fetch_bytes)
+
+    arr = await cm._archive_fetch_okx_zip_rows(
+        "BTC-USDT-SWAP",
+        "https://example.test/okx.zip",
+        start_ts=1719619200000,
+        end_ts=1719705540000,
+    )
+
+    assert arr is None
+
+
+@pytest.mark.asyncio
+async def test_okx_archive_zip_missing_required_columns_raises(tmp_path, monkeypatch):
+    class _Ex:
+        id = "okx"
+
+    cm = CandlestickManager(exchange=_Ex(), exchange_name="okx", cache_dir=str(tmp_path / "caches"))
+    raw = _make_okx_archive_zip("2024-06-29", malformed=True)
+
+    async def fake_fetch_bytes(_url):
+        return raw
+
+    monkeypatch.setattr(cm, "_archive_fetch_bytes", fake_fetch_bytes)
+
+    with pytest.raises(ValueError, match="okx archive missing columns"):
+        await cm._archive_fetch_okx_zip_rows(
+            "BTC-USDT-SWAP",
+            "https://example.test/okx.zip",
+            start_ts=1719619200000,
+            end_ts=1719705540000,
+        )
+
+
 @pytest.mark.parametrize("debug", [False])
 def test_standardize_gaps_inserts_zero_candles(tmp_path, debug):
     class _Ex:
@@ -834,7 +999,7 @@ async def test_gateio_partial_1m_window_clips_fetch_to_recent_limit(monkeypatch,
 
 
 @pytest.mark.asyncio
-async def test_get_current_close_uses_latest_completed_candle_not_ticker(monkeypatch):
+async def test_get_current_close_uses_latest_completed_candle_not_ticker(monkeypatch, tmp_path):
     fixed_now_ms = 1725590400000
     monkeypatch.setattr("time.time", lambda: fixed_now_ms / 1000.0)
 
@@ -844,7 +1009,9 @@ async def test_get_current_close_uses_latest_completed_candle_not_ticker(monkeyp
         async def fetch_ticker(self, symbol):
             raise AssertionError("CandlestickManager must not fetch tickers")
 
-    cm = CandlestickManager(exchange=_Ex(), exchange_name="okx")
+    cm = CandlestickManager(
+        exchange=_Ex(), exchange_name="okx", cache_dir=str(tmp_path / "caches")
+    )
     symbol = "BTC/USDT:USDT"
     last_final = _floor_minute(fixed_now_ms) - ONE_MIN_MS
     cm._cache[symbol] = np.array(

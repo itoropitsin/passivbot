@@ -1,0 +1,1616 @@
+{
+  "admission_scope": "local_risk_grid_checks_only",
+  "api_outage_safe": true,
+  "cancel_repeat_unknown_order_id": true,
+  "candidate_admission": false,
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--manifest-path",
+        "passivbot-rust/Cargo.toml",
+        "--lib",
+        "crypto_portfolio_entry_gate_blocks_entries_inside_liquidation_buffer"
+      ],
+      "exit_code": 0,
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "name": "no_liquidations",
+      "output_sha256": "ce7052e4ea5b8e859115d02e1b451331f647171471b3a740b025d87d7608eb38",
+      "output_tail": "\nrunning 1 test\ntest backtest::tests::crypto_portfolio_entry_gate_blocks_entries_inside_liquidation_buffer ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 144 filtered out; finished in 0.00s\n\n\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.07s\n     Running unittests src/lib.rs (passivbot-rust/target/debug/deps/passivbot_rust-eb4bd43d671304d7)\n",
+      "passed": true
+    },
+    {
+      "command": [
+        "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_passivbot_balance_split.py::test_disappeared_emitted_order_record_arms_duplicate_guardrail_without_recent_execution"
+      ],
+      "exit_code": 0,
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "name": "no_duplicate_orders",
+      "output_sha256": "f6390eccc19899be8ac2cfa83774b23f5b1e46ed4d4a6c809c11f627ebf65ff2",
+      "output_tail": ".                                                                        [100%]\n=============================== warnings summary ===============================\ntests/test_passivbot_balance_split.py::test_disappeared_emitted_order_record_arms_duplicate_guardrail_without_recent_execution\n  /Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/lib/python3.12/site-packages/portalocker/utils.py:231: UserWarning: timeout has no effect in blocking mode\n    warnings.warn(\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n",
+      "passed": true
+    },
+    {
+      "command": [
+        "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_passivbot_balance_split.py::test_crypto_portfolio_risk_caps_initial_entry_without_liquidation_price",
+        "tests/test_passivbot_balance_split.py::test_crypto_portfolio_risk_handles_executable_dicts_and_allows_only_panic_market_close"
+      ],
+      "exit_code": 0,
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "name": "limits_not_bypassed",
+      "output_sha256": "99db33d5c94c6f7da021687c7391181685cc33299c5435b1c861e2db3be3ec87",
+      "output_tail": "..                                                                       [100%]\n",
+      "passed": true
+    },
+    {
+      "command": [
+        "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_passivbot_balance_split.py::test_restarted_inherited_order_disappearance_uses_confirmation_not_symbol_block",
+        "tests/test_passivbot_balance_split.py::test_bot_cancelled_order_disappearance_does_not_arm_duplicate_guardrail"
+      ],
+      "exit_code": 0,
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "name": "state_recovery_consistent",
+      "output_sha256": "99db33d5c94c6f7da021687c7391181685cc33299c5435b1c861e2db3be3ec87",
+      "output_tail": "..                                                                       [100%]\n",
+      "passed": true
+    },
+    {
+      "command": [
+        "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_passivbot_balance_split.py::test_update_balance_failure_keeps_previous",
+        "tests/test_passivbot_balance_split.py::test_pre_create_snapshot_filter_blocks_stale_market_snapshots"
+      ],
+      "exit_code": 0,
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "name": "api_outage_safe",
+      "output_sha256": "e5e0eee33ba356d23c5de812ebee1ce18130b63620e69b7aed97194edce46315",
+      "output_tail": "..                                                                       [100%]\n=============================== warnings summary ===============================\ntests/test_passivbot_balance_split.py::test_pre_create_snapshot_filter_blocks_stale_market_snapshots\n  /Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/lib/python3.12/site-packages/portalocker/utils.py:231: UserWarning: timeout has no effect in blocking mode\n    warnings.warn(\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n",
+      "passed": true
+    },
+    {
+      "command": [
+        "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_unstucking_safeguards.py::test_manual_mode_skips_side_orders",
+        "tests/test_passivbot_balance_split.py::test_unknown_manual_or_exchange_cancel_requests_confirmation_without_symbol_block"
+      ],
+      "exit_code": 0,
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "name": "manual_position_safe",
+      "output_sha256": "99db33d5c94c6f7da021687c7391181685cc33299c5435b1c861e2db3be3ec87",
+      "output_tail": "..                                                                       [100%]\n",
+      "passed": true
+    },
+    {
+      "command": [
+        "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_passivbot_balance_split.py::test_crypto_portfolio_risk_handles_executable_dicts_and_allows_only_panic_market_close"
+      ],
+      "exit_code": 0,
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "name": "ordinary_market_orders_blocked",
+      "output_sha256": "423b1d0e014eb1eab96f4420f7b344c2615be505dd574b756ac884826ca74f2d",
+      "output_tail": ".                                                                        [100%]\n",
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--manifest-path",
+        "passivbot-rust/Cargo.toml",
+        "--lib",
+        "one_way_blocks_disabled"
+      ],
+      "exit_code": 0,
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "name": "symmetric_long_short_safety",
+      "output_sha256": "829905747cb55da8a0cee03a76b6bc27a636bf4dad3cfd2adf14866702ccfc30",
+      "output_tail": "\nrunning 2 tests\ntest orchestrator::core::tests::one_way_blocks_disabled_short_allows_long_initials ... ok\ntest orchestrator::core::tests::one_way_blocks_disabled_long_allows_short_initials ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 143 filtered out; finished in 0.00s\n\n\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s\n     Running unittests src/lib.rs (passivbot-rust/target/debug/deps/passivbot_rust-eb4bd43d671304d7)\n",
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--manifest-path",
+        "passivbot-rust/Cargo.toml",
+        "--lib",
+        "crypto_portfolio_entry_gate_limits_multiple_gap_levels_in_one_step"
+      ],
+      "exit_code": 0,
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "name": "gap_and_multi_level_same_candle",
+      "output_sha256": "282177c11496307991852f712ee3a7b41adf4dc631041b57be977430434953ff",
+      "output_tail": "\nrunning 1 test\ntest backtest::tests::crypto_portfolio_entry_gate_limits_multiple_gap_levels_in_one_step ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 144 filtered out; finished in 0.00s\n\n\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s\n     Running unittests src/lib.rs (passivbot-rust/target/debug/deps/passivbot_rust-eb4bd43d671304d7)\n",
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--manifest-path",
+        "passivbot-rust/Cargo.toml",
+        "--lib",
+        "execution_model_partial_fill_retains_unfilled_quantity"
+      ],
+      "exit_code": 0,
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "name": "partial_fills",
+      "output_sha256": "5ab4d040e5b788be2d5b412fcffb6420a1db404788144b0a84a0af1ac45cb34a",
+      "output_tail": "\nrunning 1 test\ntest backtest::tests::execution_model_partial_fill_retains_unfilled_quantity ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 144 filtered out; finished in 0.00s\n\n\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s\n     Running unittests src/lib.rs (passivbot-rust/target/debug/deps/passivbot_rust-eb4bd43d671304d7)\n",
+      "passed": true
+    },
+    {
+      "command": [
+        "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_passivbot_balance_split.py::test_bot_cancelled_order_disappearance_does_not_arm_duplicate_guardrail",
+        "tests/test_passivbot_balance_split.py::test_disappeared_emitted_order_record_arms_duplicate_guardrail_without_recent_execution",
+        "tests/test_passivbot_balance_split.py::test_unknown_manual_or_exchange_cancel_requests_confirmation_without_symbol_block",
+        "tests/test_passivbot_balance_split.py::test_ambiguous_cancel_forces_full_authoritative_confirmation"
+      ],
+      "exit_code": 0,
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "name": "cancel_repeat_unknown_order_id",
+      "output_sha256": "6e902e1e07414ecf2264766a4971faf5bad47451660c4b705686839a580b5403",
+      "output_tail": "....                                                                     [100%]\n=============================== warnings summary ===============================\ntests/test_passivbot_balance_split.py::test_disappeared_emitted_order_record_arms_duplicate_guardrail_without_recent_execution\n  /Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/lib/python3.12/site-packages/portalocker/utils.py:231: UserWarning: timeout has no effect in blocking mode\n    warnings.warn(\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n",
+      "passed": true
+    },
+    {
+      "command": [
+        "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_backtest_execution_model.py::test_execution_inputs_are_aligned_without_substituting_leading_values",
+        "tests/test_risk_parity.py::test_missing_required_snapshot_data_is_rejected"
+      ],
+      "exit_code": 0,
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "name": "funding_input_alignment",
+      "output_sha256": "8332a5c6874a6244e72db273b1406615a6f1ec683804154f65514ce151d2546b",
+      "output_tail": "..                                                                       [100%]\n=============================== warnings summary ===============================\n.venv/lib/python3.12/site-packages/matplotlib/_fontconfig_pattern.py:88\n.venv/lib/python3.12/site-packages/matplotlib/_fontconfig_pattern.py:88\n.venv/lib/python3.12/site-packages/matplotlib/_fontconfig_pattern.py:88\n.venv/lib/python3.12/site-packages/matplotlib/_fontconfig_pattern.py:88\n.venv/lib/python3.12/site-packages/matplotlib/_fontconfig_pattern.py:88\n.venv/lib/python3.12/site-packages/matplotlib/_fontconfig_pattern.py:88\n  /Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/lib/python3.12/site-packages/matplotlib/_fontconfig_pattern.py:88: PyparsingDeprecationWarning: 'parseString' deprecated - use 'parse_string'\n    parse = parser.parseString(pattern)\n\n.venv/lib/python3.12/site-packages/matplotlib/_fontconfig_pattern.py:92\n.venv/lib/python3.12/site-packages/matplotlib/_fontconfig_pattern.py:92\n.venv/lib/python3.12/site-packages/matplotlib/_fontconfig_pattern.py:92\n.venv/lib/python3.12/site-packages/matplotlib/_fontconfig_pattern.py:92\n.venv/lib/python3.12/site-packages/matplotlib/_fontconfig_pattern.py:92\n.venv/lib/python3.12/site-packages/matplotlib/_fontconfig_pattern.py:92\n  /Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/lib/python3.12/site-packages/matplotlib/_fontconfig_pattern.py:92: PyparsingDeprecationWarning: 'resetCache' deprecated - use 'reset_cache'\n    parser.resetCache()\n\n.venv/lib/python3.12/site-packages/matplotlib/_mathtext.py:45\n  /Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/lib/python3.12/site-packages/matplotlib/_mathtext.py:45: PyparsingDeprecationWarning: 'enablePackrat' deprecated - use 'enable_packrat'\n    ParserElement.enablePackrat()\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n",
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--manifest-path",
+        "passivbot-rust/Cargo.toml",
+        "--lib",
+        "execution_model_uses_mark_price_for_funding_valuation"
+      ],
+      "exit_code": 0,
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "name": "mark_price_funding_valuation",
+      "output_sha256": "dc876a451a984f287b0009be4b80ee56fdbe40411725de885e1a1f30613a313e",
+      "output_tail": "\nrunning 1 test\ntest backtest::tests::execution_model_uses_mark_price_for_funding_valuation ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 144 filtered out; finished in 0.00s\n\n\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s\n     Running unittests src/lib.rs (passivbot-rust/target/debug/deps/passivbot_rust-eb4bd43d671304d7)\n",
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--manifest-path",
+        "passivbot-rust/Cargo.toml",
+        "--lib",
+        "crypto_portfolio_entry_gate_blocks_entries_without_position_tiers"
+      ],
+      "exit_code": 0,
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "name": "missing_tier_blocks_entries",
+      "output_sha256": "f4254a5f98d9216f45238516fb8629d85b5897a29628d2700c8b73150e9fe30c",
+      "output_tail": "\nrunning 1 test\ntest backtest::tests::crypto_portfolio_entry_gate_blocks_entries_without_position_tiers ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 144 filtered out; finished in 0.00s\n\n\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s\n     Running unittests src/lib.rs (passivbot-rust/target/debug/deps/passivbot_rust-eb4bd43d671304d7)\n",
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--offline",
+        "--manifest-path",
+        "passivbot-rust/Cargo.toml",
+        "--lib",
+        "crypto_portfolio_entry_gate_limits_synchronized_btc_eth_exposure"
+      ],
+      "exit_code": 0,
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "name": "synchronized_btc_eth_safety",
+      "output_sha256": "67d8323bbcc168c3642cf50761d0245453a7d1a6a0a0df86d4202e5470511698",
+      "output_tail": "\nrunning 1 test\ntest backtest::tests::crypto_portfolio_entry_gate_limits_synchronized_btc_eth_exposure ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 144 filtered out; finished in 0.00s\n\n\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.02s\n     Running unittests src/lib.rs (passivbot-rust/target/debug/deps/passivbot_rust-eb4bd43d671304d7)\n",
+      "passed": true
+    }
+  ],
+  "config_mode": "roadmap",
+  "config_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+  "config_preflight": {
+    "candidate_admission": false,
+    "checks": [
+      {
+        "expected": true,
+        "id": "portfolio_risk_enabled",
+        "message": "roadmap mode requires live.portfolio_risk.enabled=true",
+        "missing": false,
+        "observed": true,
+        "passed": true,
+        "path": "live.portfolio_risk.enabled",
+        "source": "config"
+      },
+      {
+        "expected": true,
+        "id": "explicit_live_authorization_required",
+        "message": "roadmap mode requires a separate explicit live authorization",
+        "missing": false,
+        "observed": true,
+        "passed": true,
+        "path": "live.portfolio_risk.require_explicit_live_authorization",
+        "source": "config"
+      },
+      {
+        "expected": true,
+        "id": "hedge_mode_enabled",
+        "message": "roadmap mode requires hedge mode",
+        "missing": false,
+        "observed": true,
+        "passed": true,
+        "path": "live.hedge_mode",
+        "source": "config"
+      },
+      {
+        "expected": "isolated",
+        "id": "isolated_margin_mode",
+        "message": "roadmap mode rejects cross-only margin configuration",
+        "missing": false,
+        "observed": "isolated",
+        "passed": true,
+        "path": "live.margin_mode_preference",
+        "source": "config"
+      },
+      {
+        "expected": {
+          "maximum": 3.0,
+          "minimum_exclusive": 0
+        },
+        "id": "leverage_at_most_3",
+        "message": "live leverage must be positive and no greater than 3x",
+        "missing": false,
+        "observed": 3.0,
+        "passed": true,
+        "path": "live.leverage",
+        "source": "config"
+      },
+      {
+        "expected": {
+          "maximum": 0.03,
+          "minimum_exclusive": 0
+        },
+        "id": "max_initial_entry_sizing_pct_at_most_0_03",
+        "message": "the portfolio first-entry cap must be positive and no greater than 3%",
+        "missing": false,
+        "observed": 0.03,
+        "passed": true,
+        "path": "live.portfolio_risk.max_initial_entry_sizing_balance_pct",
+        "source": "schema_default"
+      },
+      {
+        "expected": {
+          "maximum": 0.03,
+          "minimum_exclusive": 0
+        },
+        "id": "long_entry_initial_qty_pct_at_most_0_03",
+        "message": "long first entry must be positive and no greater than 3%",
+        "missing": false,
+        "observed": 0.0122,
+        "passed": true,
+        "path": "bot.long.entry_initial_qty_pct",
+        "source": "config"
+      },
+      {
+        "expected": {
+          "maximum": 8,
+          "minimum": 1
+        },
+        "id": "long_entry_grid_levels_at_most_8",
+        "message": "long entry grid must contain no more than 8 levels",
+        "missing": false,
+        "observed": 8,
+        "passed": true,
+        "path": "bot.long.entry_grid_max_levels",
+        "source": "config"
+      },
+      {
+        "expected": {
+          "maximum": 0.03,
+          "minimum_exclusive": 0
+        },
+        "id": "short_entry_initial_qty_pct_at_most_0_03",
+        "message": "short first entry must be positive and no greater than 3%",
+        "missing": false,
+        "observed": 0.0122,
+        "passed": true,
+        "path": "bot.short.entry_initial_qty_pct",
+        "source": "config"
+      },
+      {
+        "expected": {
+          "maximum": 8,
+          "minimum": 1
+        },
+        "id": "short_entry_grid_levels_at_most_8",
+        "message": "short entry grid must contain no more than 8 levels",
+        "missing": false,
+        "observed": 8,
+        "passed": true,
+        "path": "bot.short.entry_grid_max_levels",
+        "source": "config"
+      },
+      {
+        "expected": false,
+        "id": "ordinary_market_orders_disabled",
+        "message": "ordinary market orders must remain disabled",
+        "missing": false,
+        "observed": false,
+        "passed": true,
+        "path": "live.market_orders_allowed",
+        "source": "config"
+      },
+      {
+        "expected": true,
+        "id": "execution_model_enabled",
+        "message": "roadmap mode requires the bounded execution model",
+        "missing": false,
+        "observed": true,
+        "passed": true,
+        "path": "backtest.execution_model.enabled",
+        "source": "config"
+      },
+      {
+        "expected": true,
+        "id": "funding_execution_enabled",
+        "message": "roadmap mode requires funding input handling",
+        "missing": false,
+        "observed": true,
+        "passed": true,
+        "path": "backtest.execution_model.funding_enabled",
+        "source": "config"
+      },
+      {
+        "expected": "blocked",
+        "id": "missing_funding_data_blocks",
+        "message": "missing funding input must block the scenario",
+        "missing": false,
+        "observed": "blocked",
+        "passed": true,
+        "path": "backtest.execution_model.funding_missing_data",
+        "source": "config"
+      },
+      {
+        "expected": "mark",
+        "id": "mark_price_valuation_enabled",
+        "message": "roadmap mode requires mark-price valuation",
+        "missing": false,
+        "observed": "mark",
+        "passed": true,
+        "path": "backtest.execution_model.mark_price_basis",
+        "source": "config"
+      },
+      {
+        "expected": "worst_case",
+        "id": "same_candle_ordering_is_worst_case",
+        "message": "same-candle stress must use the adverse ordering",
+        "missing": false,
+        "observed": "worst_case",
+        "passed": true,
+        "path": "backtest.execution_model.adverse_same_candle_ordering",
+        "source": "config"
+      },
+      {
+        "expected": "non-empty values in (0, 1] including a partial value",
+        "id": "partial_fill_schedule_present",
+        "message": "roadmap mode requires a partial-fill schedule",
+        "missing": false,
+        "observed": [
+          0.25,
+          0.5,
+          0.75,
+          1.0
+        ],
+        "passed": true,
+        "path": "backtest.execution_model.partial_fill_ratios",
+        "source": "config"
+      },
+      {
+        "expected": {
+          "maximum": 1.0,
+          "minimum_exclusive": 0
+        },
+        "id": "gap_stress_enabled",
+        "message": "roadmap mode requires a bounded gap stress input",
+        "missing": false,
+        "observed": 0.01,
+        "passed": true,
+        "path": "backtest.execution_model.gap_stress_pct",
+        "source": "config"
+      }
+    ],
+    "config_class": "roadmap_admission",
+    "eligible_for_roadmap": true,
+    "failed_checks": [],
+    "mode": "roadmap",
+    "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+    "read_only_external_operations": true,
+    "reasons": [],
+    "schema_version": "crypto-risk-grid-config-preflight-v1",
+    "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+    "status": "passed",
+    "trading_operations_count": 0
+  },
+  "evidence_incomplete_scenarios": [],
+  "failed_scenarios": [],
+  "funding_input_alignment": true,
+  "gap_and_multi_level_same_candle": true,
+  "limits_not_bypassed": true,
+  "manual_position_safe": true,
+  "mark_price_funding_valuation": true,
+  "market_profile_input_present": true,
+  "market_profile_private_api_data_present": false,
+  "market_profile_private_markers_count": 0,
+  "market_profile_public_api_only": true,
+  "metrics": {
+    "api_outage_safe": true,
+    "cancel_repeat_unknown_order_id": true,
+    "funding_input_alignment": true,
+    "gap_and_multi_level_same_candle": true,
+    "limits_not_bypassed": true,
+    "manual_position_safe": true,
+    "mark_price_funding_valuation": true,
+    "missing_tier_blocks_entries": true,
+    "no_duplicate_orders": true,
+    "no_liquidations": true,
+    "ordinary_market_orders_blocked": true,
+    "partial_fills": true,
+    "state_recovery_consistent": true,
+    "symmetric_long_short_safety": true,
+    "synchronized_btc_eth_safety": true
+  },
+  "missing_scenarios": [],
+  "missing_tier_blocks_entries": true,
+  "no_duplicate_orders": true,
+  "no_liquidations": true,
+  "ordinary_market_orders_blocked": true,
+  "partial_fills": true,
+  "profile_preflight": {
+    "eligible_for_roadmap": true,
+    "failed_profiles": [],
+    "profile_class": "public_market_profile",
+    "profiles": [
+      {
+        "checks": [
+          {
+            "expected": "bitget-public-market-profile-v1",
+            "id": "public_market_profile_schema",
+            "message": "roadmap mode requires a normalized public market profile",
+            "missing": false,
+            "observed": "bitget-public-market-profile-v1",
+            "passed": true,
+            "path": "schema_version",
+            "source": "profile"
+          },
+          {
+            "expected": "bitget",
+            "id": "profile_exchange_is_bitget",
+            "message": "the roadmap market profile must be for Bitget",
+            "missing": false,
+            "observed": "bitget",
+            "passed": true,
+            "path": "exchange",
+            "source": "profile"
+          },
+          {
+            "expected": true,
+            "id": "profile_is_read_only",
+            "message": "the market profile must declare read-only collection",
+            "missing": false,
+            "observed": true,
+            "passed": true,
+            "path": "read_only_only",
+            "source": "profile"
+          },
+          {
+            "expected": 0,
+            "id": "profile_has_no_trading_operations",
+            "message": "profile collection must contain no trading operations",
+            "missing": false,
+            "observed": 0,
+            "passed": true,
+            "path": "trading_operations_count",
+            "source": "profile"
+          },
+          {
+            "expected": "USDT-FUTURES",
+            "id": "profile_category_is_usdt_futures",
+            "message": "roadmap scenarios require the USDT futures market",
+            "missing": false,
+            "observed": "USDT-FUTURES",
+            "passed": true,
+            "path": "category",
+            "source": "profile"
+          },
+          {
+            "expected": "online",
+            "id": "profile_instrument_online",
+            "message": "the profiled instrument must be online",
+            "missing": false,
+            "observed": "online",
+            "passed": true,
+            "path": "instrument.status",
+            "source": "profile"
+          },
+          {
+            "expected": "perpetual",
+            "id": "profile_instrument_perpetual",
+            "message": "the profiled instrument must be perpetual",
+            "missing": false,
+            "observed": "perpetual",
+            "passed": true,
+            "path": "instrument.contract_type",
+            "source": "profile"
+          },
+          {
+            "expected": "USDT",
+            "id": "profile_quote_coin_usdt",
+            "message": "the profiled instrument must settle in USDT",
+            "missing": false,
+            "observed": "USDT",
+            "passed": true,
+            "path": "instrument.quote_coin",
+            "source": "profile"
+          },
+          {
+            "expected": "finite positive mark price",
+            "id": "profile_mark_price_present",
+            "message": "mark price is required for the roadmap stress inputs",
+            "missing": false,
+            "observed": 62878.3,
+            "passed": true,
+            "path": "mark_and_index.mark_price",
+            "source": "profile"
+          },
+          {
+            "expected": "finite positive index price",
+            "id": "profile_index_price_present",
+            "message": "index price is required for the roadmap stress inputs",
+            "missing": false,
+            "observed": 62902.3305,
+            "passed": true,
+            "path": "mark_and_index.index_price",
+            "source": "profile"
+          },
+          {
+            "expected": "finite funding rate",
+            "id": "profile_funding_rate_present",
+            "message": "funding input is required for the roadmap stress inputs",
+            "missing": false,
+            "observed": 6.9e-05,
+            "passed": true,
+            "path": "funding.current_rate",
+            "source": "profile"
+          },
+          {
+            "expected": {
+              "maximum": 168.0,
+              "minimum_exclusive": 0
+            },
+            "id": "profile_funding_interval_present",
+            "message": "funding interval must be a bounded positive number",
+            "missing": false,
+            "observed": 8,
+            "passed": true,
+            "path": "funding.interval_hours",
+            "source": "profile"
+          },
+          {
+            "expected": "ordered non-empty maintenance-tier list",
+            "id": "profile_margin_tiers_complete",
+            "message": "position tiers are required and must be ordered",
+            "missing": false,
+            "observed": 12,
+            "passed": true,
+            "path": "margin_tiers",
+            "source": "profile"
+          },
+          {
+            "expected": "non-empty SHA-256 source response map",
+            "id": "profile_source_hashes_present",
+            "message": "profile evidence must retain source response hashes",
+            "missing": false,
+            "observed": {
+              "market_current_fund_rate": "a625908f4ef2202f55f777c973c108734e27e62321145aecb7c70122494bb279",
+              "market_instruments": "31935c469f56b251e45810cfa05da803e4fab39b64946afc015f812b0ba9c655",
+              "market_position_tier": "10be36165127b4cea3a3463a572a7e6a8ef3e0bed3a3c45ff26746415ef7ac1e",
+              "market_tickers": "9a2c985f0ccfb67d47b8bdfd08ca91109fb5c0a7117e60ec6e948abbc224319e"
+            },
+            "passed": true,
+            "path": "source_response_sha256",
+            "source": "profile"
+          }
+        ],
+        "eligible_for_roadmap": true,
+        "failed_checks": [],
+        "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+        "profile_class": "public_market_profile",
+        "read_only_external_operations": true,
+        "reasons": [],
+        "schema_version": "crypto-risk-grid-market-profile-preflight-v1",
+        "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+        "status": "passed",
+        "symbol": "BTCUSDT",
+        "trading_operations_count": 0
+      }
+    ],
+    "read_only_external_operations": true,
+    "reasons": [],
+    "schema_version": "crypto-risk-grid-market-profile-preflight-v1",
+    "status": "passed",
+    "trading_operations_count": 0
+  },
+  "read_only_external_operations": true,
+  "roadmap_config_eligible": true,
+  "roadmap_profile_eligible": true,
+  "scenario_coverage": [
+    {
+      "coverage_status": "covered",
+      "evidence": [
+        "passivbot-rust/src/backtest.rs::crypto_portfolio_entry_gate_blocks_entries_inside_liquidation_buffer"
+      ],
+      "evidence_checks": [
+        {
+          "check": "no_liquidations",
+          "command": [
+            "cargo",
+            "test",
+            "--offline",
+            "--manifest-path",
+            "passivbot-rust/Cargo.toml",
+            "--lib",
+            "crypto_portfolio_entry_gate_blocks_entries_inside_liquidation_buffer"
+          ],
+          "exit_code": 0,
+          "output_sha256": "ce7052e4ea5b8e859115d02e1b451331f647171471b3a740b025d87d7608eb38",
+          "passed": true
+        }
+      ],
+      "evidence_complete": true,
+      "execution_status": "passed",
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "missing": [],
+      "name": "no_liquidations",
+      "required_checks": [
+        "no_liquidations"
+      ],
+      "status": "passed"
+    },
+    {
+      "coverage_status": "covered",
+      "evidence": [
+        "tests/test_passivbot_balance_split.py::test_disappeared_emitted_order_record_arms_duplicate_guardrail_without_recent_execution"
+      ],
+      "evidence_checks": [
+        {
+          "check": "no_duplicate_orders",
+          "command": [
+            "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python",
+            "-m",
+            "pytest",
+            "-q",
+            "tests/test_passivbot_balance_split.py::test_disappeared_emitted_order_record_arms_duplicate_guardrail_without_recent_execution"
+          ],
+          "exit_code": 0,
+          "output_sha256": "f6390eccc19899be8ac2cfa83774b23f5b1e46ed4d4a6c809c11f627ebf65ff2",
+          "passed": true
+        }
+      ],
+      "evidence_complete": true,
+      "execution_status": "passed",
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "missing": [],
+      "name": "no_duplicate_orders",
+      "required_checks": [
+        "no_duplicate_orders"
+      ],
+      "status": "passed"
+    },
+    {
+      "coverage_status": "covered",
+      "evidence": [
+        "tests/test_passivbot_balance_split.py::test_crypto_portfolio_risk_caps_initial_entry_without_liquidation_price",
+        "tests/test_passivbot_balance_split.py::test_crypto_portfolio_risk_handles_executable_dicts_and_allows_only_panic_market_close"
+      ],
+      "evidence_checks": [
+        {
+          "check": "limits_not_bypassed",
+          "command": [
+            "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python",
+            "-m",
+            "pytest",
+            "-q",
+            "tests/test_passivbot_balance_split.py::test_crypto_portfolio_risk_caps_initial_entry_without_liquidation_price",
+            "tests/test_passivbot_balance_split.py::test_crypto_portfolio_risk_handles_executable_dicts_and_allows_only_panic_market_close"
+          ],
+          "exit_code": 0,
+          "output_sha256": "99db33d5c94c6f7da021687c7391181685cc33299c5435b1c861e2db3be3ec87",
+          "passed": true
+        }
+      ],
+      "evidence_complete": true,
+      "execution_status": "passed",
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "missing": [],
+      "name": "limits_not_bypassed",
+      "required_checks": [
+        "limits_not_bypassed"
+      ],
+      "status": "passed"
+    },
+    {
+      "coverage_status": "covered",
+      "evidence": [
+        "tests/test_passivbot_balance_split.py::test_restarted_inherited_order_disappearance_uses_confirmation_not_symbol_block",
+        "tests/test_passivbot_balance_split.py::test_bot_cancelled_order_disappearance_does_not_arm_duplicate_guardrail"
+      ],
+      "evidence_checks": [
+        {
+          "check": "state_recovery_consistent",
+          "command": [
+            "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python",
+            "-m",
+            "pytest",
+            "-q",
+            "tests/test_passivbot_balance_split.py::test_restarted_inherited_order_disappearance_uses_confirmation_not_symbol_block",
+            "tests/test_passivbot_balance_split.py::test_bot_cancelled_order_disappearance_does_not_arm_duplicate_guardrail"
+          ],
+          "exit_code": 0,
+          "output_sha256": "99db33d5c94c6f7da021687c7391181685cc33299c5435b1c861e2db3be3ec87",
+          "passed": true
+        }
+      ],
+      "evidence_complete": true,
+      "execution_status": "passed",
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "missing": [],
+      "name": "state_recovery_consistent",
+      "required_checks": [
+        "state_recovery_consistent"
+      ],
+      "status": "passed"
+    },
+    {
+      "coverage_status": "covered",
+      "evidence": [
+        "tests/test_passivbot_balance_split.py::test_update_balance_failure_keeps_previous",
+        "tests/test_passivbot_balance_split.py::test_pre_create_snapshot_filter_blocks_stale_market_snapshots"
+      ],
+      "evidence_checks": [
+        {
+          "check": "api_outage_safe",
+          "command": [
+            "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python",
+            "-m",
+            "pytest",
+            "-q",
+            "tests/test_passivbot_balance_split.py::test_update_balance_failure_keeps_previous",
+            "tests/test_passivbot_balance_split.py::test_pre_create_snapshot_filter_blocks_stale_market_snapshots"
+          ],
+          "exit_code": 0,
+          "output_sha256": "e5e0eee33ba356d23c5de812ebee1ce18130b63620e69b7aed97194edce46315",
+          "passed": true
+        }
+      ],
+      "evidence_complete": true,
+      "execution_status": "passed",
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "missing": [],
+      "name": "api_outage_stale_data",
+      "required_checks": [
+        "api_outage_safe"
+      ],
+      "status": "passed"
+    },
+    {
+      "coverage_status": "covered",
+      "evidence": [
+        "tests/test_unstucking_safeguards.py::test_manual_mode_skips_side_orders",
+        "tests/test_passivbot_balance_split.py::test_unknown_manual_or_exchange_cancel_requests_confirmation_without_symbol_block"
+      ],
+      "evidence_checks": [
+        {
+          "check": "manual_position_safe",
+          "command": [
+            "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python",
+            "-m",
+            "pytest",
+            "-q",
+            "tests/test_unstucking_safeguards.py::test_manual_mode_skips_side_orders",
+            "tests/test_passivbot_balance_split.py::test_unknown_manual_or_exchange_cancel_requests_confirmation_without_symbol_block"
+          ],
+          "exit_code": 0,
+          "output_sha256": "99db33d5c94c6f7da021687c7391181685cc33299c5435b1c861e2db3be3ec87",
+          "passed": true
+        }
+      ],
+      "evidence_complete": true,
+      "execution_status": "passed",
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "missing": [],
+      "name": "manual_position_safe",
+      "required_checks": [
+        "manual_position_safe"
+      ],
+      "status": "passed"
+    },
+    {
+      "coverage_status": "covered",
+      "evidence": [
+        "tests/test_passivbot_balance_split.py::test_crypto_portfolio_risk_handles_executable_dicts_and_allows_only_panic_market_close"
+      ],
+      "evidence_checks": [
+        {
+          "check": "ordinary_market_orders_blocked",
+          "command": [
+            "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python",
+            "-m",
+            "pytest",
+            "-q",
+            "tests/test_passivbot_balance_split.py::test_crypto_portfolio_risk_handles_executable_dicts_and_allows_only_panic_market_close"
+          ],
+          "exit_code": 0,
+          "output_sha256": "423b1d0e014eb1eab96f4420f7b344c2615be505dd574b756ac884826ca74f2d",
+          "passed": true
+        }
+      ],
+      "evidence_complete": true,
+      "execution_status": "passed",
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "missing": [],
+      "name": "ordinary_market_orders_blocked",
+      "required_checks": [
+        "ordinary_market_orders_blocked"
+      ],
+      "status": "passed"
+    },
+    {
+      "coverage_status": "covered",
+      "evidence": [
+        "passivbot-rust/src/orchestrator.rs::one_way_blocks_disabled_long_allows_short_initials",
+        "passivbot-rust/src/orchestrator.rs::one_way_blocks_disabled_short_allows_long_initials"
+      ],
+      "evidence_checks": [
+        {
+          "check": "symmetric_long_short_safety",
+          "command": [
+            "cargo",
+            "test",
+            "--offline",
+            "--manifest-path",
+            "passivbot-rust/Cargo.toml",
+            "--lib",
+            "one_way_blocks_disabled"
+          ],
+          "exit_code": 0,
+          "output_sha256": "829905747cb55da8a0cee03a76b6bc27a636bf4dad3cfd2adf14866702ccfc30",
+          "passed": true
+        }
+      ],
+      "evidence_complete": true,
+      "execution_status": "passed",
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "missing": [],
+      "name": "trend_plus_minus_35_or_symmetric_long_short_safety",
+      "requested_forms": [
+        "trend +35/-35",
+        "symmetric long/short safety"
+      ],
+      "required_checks": [
+        "symmetric_long_short_safety"
+      ],
+      "status": "passed"
+    },
+    {
+      "coverage_status": "covered",
+      "evidence": [
+        "passivbot-rust/src/backtest.rs::crypto_portfolio_entry_gate_limits_multiple_gap_levels_in_one_step"
+      ],
+      "evidence_checks": [
+        {
+          "check": "gap_and_multi_level_same_candle",
+          "command": [
+            "cargo",
+            "test",
+            "--offline",
+            "--manifest-path",
+            "passivbot-rust/Cargo.toml",
+            "--lib",
+            "crypto_portfolio_entry_gate_limits_multiple_gap_levels_in_one_step"
+          ],
+          "exit_code": 0,
+          "output_sha256": "282177c11496307991852f712ee3a7b41adf4dc631041b57be977430434953ff",
+          "passed": true
+        }
+      ],
+      "evidence_complete": true,
+      "execution_status": "passed",
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "missing": [],
+      "name": "gap_and_multi_level_same_candle",
+      "required_checks": [
+        "gap_and_multi_level_same_candle"
+      ],
+      "status": "passed"
+    },
+    {
+      "coverage_status": "covered",
+      "evidence": [
+        "passivbot-rust/src/backtest.rs::execution_model_partial_fill_retains_unfilled_quantity"
+      ],
+      "evidence_checks": [
+        {
+          "check": "partial_fills",
+          "command": [
+            "cargo",
+            "test",
+            "--offline",
+            "--manifest-path",
+            "passivbot-rust/Cargo.toml",
+            "--lib",
+            "execution_model_partial_fill_retains_unfilled_quantity"
+          ],
+          "exit_code": 0,
+          "output_sha256": "5ab4d040e5b788be2d5b412fcffb6420a1db404788144b0a84a0af1ac45cb34a",
+          "passed": true
+        }
+      ],
+      "evidence_complete": true,
+      "execution_status": "passed",
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "missing": [],
+      "name": "partial_fills",
+      "required_checks": [
+        "partial_fills"
+      ],
+      "status": "passed"
+    },
+    {
+      "coverage_status": "covered",
+      "evidence": [
+        "tests/test_passivbot_balance_split.py::test_bot_cancelled_order_disappearance_does_not_arm_duplicate_guardrail",
+        "tests/test_passivbot_balance_split.py::test_disappeared_emitted_order_record_arms_duplicate_guardrail_without_recent_execution",
+        "tests/test_passivbot_balance_split.py::test_unknown_manual_or_exchange_cancel_requests_confirmation_without_symbol_block",
+        "tests/test_passivbot_balance_split.py::test_ambiguous_cancel_forces_full_authoritative_confirmation"
+      ],
+      "evidence_checks": [
+        {
+          "check": "cancel_repeat_unknown_order_id",
+          "command": [
+            "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python",
+            "-m",
+            "pytest",
+            "-q",
+            "tests/test_passivbot_balance_split.py::test_bot_cancelled_order_disappearance_does_not_arm_duplicate_guardrail",
+            "tests/test_passivbot_balance_split.py::test_disappeared_emitted_order_record_arms_duplicate_guardrail_without_recent_execution",
+            "tests/test_passivbot_balance_split.py::test_unknown_manual_or_exchange_cancel_requests_confirmation_without_symbol_block",
+            "tests/test_passivbot_balance_split.py::test_ambiguous_cancel_forces_full_authoritative_confirmation"
+          ],
+          "exit_code": 0,
+          "output_sha256": "6e902e1e07414ecf2264766a4971faf5bad47451660c4b705686839a580b5403",
+          "passed": true
+        }
+      ],
+      "evidence_complete": true,
+      "execution_status": "passed",
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "missing": [],
+      "name": "cancel_repeat_unknown_order_id",
+      "required_checks": [
+        "cancel_repeat_unknown_order_id"
+      ],
+      "status": "passed"
+    },
+    {
+      "coverage_status": "covered",
+      "evidence": [
+        "tests/test_passivbot_balance_split.py::test_restarted_inherited_order_disappearance_uses_confirmation_not_symbol_block",
+        "tests/test_unstucking_safeguards.py::test_manual_mode_skips_side_orders"
+      ],
+      "evidence_checks": [
+        {
+          "check": "state_recovery_consistent",
+          "command": [
+            "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python",
+            "-m",
+            "pytest",
+            "-q",
+            "tests/test_passivbot_balance_split.py::test_restarted_inherited_order_disappearance_uses_confirmation_not_symbol_block",
+            "tests/test_passivbot_balance_split.py::test_bot_cancelled_order_disappearance_does_not_arm_duplicate_guardrail"
+          ],
+          "exit_code": 0,
+          "output_sha256": "99db33d5c94c6f7da021687c7391181685cc33299c5435b1c861e2db3be3ec87",
+          "passed": true
+        },
+        {
+          "check": "manual_position_safe",
+          "command": [
+            "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python",
+            "-m",
+            "pytest",
+            "-q",
+            "tests/test_unstucking_safeguards.py::test_manual_mode_skips_side_orders",
+            "tests/test_passivbot_balance_split.py::test_unknown_manual_or_exchange_cancel_requests_confirmation_without_symbol_block"
+          ],
+          "exit_code": 0,
+          "output_sha256": "99db33d5c94c6f7da021687c7391181685cc33299c5435b1c861e2db3be3ec87",
+          "passed": true
+        }
+      ],
+      "evidence_complete": true,
+      "execution_status": "passed",
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "missing": [],
+      "name": "restart_manual_position",
+      "required_checks": [
+        "state_recovery_consistent",
+        "manual_position_safe"
+      ],
+      "status": "passed"
+    },
+    {
+      "coverage_status": "covered",
+      "evidence": [
+        "tests/test_backtest_execution_model.py::test_execution_inputs_are_aligned_without_substituting_leading_values",
+        "tests/test_risk_parity.py::test_missing_required_snapshot_data_is_rejected",
+        "passivbot-rust/src/backtest.rs::execution_model_uses_mark_price_for_funding_valuation",
+        "passivbot-rust/src/backtest.rs::crypto_portfolio_entry_gate_blocks_entries_without_position_tiers"
+      ],
+      "evidence_checks": [
+        {
+          "check": "funding_input_alignment",
+          "command": [
+            "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python",
+            "-m",
+            "pytest",
+            "-q",
+            "tests/test_backtest_execution_model.py::test_execution_inputs_are_aligned_without_substituting_leading_values",
+            "tests/test_risk_parity.py::test_missing_required_snapshot_data_is_rejected"
+          ],
+          "exit_code": 0,
+          "output_sha256": "8332a5c6874a6244e72db273b1406615a6f1ec683804154f65514ce151d2546b",
+          "passed": true
+        },
+        {
+          "check": "mark_price_funding_valuation",
+          "command": [
+            "cargo",
+            "test",
+            "--offline",
+            "--manifest-path",
+            "passivbot-rust/Cargo.toml",
+            "--lib",
+            "execution_model_uses_mark_price_for_funding_valuation"
+          ],
+          "exit_code": 0,
+          "output_sha256": "dc876a451a984f287b0009be4b80ee56fdbe40411725de885e1a1f30613a313e",
+          "passed": true
+        },
+        {
+          "check": "missing_tier_blocks_entries",
+          "command": [
+            "cargo",
+            "test",
+            "--offline",
+            "--manifest-path",
+            "passivbot-rust/Cargo.toml",
+            "--lib",
+            "crypto_portfolio_entry_gate_blocks_entries_without_position_tiers"
+          ],
+          "exit_code": 0,
+          "output_sha256": "f4254a5f98d9216f45238516fb8629d85b5897a29628d2700c8b73150e9fe30c",
+          "passed": true
+        }
+      ],
+      "evidence_complete": true,
+      "execution_status": "passed",
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "missing": [],
+      "name": "funding_mark_tier_inputs",
+      "required_checks": [
+        "funding_input_alignment",
+        "mark_price_funding_valuation",
+        "missing_tier_blocks_entries"
+      ],
+      "status": "passed"
+    },
+    {
+      "coverage_status": "covered",
+      "evidence": [
+        "passivbot-rust/src/backtest.rs::crypto_portfolio_entry_gate_limits_synchronized_btc_eth_exposure"
+      ],
+      "evidence_checks": [
+        {
+          "check": "synchronized_btc_eth_safety",
+          "command": [
+            "cargo",
+            "test",
+            "--offline",
+            "--manifest-path",
+            "passivbot-rust/Cargo.toml",
+            "--lib",
+            "crypto_portfolio_entry_gate_limits_synchronized_btc_eth_exposure"
+          ],
+          "exit_code": 0,
+          "output_sha256": "67d8323bbcc168c3642cf50761d0245453a7d1a6a0a0df86d4202e5470511698",
+          "passed": true
+        }
+      ],
+      "evidence_complete": true,
+      "execution_status": "passed",
+      "input_evidence": {
+        "config": {
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/historical_protocol/2026-08-17/configs/bitget_btc_long_historical.json",
+          "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+          "status": "passed"
+        },
+        "profiles": [
+          {
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+            "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+            "status": "passed",
+            "symbol": "BTCUSDT"
+          }
+        ]
+      },
+      "missing": [],
+      "name": "synchronized_btc_eth_safety",
+      "required_checks": [
+        "synchronized_btc_eth_safety"
+      ],
+      "status": "passed"
+    }
+  ],
+  "scenario_coverage_complete": true,
+  "scenario_summary": {
+    "blocked": 0,
+    "failed": 0,
+    "not_run": 0,
+    "passed": 14,
+    "total": 14
+  },
+  "schema_version": "crypto-risk-grid-scenarios-v1",
+  "stage": "risk_grid",
+  "state_recovery_consistent": true,
+  "status": "passed",
+  "symmetric_long_short_safety": true,
+  "synchronized_btc_eth_safety": true,
+  "trading_operations_count": 0
+}

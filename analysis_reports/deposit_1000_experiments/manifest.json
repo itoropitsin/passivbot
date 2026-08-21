@@ -1,0 +1,59 @@
+[
+  {
+    "name": "baseline_sb1000",
+    "config": "analysis_reports/deposit_1000_experiments/configs/baseline_sb1000.json",
+    "source": "backtests/binance/2026-06-26T20_46_03/config.json"
+  },
+  {
+    "name": "optimizer_best_sb1000",
+    "config": "analysis_reports/deposit_1000_experiments/configs/optimizer_best_sb1000.json",
+    "source": "backtests/binance/2026-06-26T21_12_15/config.json"
+  },
+  {
+    "name": "fine_markup_0136_sb1000",
+    "config": "analysis_reports/deposit_1000_experiments/configs/fine_markup_0136_sb1000.json",
+    "source": "analysis_reports/sensitivity_2026-06-26_markup_micro/configs/close_markup_end_0.0136.json"
+  },
+  {
+    "name": "fine0136_entry_qty_0.04_sb1000",
+    "config": "analysis_reports/deposit_1000_experiments/configs/fine0136_entry_qty_0.04_sb1000.json",
+    "source": "fine0136",
+    "changed_path": "bot.long.entry_initial_qty_pct",
+    "value": 0.04
+  },
+  {
+    "name": "fine0136_entry_qty_0.06_sb1000",
+    "config": "analysis_reports/deposit_1000_experiments/configs/fine0136_entry_qty_0.06_sb1000.json",
+    "source": "fine0136",
+    "changed_path": "bot.long.entry_initial_qty_pct",
+    "value": 0.06
+  },
+  {
+    "name": "fine0136_entry_qty_0.08_sb1000",
+    "config": "analysis_reports/deposit_1000_experiments/configs/fine0136_entry_qty_0.08_sb1000.json",
+    "source": "fine0136",
+    "changed_path": "bot.long.entry_initial_qty_pct",
+    "value": 0.08
+  },
+  {
+    "name": "fine0136_entry_qty_0.10_sb1000",
+    "config": "analysis_reports/deposit_1000_experiments/configs/fine0136_entry_qty_0.10_sb1000.json",
+    "source": "fine0136",
+    "changed_path": "bot.long.entry_initial_qty_pct",
+    "value": 0.1
+  },
+  {
+    "name": "fine0136_entry_qty_0.12_sb1000",
+    "config": "analysis_reports/deposit_1000_experiments/configs/fine0136_entry_qty_0.12_sb1000.json",
+    "source": "fine0136",
+    "changed_path": "bot.long.entry_initial_qty_pct",
+    "value": 0.12
+  },
+  {
+    "name": "fine0136_entry_qty_0.15_sb1000",
+    "config": "analysis_reports/deposit_1000_experiments/configs/fine0136_entry_qty_0.15_sb1000.json",
+    "source": "fine0136",
+    "changed_path": "bot.long.entry_initial_qty_pct",
+    "value": 0.15
+  }
+]

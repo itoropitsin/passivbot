@@ -1,0 +1,207 @@
+{
+  "blocked_count": 21,
+  "check_status": "failed",
+  "failed_count": 2,
+  "gate_count": 28,
+  "gates": [
+    {
+      "actual": true,
+      "id": "market_profile.market_profile_input_present",
+      "limit": true,
+      "metric": "market_profile_input_present",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "market_profile.market_profile_public_api_only",
+      "limit": true,
+      "metric": "market_profile_public_api_only",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": false,
+      "id": "market_profile.market_profile_private_api_data_present",
+      "limit": false,
+      "metric": "market_profile_private_api_data_present",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "market_profile.source_profile_sha256_not_placeholder",
+      "limit": true,
+      "metric": "market_profile_source_profile_sha256_not_placeholder",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "id": "risk.max_drawdown",
+      "metric": "max_drawdown",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "risk.liquidations",
+      "metric": "liquidations",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "risk.max_recovery_days",
+      "metric": "max_recovery_days",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "risk.gross_exposure_ratio",
+      "metric": "gross_exposure_ratio",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "risk.used_margin_ratio",
+      "metric": "used_margin_ratio",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "risk.min_liquidation_distance",
+      "metric": "min_liquidation_distance",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "execution.slippage_median_bps",
+      "metric": "execution_slippage_median_bps",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "execution.slippage_p95_bps",
+      "metric": "execution_slippage_p95_bps",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "execution.slippage_max_bps",
+      "metric": "execution_slippage_max_bps",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "risk.daily_loss",
+      "metric": "max_daily_loss",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "risk.reconciliation",
+      "metric": "reconciliation_mismatches",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "actual": 0,
+      "id": "candidate.validation_windows",
+      "limit": 4,
+      "metric": "validation_windows",
+      "operator": "==",
+      "status": "failed"
+    },
+    {
+      "id": "candidate.independent_optimizer_runs",
+      "metric": "independent_optimizer_runs",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "candidate.sides_evaluated_independently",
+      "metric": "sides_evaluated_independently",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "candidate.neighbor_checks_complete",
+      "metric": "neighbor_checks_complete",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "candidate.holdout_reserved",
+      "metric": "holdout_reserved",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "candidate.execution_stresses_complete",
+      "metric": "execution_stresses_complete",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "actual": 0,
+      "id": "candidate.validation_return",
+      "limit": 0,
+      "metric": "positive_validation_windows",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "id": "candidate.cycles_per_window",
+      "metric": "closed_cycles_per_window_min",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "candidate.stress_equity",
+      "metric": "stress_min_equity_ratio",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "candidate.neighbor_stability",
+      "metric": "neighbor_profitable_ratio",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "actual": false,
+      "id": "candidate.events_present",
+      "limit": true,
+      "metric": "events_present",
+      "operator": "==",
+      "status": "failed"
+    },
+    {
+      "id": "candidate.net_result",
+      "metric": "net_result",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "blockers": [
+        {
+          "stage": "data",
+          "status": "failed"
+        }
+      ],
+      "id": "stage.prerequisites",
+      "required": [
+        "baseline",
+        "market_profile",
+        "data",
+        "risk_engine",
+        "risk_grid"
+      ],
+      "status": "blocked"
+    }
+  ],
+  "outcome": "failed",
+  "passed_count": 5,
+  "schema_version": "crypto-grid-experiment-v1",
+  "stage": "historical",
+  "stage_admission_status": "failed",
+  "status": "failed"
+}

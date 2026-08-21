@@ -1,0 +1,8 @@
+{
+  "account_mode_uta": false,
+  "failure_evidence": "Bitget UTA private GET endpoints returned code 40084: Classic Account mode; Unified Account API is not supported for this key.",
+  "profile_status": "failed_uta_account_mode",
+  "raw_responses_hashed": true,
+  "read_only_check": true,
+  "trading_operations_count_zero": true
+}

@@ -1,0 +1,46 @@
+{
+  "runs": {
+    "2026-06-26T20_32_54_binance_365days_BTC_c8cb0c37": 279,
+    "2026-06-26T20_35_45_binance_365days_BTC_8ddda768": 279,
+    "2026-06-26T20_40_29_binance_365days_BTC_bfaea43d": 1203,
+    "2026-06-26T21_00_58_binance_365days_BTC_1b383402": 2411
+  },
+  "pareto_points": 45,
+  "all_points": 4172,
+  "verified_backtests": [
+    {
+      "label": "baseline",
+      "path": "backtests/binance/2026-06-26T20_46_03",
+      "adg": 0.00011024800517955846,
+      "drawdown": 0.0994517695369313,
+      "drawdown_pct": 9.94517695369313,
+      "completion": 1.0
+    },
+    {
+      "label": "profit",
+      "path": "backtests/binance/2026-06-26T21_12_15",
+      "adg": 0.0001516659729834391,
+      "drawdown": 0.09520616833635692,
+      "drawdown_pct": 9.520616833635692,
+      "completion": 1.0
+    },
+    {
+      "label": "low_dd_above_baseline",
+      "path": "backtests/binance/2026-06-26T21_12_27",
+      "adg": 0.00011921010184701153,
+      "drawdown": 0.09444884344485407,
+      "drawdown_pct": 9.444884344485407,
+      "completion": 1.0
+    },
+    {
+      "label": "compromise",
+      "path": "backtests/binance/2026-06-26T21_12_39",
+      "adg": 0.000138251121239108,
+      "drawdown": 0.09478469752654771,
+      "drawdown_pct": 9.478469752654771,
+      "completion": 1.0
+    }
+  ],
+  "html": "/Users/ivan/Documents/TLI-Setka/analysis_reports/optimization_adg_drawdown_history_2026-06-26.html",
+  "png": "/Users/ivan/Documents/TLI-Setka/analysis_reports/optimization_adg_drawdown_history_2026-06-26.png"
+}

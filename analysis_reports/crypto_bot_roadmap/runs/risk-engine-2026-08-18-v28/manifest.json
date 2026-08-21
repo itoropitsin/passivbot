@@ -1,0 +1,59 @@
+{
+  "code": {
+    "dirty_diff_sha256": "3deac1598140b058545fd229eec04df0cd24102d31bd5b6faa73195b380cb6d0",
+    "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+    "git_dirty": true,
+    "implementation_fingerprint_sha256": "3deac1598140b058545fd229eec04df0cd24102d31bd5b6faa73195b380cb6d0",
+    "implementation_fingerprint_version": "implementation-fingerprint-v2"
+  },
+  "command": [
+    "passivbot",
+    "tool",
+    "research-gates",
+    "--run-id",
+    "risk-engine-2026-08-18-v28",
+    "--stage",
+    "risk_engine",
+    "--metrics",
+    "analysis_reports/crypto_bot_roadmap/runs/risk-engine-2026-08-18-v14/metrics.json",
+    "--config",
+    "analysis_reports/crypto_bot_roadmap/runs/risk-engine-2026-08-18-v14/config.json",
+    "--dataset",
+    "analysis_reports/crypto_bot_roadmap/inputs",
+    "--market-profile",
+    "analysis_reports/crypto_bot_roadmap/runs/market-profile-2026-08-18-v46/market_profile.json",
+    "--execution-inputs",
+    "analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_public_execution_inputs_2024-07-01_to_2026-08-17-repaired-pagination-v2.json",
+    "--output-dir",
+    "analysis_reports/crypto_bot_roadmap/runs",
+    "--repo-root",
+    "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka"
+  ],
+  "created_at_utc": "2026-08-18T12:39:18+00:00",
+  "environment": {
+    "cargo": "cargo 1.96.0 (30a34c682 2026-05-25) (Homebrew)",
+    "ccxt": "4.5.48",
+    "numpy": "1.26.4",
+    "pandas": "2.2.2",
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "python": "3.12.13",
+    "python_executable": "/opt/homebrew/Cellar/python@3.12/3.12.13_4/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+    "python_implementation": "CPython",
+    "rust_extension_sha256": "a29b13ee4b6a1918e2933b919a21b795152bbc66c51616bf2a0bc39601e79f01",
+    "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25) (Homebrew)",
+    "scipy": "1.17.1"
+  },
+  "inputs": {
+    "account_profile_sha256": null,
+    "config_sha256": "7eb752600e60e12600870178806ecac123a8ae1566b0997f00aec662505f29c8",
+    "dataset_sha256": "24b3f91ba77c6d69694e24c4a4edb7993a2f56541e045168ae111f64533ec479",
+    "execution_inputs_sha256": "814551529b111f60be06f3997cebbf2002a8e4292ad551e1dfa938c9ba3cc9fd",
+    "market_profile_sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+    "plan_sha256": "e606475e2549bc02dbaa90b0601568c2f1d589f969d67dc9ea93d114418327ba"
+  },
+  "plan_date": "2026-08-17",
+  "random_seeds": [],
+  "run_id": "risk-engine-2026-08-18-v28",
+  "schema_version": "crypto-grid-experiment-v1",
+  "stage": "risk_engine"
+}

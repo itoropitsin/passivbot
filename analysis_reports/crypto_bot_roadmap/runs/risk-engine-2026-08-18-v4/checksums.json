@@ -1,0 +1,35 @@
+{
+  "files": {
+    "config.json": {
+      "sha256": "7eb752600e60e12600870178806ecac123a8ae1566b0997f00aec662505f29c8",
+      "size_bytes": 31319
+    },
+    "events.jsonl.gz": {
+      "sha256": "c33eda975c1c06900f37b8d0344c5d395c3d928171eeff74c54ffb4cbea16ac1",
+      "size_bytes": 33
+    },
+    "manifest.json": {
+      "sha256": "ae685c1348b407f808b30f3c5b3ea026f8968fa4009ce01a8ddb1d1b7a5bb0f2",
+      "size_bytes": 2229
+    },
+    "market_profile.json": {
+      "sha256": "d8029009e5ca9943c590d6f829ce7c1edc42f3b439292a0a60814370e8aab1a1",
+      "size_bytes": 3036
+    },
+    "metrics.json": {
+      "sha256": "1a700ffacc7c7a97a34ce7fe0e14f461d27b6f1b9f2fca2ac51e9dc35d0bc46b",
+      "size_bytes": 642
+    },
+    "report.md": {
+      "sha256": "13d1d9470b98941daf5da5554901db2236038a09958264d94a7c54ec8d9acae6",
+      "size_bytes": 880
+    },
+    "verdict.json": {
+      "sha256": "a64cbf1a502a31a6b11b9ceb2d0e341c9cb31016960e4e6c322dd552997dec2a",
+      "size_bytes": 1971
+    }
+  },
+  "run_id": "risk-engine-2026-08-18-v4",
+  "schema_version": "crypto-grid-run-checksums-v1",
+  "stage": "risk_engine"
+}

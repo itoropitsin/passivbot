@@ -1,0 +1,41 @@
+{
+  "eligible_for_historical_selection": false,
+  "exchange": "bitget",
+  "notes": [
+    "No rows were synthesized, interpolated, or copied from another exchange.",
+    "A complete observed subrange is not sufficient; the requested window must be complete.",
+    "Rows whose symbol differs from the requested symbol are excluded and block eligibility."
+  ],
+  "quality": {
+    "actual_rows": 270,
+    "complete_between_observed_bounds": true,
+    "complete_requested_window": false,
+    "duplicate_rows": 0,
+    "expected_interval_hours": 8,
+    "expected_rows": 2332,
+    "first_timestamp_ms": 1779177600000,
+    "foreign_symbol_rows": 0,
+    "future_rows": 0,
+    "interval_gaps": 0,
+    "invalid_rows": 0,
+    "last_timestamp_ms": 1786924800000,
+    "missing_rows": 2062,
+    "outside_requested_range": 0,
+    "requested_symbol": "BTCUSDT",
+    "rows": 270,
+    "unexpected_in_range_rows": 0
+  },
+  "requested_end_utc": "2026-08-17T00:00:00+00:00",
+  "requested_start_utc": "2024-07-01T00:00:00+00:00",
+  "schema_version": "bitget-funding-archive-validation-v1",
+  "source": {
+    "input_format": "json",
+    "kind": "external_archive",
+    "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_public_execution_inputs_2024-07-01_to_2026-08-17-repaired-pagination-v2.json",
+    "raw_rows": 270,
+    "sha256": "814551529b111f60be06f3997cebbf2002a8e4292ad551e1dfa938c9ba3cc9fd",
+    "url": "https://www.bitget.com/api-doc/uta/public/Get-History-Funding-Rate"
+  },
+  "status": "blocked",
+  "symbol": "BTCUSDT"
+}

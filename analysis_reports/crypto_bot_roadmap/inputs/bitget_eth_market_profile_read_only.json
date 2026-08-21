@@ -1,0 +1,261 @@
+{
+  "account_controls": {
+    "ip_allowlist_enabled": null,
+    "source": "must be confirmed from API-key settings; not inferred from account data",
+    "withdrawals_enabled": null
+  },
+  "category": "USDT-FUTURES",
+  "collected_at_utc": "2026-08-17T02:46:46+00:00",
+  "errors": {
+    "account_assets": {
+      "error_type": "ExchangeError",
+      "message": "bitget {\"code\":\"40084\",\"msg\":\"You are in Classic Account mode, and the Unified Account API is not supported at this time\",\"requestTime\":1786934804148,\"data\":null}"
+    },
+    "account_fee_rate": {
+      "error_type": "ExchangeError",
+      "message": "bitget {\"code\":\"40084\",\"msg\":\"You are in Classic Account mode, and the Unified Account API is not supported at this time\",\"requestTime\":1786934804779,\"data\":null}"
+    },
+    "account_settings": {
+      "error_type": "ExchangeError",
+      "message": "bitget {\"code\":\"40084\",\"msg\":\"You are in Classic Account mode, and the Unified Account API is not supported at this time\",\"requestTime\":1786934804470,\"data\":null}"
+    }
+  },
+  "exchange": "bitget",
+  "normalized": {
+    "account_mode": "classic",
+    "collateral_currency": "USDT",
+    "leverage_long": null,
+    "leverage_short": null,
+    "margin_mode": null,
+    "position_mode": null
+  },
+  "plan_date": "2026-08-17",
+  "read_only_endpoints": {
+    "account_assets": "private_uta_get_v3_account_assets",
+    "account_fee_rate": "private_uta_get_v3_account_fee_rate",
+    "account_settings": "private_uta_get_v3_account_settings",
+    "market_current_fund_rate": "public_uta_get_v3_market_current_fund_rate",
+    "market_instruments": "public_uta_get_v3_market_instruments",
+    "market_position_tier": "public_uta_get_v3_market_position_tier",
+    "market_tickers": "public_uta_get_v3_market_tickers"
+  },
+  "read_only_only": true,
+  "reason": "The API key is in Classic Account mode; UTA isolated hedge trading cannot be authorized for this key.",
+  "response_sha256": {
+    "market_current_fund_rate": "82349fa860c4ee87834f61efca22cf5da1c99488de2924e22cc79674b2fcb264",
+    "market_instruments": "9725aeab3228e6794eb99917d4d0254c046821b58b8e1e02ad88a4db8a02b3a0",
+    "market_position_tier": "ced276d6770a05b37bc2fd1953bd50267986e809d0e0c9df58cd8943788dc7cd",
+    "market_tickers": "704c381c381850c47eb2dcad4d628f4a660a34a36ab3e5b69ebe30253a436a50"
+  },
+  "responses": {
+    "market_current_fund_rate": {
+      "code": "00000",
+      "data": [
+        {
+          "cashDividend": null,
+          "cashDividendNextUpdate": null,
+          "fundingRate": "0.000081",
+          "fundingRateInterval": "8",
+          "maxFundingRate": "0.003",
+          "minFundingRate": "-0.003",
+          "nextUpdate": "1786953600000",
+          "symbol": "ETHUSDT"
+        }
+      ],
+      "msg": "success",
+      "requestTime": "1786934806298"
+    },
+    "market_instruments": {
+      "code": "00000",
+      "data": [
+        {
+          "baseCoin": "ETH",
+          "buyLimitPriceRatio": "0.05",
+          "category": "USDT-FUTURES",
+          "deliveryPeriod": "",
+          "deliveryStartTime": "",
+          "deliveryTime": "",
+          "feeRateUpRatio": "0.005",
+          "fundInterval": "8",
+          "isRwa": "NO",
+          "launchTime": "0",
+          "limitOpenTime": "-1",
+          "maintainTime": "",
+          "makerFeeRate": "0.0002",
+          "maxLeverage": "150",
+          "maxMarketOrderQty": "1900",
+          "maxOrderQty": "9900",
+          "maxPositionNum": "200",
+          "maxProductOrderNum": "400",
+          "maxSymbolOrderNum": "",
+          "minLeverage": "1",
+          "minOrderAmount": "5",
+          "minOrderQty": "0.01",
+          "offTime": "-1",
+          "openCostUpRatio": "0.01",
+          "priceMultiplier": "0.01",
+          "pricePrecision": "2",
+          "quantityMultiplier": "0.01",
+          "quantityPrecision": "2",
+          "quoteCoin": "USDT",
+          "quotePrecision": "",
+          "sellLimitPriceRatio": "0.05",
+          "status": "online",
+          "symbol": "ETHUSDT",
+          "symbolType": "crypto",
+          "takerFeeRate": "0.0006",
+          "type": "perpetual"
+        }
+      ],
+      "msg": "success",
+      "requestTime": "1786934805376"
+    },
+    "market_position_tier": {
+      "code": "00000",
+      "data": [
+        {
+          "leverage": "150",
+          "maxTierValue": "200000",
+          "minTierValue": "0",
+          "mmr": "0.004",
+          "tier": "1"
+        },
+        {
+          "leverage": "100",
+          "maxTierValue": "1000000",
+          "minTierValue": "200000",
+          "mmr": "0.005",
+          "tier": "2"
+        },
+        {
+          "leverage": "75",
+          "maxTierValue": "3000000",
+          "minTierValue": "1000000",
+          "mmr": "0.01",
+          "tier": "3"
+        },
+        {
+          "leverage": "50",
+          "maxTierValue": "12000000",
+          "minTierValue": "3000000",
+          "mmr": "0.015",
+          "tier": "4"
+        },
+        {
+          "leverage": "25",
+          "maxTierValue": "40000000",
+          "minTierValue": "12000000",
+          "mmr": "0.02",
+          "tier": "5"
+        },
+        {
+          "leverage": "20",
+          "maxTierValue": "70000000",
+          "minTierValue": "40000000",
+          "mmr": "0.03",
+          "tier": "6"
+        },
+        {
+          "leverage": "10",
+          "maxTierValue": "100000000",
+          "minTierValue": "70000000",
+          "mmr": "0.05",
+          "tier": "7"
+        },
+        {
+          "leverage": "8",
+          "maxTierValue": "150000000",
+          "minTierValue": "100000000",
+          "mmr": "0.07",
+          "tier": "8"
+        },
+        {
+          "leverage": "7",
+          "maxTierValue": "200000000",
+          "minTierValue": "150000000",
+          "mmr": "0.08",
+          "tier": "9"
+        },
+        {
+          "leverage": "6",
+          "maxTierValue": "250000000",
+          "minTierValue": "200000000",
+          "mmr": "0.09",
+          "tier": "10"
+        },
+        {
+          "leverage": "5",
+          "maxTierValue": "300000000",
+          "minTierValue": "250000000",
+          "mmr": "0.12",
+          "tier": "11"
+        },
+        {
+          "leverage": "4",
+          "maxTierValue": "400000000",
+          "minTierValue": "300000000",
+          "mmr": "0.15",
+          "tier": "12"
+        },
+        {
+          "leverage": "3",
+          "maxTierValue": "500000000",
+          "minTierValue": "400000000",
+          "mmr": "0.2",
+          "tier": "13"
+        },
+        {
+          "leverage": "2",
+          "maxTierValue": "800000000",
+          "minTierValue": "500000000",
+          "mmr": "0.3",
+          "tier": "14"
+        },
+        {
+          "leverage": "1",
+          "maxTierValue": "1200000000",
+          "minTierValue": "800000000",
+          "mmr": "0.6",
+          "tier": "15"
+        }
+      ],
+      "msg": "success",
+      "requestTime": "1786934805681"
+    },
+    "market_tickers": {
+      "code": "00000",
+      "data": [
+        {
+          "ask1Price": "1895.43",
+          "ask1Size": "31.35",
+          "bid1Price": "1895.42",
+          "bid1Size": "172.29",
+          "category": "USDT-FUTURES",
+          "deliveryStartTime": "",
+          "deliveryStatus": "",
+          "deliveryTime": "",
+          "fundingRate": "0.000081",
+          "highPrice24h": "1896.4",
+          "indexPrice": "1896.3465",
+          "lastPrice": "1895.42",
+          "lowPrice24h": "1868.23",
+          "markPrice": "1895.42",
+          "openInterest": "789896.600000001115",
+          "openPrice24h": "1883.04",
+          "price24hPcnt": "0.00657",
+          "symbol": "ETHUSDT",
+          "ts": "1786934805076",
+          "turnover24h": "477486800.485",
+          "volume24h": "253579.59"
+        }
+      ],
+      "msg": "success",
+      "requestTime": "1786934805990"
+    }
+  },
+  "schema_version": "bitget-uta-market-profile-v1",
+  "status": "failed_uta_account_mode",
+  "symbol": "ETHUSDT",
+  "trading_operations_count": 0,
+  "user": "bitget_01"
+}

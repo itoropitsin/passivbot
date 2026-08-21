@@ -1,0 +1,34 @@
+{
+  "risk_contract_implemented": true,
+  "risk_snapshot_contract_present": true,
+  "parity_harness_present": true,
+  "live_tester_decisions_identical": false,
+  "risk_limits_enforced_in_live_and_tester": false,
+  "risk_parity_reached": false,
+  "risk_contract_fails_closed_on_mismatch": true,
+  "adapter_status": {
+    "fixture_boundary": "connected_regression_only",
+    "python_live_gate_exporter": "connected_after_actual_gate",
+    "rust_backtest_gate_trace": "connected_before_order_distribution",
+    "rust_risk_snapshot": "connected_before_pending_order_queue_clear",
+    "risk_trace_adapter": "connected_read_only",
+    "harness_actual_trace_mode": "connected_read_only_full_decision_set",
+    "rust_snapshot_failure_behavior": "new entries blocked; close orders retained",
+    "canonical_snapshot": "same_state_hash_match_in_actual_probe",
+    "stable_order_id": "aligned_for_distinct_semantic_requests; duplicate_semantics_fail_closed",
+    "canonical_decisions": "actual_probe_completed_with_5_of_6_mismatches"
+  },
+  "actual_probe": {
+    "report_path": "actual_risk_parity_probe_2026-08-17/report.json",
+    "snapshot_hash": "c66bc9db3de9362d054d703bc67eccf158f0ad93e1fa9513e185073f249f6002",
+    "trace_records": 6,
+    "matching_decisions": 1,
+    "mismatching_decisions": 5,
+    "initial_entry": "match_allow",
+    "grid_entries": "rust_allow_python_deny",
+    "trading_operations_count": 0
+  },
+  "candidate_admission": false,
+  "trading_operations_count": 0,
+  "reason": "A same-state read-only probe now runs the production Python portfolio-risk method and the Rust Backtest gate. The canonical snapshot hash and distinct order identities match. The initial entry matches, but five grid decisions differ because Python requires an actual liquidation-distance measurement for non-initial entries while Rust evaluates a projected post-entry position. The contract remains failed until this projected liquidation-distance calculation is reconciled without weakening either side's limits."
+}

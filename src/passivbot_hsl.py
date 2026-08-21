@@ -275,6 +275,10 @@ def _equity_hard_stop_signal_values(
 
 
 def _equity_hard_stop_latch_path(self, pside: str) -> str:
+    runtime_path = getattr(self, "_runtime_path", None)
+    config = getattr(self, "config", None)
+    if callable(runtime_path) and isinstance(config, dict) and config.get("_runtime_root"):
+        return runtime_path(f"caches/equity_hard_stop/{self.exchange}/{self.user}_{pside}.json")
     return make_get_filepath(f"caches/equity_hard_stop/{self.exchange}/{self.user}_{pside}.json")
 
 

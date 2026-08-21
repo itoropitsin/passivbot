@@ -2109,6 +2109,12 @@ async def main():
         help_all=help_all,
         group_map=group_map,
     )
+    group_map["Optimizer"].add_argument(
+        "--seed",
+        type=int,
+        default=None,
+        help="Deterministic random seed for this independent optimizer run.",
+    )
     optimize_common_group = group_map["Optimize Common"]
     optimize_common_group.add_argument(
         "-l",
@@ -2133,6 +2139,11 @@ async def main():
     raw_args = merge_negative_cli_values(expand_help_all_argv(raw_argv))
     raw_args = _normalize_optional_bool_flag(raw_args, "--suite")
     args = parser.parse_args(raw_args)
+    if args.seed is not None:
+        if not 0 <= args.seed <= (2**32 - 1):
+            parser.error("--seed must be between 0 and 4294967295")
+        random.seed(args.seed)
+        np.random.seed(args.seed)
     initial_log_level = resolve_log_level(args.log_level, None, fallback=1)
     configure_logging(debug=initial_log_level)
     source_config, base_config_path, raw_snapshot = load_input_config(args.config_path)

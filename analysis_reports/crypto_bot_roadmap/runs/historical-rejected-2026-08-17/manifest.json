@@ -1,0 +1,41 @@
+{
+  "code": {
+    "dirty_diff_sha256": "2dd783b8d9916d96effc2023917bfe5b3ebbea41f0e29c5f1a2bbccbbe1b82b7",
+    "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+    "git_dirty": true
+  },
+  "command": [
+    "passivbot",
+    "tool",
+    "research-gates",
+    "--run-id",
+    "historical-rejected-2026-08-17",
+    "--stage",
+    "historical",
+    "--metrics",
+    "analysis_reports/crypto_bot_roadmap/historical_metrics_rejected_2026-08-17.json",
+    "--config",
+    "analysis_reports/bitget_profit_1000_walkforward_2024train_dd25/configs/bitget_profit_1000_walkforward_2024train_dd25_seeded.json",
+    "--dataset",
+    "analysis_reports/bitget_profit_1000_walkforward_2024train_dd25/validation/validation_results.json",
+    "--market-profile",
+    "analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_read_only.json",
+    "--execution-inputs",
+    "analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_public_execution_inputs_2024-07-01_to_2026-08-17-repaired-pagination-v2.json",
+    "--output-dir",
+    "analysis_reports/crypto_bot_roadmap/runs",
+    "--overwrite"
+  ],
+  "created_at_utc": "2026-08-17T02:32:35+00:00",
+  "inputs": {
+    "config_sha256": "05f92bcb1e3df7e6d8cf8146a7a964c7afd6ba35191dea5e8fdb912aab6d5104",
+    "dataset_sha256": "196aa1a052d71b23687e464effbea23d25241e8eccf0950987003a6bc560f50b",
+    "execution_inputs_sha256": "8f1c04932f03ed35f12aa1dc675f8f5bdd91479a29807abd1b5060c72718fda7",
+    "market_profile_sha256": "7c36c253af60590f51a44116e616048d7e686e2b25e6aed8346f8ee6592b5424"
+  },
+  "plan_date": "2026-08-17",
+  "random_seeds": [],
+  "run_id": "historical-rejected-2026-08-17",
+  "schema_version": "crypto-grid-experiment-v1",
+  "stage": "historical"
+}

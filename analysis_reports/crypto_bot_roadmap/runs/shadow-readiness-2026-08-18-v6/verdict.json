@@ -1,0 +1,259 @@
+{
+  "blocked_count": 6,
+  "check_status": "failed",
+  "failed_count": 8,
+  "gate_count": 32,
+  "gates": [
+    {
+      "actual": "crypto-strategy-shadow-evidence-v1",
+      "id": "shadow_readiness.evidence_schema_version",
+      "limit": "crypto-strategy-shadow-evidence-v1",
+      "metric": "shadow_evidence_schema_version",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": "passed",
+      "id": "shadow_readiness.evidence_status",
+      "limit": "passed",
+      "metric": "shadow_evidence_status",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": false,
+      "id": "shadow_readiness.candidate_admission",
+      "limit": false,
+      "metric": "shadow_candidate_admission",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "shadow_readiness.read_only",
+      "limit": true,
+      "metric": "shadow_read_only",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": 0,
+      "id": "shadow_readiness.external_network_calls",
+      "limit": 0,
+      "metric": "shadow_external_network_calls",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": 0,
+      "id": "shadow_readiness.private_requests",
+      "limit": 0,
+      "metric": "shadow_private_requests",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": 0,
+      "id": "shadow_readiness.trading_operations_count",
+      "limit": 0,
+      "metric": "shadow_trading_operations_count",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": 0,
+      "id": "shadow_readiness.public_write_calls",
+      "limit": 0,
+      "metric": "shadow_public_write_calls",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": "passed",
+      "id": "shadow_readiness.determinism_status",
+      "limit": "passed",
+      "metric": "shadow_determinism_status",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "shadow_readiness.input_provenance_present",
+      "limit": true,
+      "metric": "shadow_input_provenance_present",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "shadow_readiness.artifact_provenance_present",
+      "limit": true,
+      "metric": "shadow_artifact_provenance_present",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": 0.03333333333333333,
+      "id": "shadow_readiness.duration_hours",
+      "limit": 24,
+      "metric": "shadow_duration_hours",
+      "operator": ">=",
+      "status": "failed"
+    },
+    {
+      "actual": 4,
+      "id": "shadow_readiness.planned_orders",
+      "limit": 20,
+      "metric": "shadow_planned_orders",
+      "operator": ">=",
+      "status": "failed"
+    },
+    {
+      "actual": 0,
+      "id": "shadow_readiness.restart_count",
+      "limit": 5,
+      "metric": "shadow_restart_count",
+      "operator": ">=",
+      "status": "failed"
+    },
+    {
+      "actual": null,
+      "id": "shadow_readiness.max_restart_recovery_seconds",
+      "metric": "shadow_max_restart_recovery_seconds",
+      "reason": "invalid_metric",
+      "status": "blocked"
+    },
+    {
+      "actual": 0,
+      "id": "shadow_readiness.duplicate_orders",
+      "limit": 0,
+      "metric": "shadow_duplicate_orders",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": 0,
+      "id": "shadow_readiness.unknown_positions",
+      "limit": 0,
+      "metric": "shadow_unknown_positions",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": 0,
+      "id": "shadow_readiness.private_calls",
+      "limit": 0,
+      "metric": "shadow_private_calls",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": 0,
+      "id": "shadow_readiness.order_creates",
+      "limit": 0,
+      "metric": "shadow_order_creates",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": 0,
+      "id": "shadow_readiness.transfers",
+      "limit": 0,
+      "metric": "shadow_transfers",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "shadow_readiness.events_present",
+      "limit": true,
+      "metric": "shadow_events_present",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": 3,
+      "id": "shadow_readiness.determinism_runs",
+      "limit": 3,
+      "metric": "shadow_determinism_runs",
+      "operator": ">=",
+      "status": "passed"
+    },
+    {
+      "actual": false,
+      "id": "shadow_readiness.process_evidence_present",
+      "limit": true,
+      "metric": "shadow_process_evidence_present",
+      "operator": "==",
+      "status": "failed"
+    },
+    {
+      "actual": null,
+      "id": "shadow_readiness.process_supervisor_status",
+      "limit": "passed",
+      "metric": "shadow_process_supervisor_status",
+      "operator": "==",
+      "status": "failed"
+    },
+    {
+      "id": "shadow_readiness.wall_clock_duration_seconds",
+      "metric": "shadow_wall_clock_duration_seconds",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "shadow_readiness.process_restart_status",
+      "metric": "shadow_process_restart_status",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "shadow_readiness.process_restart_count",
+      "metric": "shadow_process_restart_count",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "shadow_readiness.process_max_recovery_seconds",
+      "metric": "shadow_process_max_recovery_seconds",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "shadow_readiness.process_duplicate_state_count",
+      "metric": "shadow_process_duplicate_state_count",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "actual": false,
+      "id": "shadow_readiness.process_code_hash_matches_current",
+      "limit": true,
+      "metric": "shadow_process_code_hash_matches_current",
+      "operator": "==",
+      "status": "failed"
+    },
+    {
+      "actual": false,
+      "id": "shadow_readiness.process_config_hash_matches_config",
+      "limit": true,
+      "metric": "shadow_process_config_hash_matches_config",
+      "operator": "==",
+      "status": "failed"
+    },
+    {
+      "actual": false,
+      "id": "shadow_readiness.process_input_hash_matches_dataset",
+      "limit": true,
+      "metric": "shadow_process_input_hash_matches_dataset",
+      "operator": "==",
+      "status": "failed"
+    }
+  ],
+  "outcome": "failed",
+  "passed_count": 18,
+  "schema_version": "crypto-grid-experiment-v1",
+  "stage": "shadow_readiness",
+  "stage_admission_status": "failed",
+  "status": "failed"
+}

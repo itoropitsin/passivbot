@@ -1,0 +1,77 @@
+{
+  "blocked_count": 11,
+  "failed_count": 0,
+  "gate_count": 11,
+  "gates": [
+    {
+      "id": "profile.read_only_check",
+      "metric": "read_only_check",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "profile.account_mode_uta",
+      "metric": "account_mode_uta",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "profile.position_mode_hedge",
+      "metric": "position_mode_hedge",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "profile.margin_mode_isolated",
+      "metric": "margin_mode_isolated",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "profile.collateral_usdt",
+      "metric": "collateral_usdt",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "profile.borrowing_disabled",
+      "metric": "borrowing_disabled",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "profile.withdrawals_disabled",
+      "metric": "withdrawals_disabled",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "profile.ip_allowlist_enabled",
+      "metric": "ip_allowlist_enabled",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "profile.separate_long_short_leverage",
+      "metric": "separate_long_short_leverage",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "profile.raw_responses_hashed",
+      "metric": "raw_responses_hashed",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "profile.trading_operations_count_zero",
+      "metric": "trading_operations_count_zero",
+      "reason": "missing_metric",
+      "status": "blocked"
+    }
+  ],
+  "passed_count": 0,
+  "schema_version": "crypto-grid-experiment-v1",
+  "stage": "profile",
+  "status": "blocked"
+}

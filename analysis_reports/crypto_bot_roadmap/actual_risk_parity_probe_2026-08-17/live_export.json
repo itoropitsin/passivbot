@@ -1,0 +1,198 @@
+{
+  "candidate_admission": false,
+  "decisions": [
+    {
+      "decision": "allow",
+      "engine": "python-live-gate",
+      "order_identity": {
+        "execution_type": "limit",
+        "order_id": "risk-order-v1:BTC/USDT:USDT:long:buy:entry_initial_normal_long:limit:ro=0:panic=0:0.191:100:0",
+        "order_side": "buy",
+        "panic_close": false,
+        "position_side": "long",
+        "price": "100",
+        "qty": "0.191",
+        "reduce_only": false,
+        "strategy_order_type": "entry_initial_normal_long",
+        "symbol": "BTC/USDT:USDT"
+      },
+      "reason": "portfolio_risk_gate_allow",
+      "risk_metrics": {
+        "daily_loss_ratio": "0",
+        "hsl_state": "disabled",
+        "requested_notional": "19.1"
+      },
+      "schema_version": "risk-decision-v1",
+      "side": "long",
+      "snapshot_hash": "c66bc9db3de9362d054d703bc67eccf158f0ad93e1fa9513e185073f249f6002"
+    },
+    {
+      "decision": "allow",
+      "engine": "python-live-gate",
+      "order_identity": {
+        "execution_type": "limit",
+        "order_id": "risk-order-v1:BTC/USDT:USDT:long:buy:entry_grid_normal_long:limit:ro=0:panic=0:0.191:97.900000000000006:0",
+        "order_side": "buy",
+        "panic_close": false,
+        "position_side": "long",
+        "price": "97.9",
+        "qty": "0.191",
+        "reduce_only": false,
+        "strategy_order_type": "entry_grid_normal_long",
+        "symbol": "BTC/USDT:USDT"
+      },
+      "reason": "portfolio_risk_gate_allow",
+      "risk_metrics": {
+        "daily_loss_ratio": "0",
+        "hsl_state": "disabled",
+        "requested_notional": "18.698900000000002"
+      },
+      "schema_version": "risk-decision-v1",
+      "side": "long",
+      "snapshot_hash": "c66bc9db3de9362d054d703bc67eccf158f0ad93e1fa9513e185073f249f6002"
+    },
+    {
+      "decision": "allow",
+      "engine": "python-live-gate",
+      "order_identity": {
+        "execution_type": "limit",
+        "order_id": "risk-order-v1:BTC/USDT:USDT:long:buy:entry_grid_normal_long:limit:ro=0:panic=0:0.382:96.799999999999997:0",
+        "order_side": "buy",
+        "panic_close": false,
+        "position_side": "long",
+        "price": "96.8",
+        "qty": "0.382",
+        "reduce_only": false,
+        "strategy_order_type": "entry_grid_normal_long",
+        "symbol": "BTC/USDT:USDT"
+      },
+      "reason": "portfolio_risk_gate_allow",
+      "risk_metrics": {
+        "daily_loss_ratio": "0",
+        "hsl_state": "disabled",
+        "requested_notional": "36.9776"
+      },
+      "schema_version": "risk-decision-v1",
+      "side": "long",
+      "snapshot_hash": "c66bc9db3de9362d054d703bc67eccf158f0ad93e1fa9513e185073f249f6002"
+    },
+    {
+      "decision": "allow",
+      "engine": "python-live-gate",
+      "order_identity": {
+        "execution_type": "limit",
+        "order_id": "risk-order-v1:BTC/USDT:USDT:long:buy:entry_grid_normal_long:limit:ro=0:panic=0:0.764:95.599999999999994:0",
+        "order_side": "buy",
+        "panic_close": false,
+        "position_side": "long",
+        "price": "95.6",
+        "qty": "0.764",
+        "reduce_only": false,
+        "strategy_order_type": "entry_grid_normal_long",
+        "symbol": "BTC/USDT:USDT"
+      },
+      "reason": "portfolio_risk_gate_allow",
+      "risk_metrics": {
+        "daily_loss_ratio": "0",
+        "hsl_state": "disabled",
+        "requested_notional": "73.0384"
+      },
+      "schema_version": "risk-decision-v1",
+      "side": "long",
+      "snapshot_hash": "c66bc9db3de9362d054d703bc67eccf158f0ad93e1fa9513e185073f249f6002"
+    },
+    {
+      "decision": "allow",
+      "engine": "python-live-gate",
+      "order_identity": {
+        "execution_type": "limit",
+        "order_id": "risk-order-v1:BTC/USDT:USDT:long:buy:entry_grid_normal_long:limit:ro=0:panic=0:1.528:94.299999999999997:0",
+        "order_side": "buy",
+        "panic_close": false,
+        "position_side": "long",
+        "price": "94.3",
+        "qty": "1.528",
+        "reduce_only": false,
+        "strategy_order_type": "entry_grid_normal_long",
+        "symbol": "BTC/USDT:USDT"
+      },
+      "reason": "portfolio_risk_gate_allow",
+      "risk_metrics": {
+        "daily_loss_ratio": "0",
+        "hsl_state": "disabled",
+        "requested_notional": "144.0904"
+      },
+      "schema_version": "risk-decision-v1",
+      "side": "long",
+      "snapshot_hash": "c66bc9db3de9362d054d703bc67eccf158f0ad93e1fa9513e185073f249f6002"
+    },
+    {
+      "decision": "allow",
+      "engine": "python-live-gate",
+      "order_identity": {
+        "execution_type": "limit",
+        "order_id": "risk-order-v1:BTC/USDT:USDT:long:buy:entry_grid_cropped_long:limit:ro=0:panic=0:1.556:92.700000000000003:0",
+        "order_side": "buy",
+        "panic_close": false,
+        "position_side": "long",
+        "price": "92.7",
+        "qty": "1.556",
+        "reduce_only": false,
+        "strategy_order_type": "entry_grid_cropped_long",
+        "symbol": "BTC/USDT:USDT"
+      },
+      "reason": "portfolio_risk_gate_allow",
+      "risk_metrics": {
+        "daily_loss_ratio": "0",
+        "hsl_state": "disabled",
+        "requested_notional": "144.24120000000002"
+      },
+      "schema_version": "risk-decision-v1",
+      "side": "long",
+      "snapshot_hash": "c66bc9db3de9362d054d703bc67eccf158f0ad93e1fa9513e185073f249f6002"
+    }
+  ],
+  "reason": "actual Python live risk gate decisions exported",
+  "snapshot": {
+    "as_of_ms": "1704067380000",
+    "balance": {
+      "available": "1000",
+      "equity": "1000"
+    },
+    "daily_loss": {
+      "ratio": "0"
+    },
+    "hsl": {
+      "long": {
+        "state": "disabled"
+      },
+      "short": {
+        "state": "disabled"
+      }
+    },
+    "leverage": {
+      "long": "3",
+      "short": "3"
+    },
+    "margin_tiers": [
+      {
+        "maintenance_margin_rate": "0.005",
+        "max_notional": "200000",
+        "min_notional": "0",
+        "symbol": "BTC/USDT:USDT",
+        "tier": "1"
+      }
+    ],
+    "mark_prices": {
+      "BTC/USDT:USDT": "100"
+    },
+    "pending_orders": [],
+    "positions": {
+      "long": [],
+      "short": []
+    },
+    "schema_version": "risk-snapshot-v1"
+  },
+  "status": "passed",
+  "trading_operations_count": 0
+}

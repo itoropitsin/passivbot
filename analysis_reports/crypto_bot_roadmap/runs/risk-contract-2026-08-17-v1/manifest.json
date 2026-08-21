@@ -1,0 +1,39 @@
+{
+  "code": {
+    "dirty_diff_sha256": "7e3b0ccc27801eae1bd13246e9d2014c217212b7bfa6f8f83757d9a93353aafa",
+    "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+    "git_dirty": true
+  },
+  "command": [
+    "passivbot",
+    "tool",
+    "research-gates",
+    "--run-id",
+    "risk-contract-2026-08-17-v1",
+    "--stage",
+    "risk_contract",
+    "--metrics",
+    "analysis_reports/crypto_bot_roadmap/baseline_metrics_2026-08-17-v13.json",
+    "--config",
+    "analysis_reports/crypto_bot_roadmap/runs/baseline-2026-08-17-v16/config.json",
+    "--dataset",
+    "analysis_reports/crypto_bot_roadmap/inputs",
+    "--output-dir",
+    "analysis_reports/crypto_bot_roadmap/runs",
+    "--repo-root",
+    "."
+  ],
+  "created_at_utc": "2026-08-17T10:37:14+00:00",
+  "inputs": {
+    "account_profile_sha256": null,
+    "config_sha256": "7eb752600e60e12600870178806ecac123a8ae1566b0997f00aec662505f29c8",
+    "dataset_sha256": "c16f052e7c2eb17ac8ce8dbec152e05a4ff20c9fc64615d41ec2713ce941f928",
+    "execution_inputs_sha256": null,
+    "market_profile_sha256": null
+  },
+  "plan_date": "2026-08-17",
+  "random_seeds": [],
+  "run_id": "risk-contract-2026-08-17-v1",
+  "schema_version": "crypto-grid-experiment-v1",
+  "stage": "risk_contract"
+}

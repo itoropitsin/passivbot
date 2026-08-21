@@ -1,0 +1,75 @@
+{
+  "blocked_count": 0,
+  "failed_count": 1,
+  "gate_count": 8,
+  "gates": [
+    {
+      "actual": true,
+      "id": "risk_contract.risk_contract_implemented",
+      "limit": true,
+      "metric": "risk_contract_implemented",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_contract.risk_snapshot_contract_present",
+      "limit": true,
+      "metric": "risk_snapshot_contract_present",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_contract.parity_harness_present",
+      "limit": true,
+      "metric": "parity_harness_present",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_contract.live_tester_decisions_identical",
+      "limit": true,
+      "metric": "live_tester_decisions_identical",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_contract.risk_limits_enforced_in_live_and_tester",
+      "limit": true,
+      "metric": "risk_limits_enforced_in_live_and_tester",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_contract.risk_parity_reached",
+      "limit": true,
+      "metric": "risk_parity_reached",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_contract.risk_contract_fails_closed_on_mismatch",
+      "limit": true,
+      "metric": "risk_contract_fails_closed_on_mismatch",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": false,
+      "id": "risk_contract.risk_model_surface_validated",
+      "limit": true,
+      "metric": "risk_model_surface_validated",
+      "operator": "==",
+      "status": "failed"
+    }
+  ],
+  "passed_count": 7,
+  "schema_version": "crypto-grid-experiment-v1",
+  "stage": "risk_contract",
+  "status": "failed"
+}

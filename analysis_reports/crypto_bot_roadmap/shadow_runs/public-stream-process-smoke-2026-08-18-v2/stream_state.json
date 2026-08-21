@@ -1,0 +1,15 @@
+{
+  "category": "USDT-FUTURES",
+  "depth": 20,
+  "fixture_mode": false,
+  "heartbeat_count": 0,
+  "ingest_seq": 6,
+  "last_observed_at_ms": 1787036816173,
+  "last_source_event_id": "4fe9d86c8e9d258c928a5818c44f9e37c50f02437ed25fde7ca09fba933d79cd",
+  "last_source_timestamp_ms": 1787036816749,
+  "market_event_count": 6,
+  "policy_config_hash": "78807100d6ea95cdd9bf951946c0dedae5df4b7020ba704a6c15161dc2e6065d",
+  "schema_version": "crypto-strategy-shadow-stream-v1",
+  "side": "long",
+  "symbol": "BTCUSDT"
+}

@@ -1,0 +1,11 @@
+{
+  "candidate_admission": false,
+  "live_tester_decisions_identical": true,
+  "parity_harness_present": true,
+  "read_only": true,
+  "risk_engine_fails_closed_on_mismatch": true,
+  "risk_engine_implemented": true,
+  "risk_snapshot_contract_present": true,
+  "surface_probe_path": "production-risk-evidence-2026-08-21-v1/surface_probe.json",
+  "trading_operations_count": 0
+}

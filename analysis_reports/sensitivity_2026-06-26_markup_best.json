@@ -1,0 +1,13 @@
+{
+  "name": "close_markup_end_0.0136",
+  "value_num": 0.0136,
+  "adg": 0.000158078710873,
+  "drawdown_pct": 9.4950002855043,
+  "final_equity": 528.0667,
+  "gain_pct_equity": NaN,
+  "fills": 215,
+  "fees": -7.449657519999999,
+  "net_pnl": 50.54964248000006,
+  "backtest_dir": "backtests/binance/2026-06-26T21_26_44",
+  "config": NaN
+}

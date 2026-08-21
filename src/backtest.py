@@ -465,6 +465,7 @@ class BacktestExecutionSettings:
     market_order_slippage_pct: float
     pnls_max_lookback_days: str | float
     pnls_max_lookback_days_backtest_value: float
+    execution_model: dict[str, Any]
 
 
 @dataclass
@@ -559,6 +560,13 @@ def build_backtest_payload(
             hlcvs.shape[0],
             offset_bars,
         )
+
+    execution_settings = _materialize_execution_model_inputs(
+        execution_settings,
+        timestamps=timestamps,
+        coins=coins_order,
+    )
+    backtest_params["execution_model"] = dict(execution_settings.execution_model)
 
     # Inject first timestamp (ms) into backtest params; default to 0 if unknown
     try:
@@ -731,7 +739,7 @@ def execute_backtest(payload: BacktestPayload, config: dict):
         )
 
     if payload.backtest_params.get("metrics_only", False):
-        payload.hard_stop_plot_data = {}
+        payload.hard_stop_plot_data = dict(hard_stop_plot_data or {})
         analysis = expand_analysis(analysis_usd, analysis_btc, None, equities_array, config)
         return None, None, analysis
 
@@ -1715,12 +1723,306 @@ def get_backtest_execution_settings(
         get_optional_live_value(config, "pnls_max_lookback_days", 30.0),
         field_name="live.pnls_max_lookback_days",
     )
+    raw_model = get_optional_config_value(config, "backtest.execution_model", {})
+    if not isinstance(raw_model, dict):
+        raise TypeError("backtest.execution_model must be a dict")
+    execution_model = {
+        "enabled": bool(raw_model.get("enabled", False)),
+        "funding_enabled": bool(raw_model.get("funding_enabled", False)),
+        "funding_missing_data": str(raw_model.get("funding_missing_data", "blocked")),
+        "mark_price_basis": str(raw_model.get("mark_price_basis", "last")),
+        "latency_ms": float(raw_model.get("latency_ms", 0.0)),
+        "partial_fill_ratios": [
+            float(value) for value in raw_model.get("partial_fill_ratios", [1.0])
+        ],
+        "adverse_same_candle_ordering": str(
+            raw_model.get("adverse_same_candle_ordering", "worst_case")
+        ),
+        "gap_stress_pct": float(raw_model.get("gap_stress_pct", 0.0)),
+        "emergency_close_slippage_pct": float(
+            raw_model.get("emergency_close_slippage_pct", 0.0)
+        ),
+        "inputs_path": raw_model.get("inputs_path"),
+        # Filled from the immutable public execution-input artifact below.
+        # An empty set is intentionally fail-closed by the Rust portfolio gate.
+        "position_tiers": [],
+    }
+    raw_portfolio_risk = get_optional_live_value(config, "portfolio_risk", {})
+    if not isinstance(raw_portfolio_risk, dict):
+        raw_portfolio_risk = {}
+    sizing_cap = get_optional_live_value(config, "sizing_balance_cap", 1000.0)
+    leverage = get_optional_live_value(config, "leverage", 3.0)
+    execution_model["portfolio_risk"] = {
+        "enabled": bool(raw_portfolio_risk.get("enabled", False)),
+        "sizing_balance_cap": float(sizing_cap or 1000.0),
+        "max_initial_entry_sizing_balance_pct": float(
+            raw_portfolio_risk.get("max_initial_entry_sizing_balance_pct", 0.03)
+        ),
+        "max_total_exposure": float(
+            raw_portfolio_risk.get(
+                "max_total_exposure_ratio",
+                raw_portfolio_risk.get("max_total_exposure", 0.80),
+            )
+        ),
+        "max_used_margin": float(
+            raw_portfolio_risk.get(
+                "max_used_margin_ratio",
+                raw_portfolio_risk.get("max_used_margin", 0.35),
+            )
+        ),
+        "max_symbol_exposure": float(
+            raw_portfolio_risk.get(
+                "max_symbol_exposure_ratio",
+                raw_portfolio_risk.get("max_symbol_exposure", 0.50),
+            )
+        ),
+        "max_active_grids": int(raw_portfolio_risk.get("max_active_grids", 2)),
+        "leverage": float(leverage or 3.0),
+        "new_entry_min_liquidation_distance": float(
+            raw_portfolio_risk.get("new_entry_min_liquidation_distance", 0.30)
+        ),
+        "reduce_only_min_liquidation_distance": float(
+            raw_portfolio_risk.get("reduce_only_min_liquidation_distance", 0.20)
+        ),
+        "emergency_liquidation_distance": float(
+            raw_portfolio_risk.get("emergency_liquidation_distance", 0.15)
+        ),
+    }
     return BacktestExecutionSettings(
         market_orders_allowed=market_orders_allowed,
         market_order_near_touch_threshold=market_order_near_touch_threshold,
         market_order_slippage_pct=market_order_slippage_pct,
         pnls_max_lookback_days=pnls_max_lookback.display_value,
         pnls_max_lookback_days_backtest_value=pnls_max_lookback.to_backtest_days_value(),
+        execution_model=execution_model,
+    )
+
+
+def _execution_input_symbol_key(value: object) -> str:
+    return re.sub(r"[^A-Z0-9]", "", str(value or "").upper())
+
+
+def _execution_input_timestamp(row: object) -> int | None:
+    raw = row.get("timestamp_ms") if isinstance(row, dict) else row[0] if row else None
+    try:
+        return int(raw)
+    except (TypeError, ValueError):
+        return None
+
+
+def _execution_input_price(row: object, *, field: str) -> float | None:
+    if isinstance(row, dict):
+        candidates = (
+            row.get(field),
+            row.get("mark_price" if field == "mark" else "index_price"),
+            row.get("markPrice" if field == "mark" else "indexPrice"),
+            row.get("close"),
+            row.get("price"),
+        )
+    else:
+        # Bitget market candle rows are [timestamp, open, high, low, close, ...].
+        candidates = (row[4] if len(row) > 4 else None,)
+    for candidate in candidates:
+        try:
+            value = float(candidate)
+        except (TypeError, ValueError):
+            continue
+        if math.isfinite(value) and value > 0.0:
+            return value
+    return None
+
+
+def _execution_input_symbol_aliases(value: object) -> set[str]:
+    key = _execution_input_symbol_key(value)
+    aliases = {key} if key else set()
+    for quote in ("USDT", "USDC"):
+        doubled = quote + quote
+        if key.endswith(doubled):
+            aliases.add(key[: -len(quote)])
+    return aliases
+
+
+def _materialize_position_tiers(payload: dict, coins: list[str]) -> list[list[dict[str, float]]]:
+    """Convert captured Bitget maintenance tiers to the Rust input shape.
+
+    The public Bitget response is symbol-specific and currently lives under
+    ``snapshots.position_tiers.data``.  The small amount of shape tolerance is
+    for future combined BTC/ETH artifacts; it never invents a tier when the
+    source is absent.
+    """
+
+    snapshots = payload.get("snapshots")
+    raw = payload.get("position_tiers")
+    if raw is None and isinstance(snapshots, dict):
+        raw = snapshots.get("position_tiers")
+
+    grouped_rows: dict[str, list[dict]] = {}
+    fallback_rows: list[dict] = []
+    if isinstance(raw, dict):
+        data = raw.get("data")
+        if isinstance(data, list):
+            rows = data
+        else:
+            rows = []
+            for symbol, values in raw.items():
+                if not isinstance(values, list):
+                    continue
+                for row in values:
+                    if isinstance(row, dict):
+                        grouped_rows.setdefault(
+                            _execution_input_symbol_key(symbol), []
+                        ).append(row)
+    elif isinstance(raw, list):
+        rows = raw
+    else:
+        rows = []
+
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        symbol_key = _execution_input_symbol_key(row.get("symbol") or payload.get("symbol"))
+        if symbol_key:
+            grouped_rows.setdefault(symbol_key, []).append(row)
+        else:
+            fallback_rows.append(row)
+
+    def parse(rows_to_parse: list[dict]) -> list[dict[str, float]]:
+        parsed: list[dict[str, float]] = []
+        for row in rows_to_parse:
+            try:
+                minimum = float(row.get("min_notional", row.get("minTierValue")))
+                maximum = float(row.get("max_notional", row.get("maxTierValue")))
+                maintenance = float(
+                    row.get("maintenance_margin_rate", row.get("mmr"))
+                )
+            except (TypeError, ValueError):
+                raise ValueError("Bitget position tier contains a non-numeric value")
+            if (
+                not math.isfinite(minimum)
+                or not math.isfinite(maximum)
+                or not math.isfinite(maintenance)
+                or minimum < 0.0
+                or maximum <= minimum
+                or maintenance < 0.0
+                or maintenance >= 1.0
+            ):
+                raise ValueError("Bitget position tier contains invalid bounds or mmr")
+            parsed.append(
+                {
+                    "min_notional": minimum,
+                    "max_notional": maximum,
+                    "maintenance_margin_rate": maintenance,
+                }
+            )
+        parsed.sort(key=lambda tier: tier["min_notional"])
+        for previous, current in zip(parsed, parsed[1:]):
+            if current["min_notional"] < previous["max_notional"]:
+                raise ValueError("Bitget position tiers overlap")
+        return parsed
+
+    fallback = parse(fallback_rows) if fallback_rows else []
+    parsed_groups = {key: parse(values) for key, values in grouped_rows.items()}
+    payload_aliases = _execution_input_symbol_aliases(payload.get("symbol"))
+    result: list[list[dict[str, float]]] = []
+    for coin in coins:
+        aliases = _execution_input_symbol_aliases(coin)
+        selected: list[dict[str, float]] = []
+        for key, values in parsed_groups.items():
+            if aliases.intersection(_execution_input_symbol_aliases(key)):
+                selected = values
+                break
+        if not selected and len(coins) == 1 and payload_aliases:
+            for key, values in parsed_groups.items():
+                if payload_aliases.intersection(_execution_input_symbol_aliases(key)):
+                    selected = values
+                    break
+        if not selected and len(coins) == 1:
+            selected = fallback
+        result.append(selected)
+    return result
+
+
+def _materialize_execution_model_inputs(
+    execution_settings: BacktestExecutionSettings,
+    *,
+    timestamps,
+    coins: list[str],
+) -> BacktestExecutionSettings:
+    """Align a recorded Bitget execution-input snapshot to the backtest grid.
+
+    The alignment is explicit: mark/index prices are carried forward only from a
+    source row at or before the candle, while a missing leading value remains NaN
+    and is rejected by the Rust runner. No market value is silently substituted.
+    """
+
+    model = dict(execution_settings.execution_model)
+    source_path = model.get("inputs_path")
+    if not source_path:
+        return execution_settings
+    if timestamps is None or len(timestamps) == 0:
+        raise ValueError("execution_model.inputs_path requires non-empty timestamps")
+    path = Path(str(source_path))
+    if not path.is_absolute():
+        path = Path.cwd() / path
+    if not path.is_file():
+        raise FileNotFoundError(f"execution model input file not found: {path}")
+    with path.open("r", encoding="utf-8") as handle:
+        payload = json.load(handle)
+    if not isinstance(payload, dict):
+        raise TypeError("execution model input file must contain a JSON object")
+
+    timestamp_grid = [int(value) for value in timestamps]
+    coin_keys = [_execution_input_symbol_key(coin) for coin in coins]
+
+    def align_rows(rows: object, *, field: str) -> list[float]:
+        grouped: dict[str, list[tuple[int, float]]] = {}
+        for row in rows if isinstance(rows, list) else []:
+            timestamp = _execution_input_timestamp(row)
+            price = _execution_input_price(row, field=field)
+            if timestamp is None or price is None:
+                continue
+            symbol = _execution_input_symbol_key(
+                row.get("symbol") if isinstance(row, dict) else payload.get("symbol")
+            )
+            grouped.setdefault(symbol, []).append((timestamp, price))
+        for values in grouped.values():
+            values.sort()
+        result: list[float] = []
+        for timestamp in timestamp_grid:
+            for coin_key in coin_keys:
+                values = grouped.get(coin_key) or grouped.get(_execution_input_symbol_key(payload.get("symbol")), [])
+                value = float("nan")
+                for row_timestamp, row_value in values:
+                    if row_timestamp > timestamp:
+                        break
+                    value = row_value
+                result.append(value)
+        return result
+
+    model["mark_prices"] = align_rows(payload.get("mark_price_history", []), field="mark")
+    model["index_prices"] = align_rows(payload.get("index_price_history", []), field="index")
+    funding_events = []
+    for row in payload.get("funding_history", []) if isinstance(payload.get("funding_history"), list) else []:
+        timestamp = _execution_input_timestamp(row)
+        if timestamp is None or not isinstance(row, dict):
+            continue
+        try:
+            rate = float(row.get("funding_rate"))
+        except (TypeError, ValueError):
+            continue
+        if math.isfinite(rate):
+            funding_events.append({"timestamp_ms": timestamp, "rate": rate})
+    funding_events.sort(key=lambda item: item["timestamp_ms"])
+    model["funding_events"] = funding_events
+    model["position_tiers"] = _materialize_position_tiers(payload, coins)
+    model["input_source_path"] = str(path)
+    return BacktestExecutionSettings(
+        market_orders_allowed=execution_settings.market_orders_allowed,
+        market_order_near_touch_threshold=execution_settings.market_order_near_touch_threshold,
+        market_order_slippage_pct=execution_settings.market_order_slippage_pct,
+        pnls_max_lookback_days=execution_settings.pnls_max_lookback_days,
+        pnls_max_lookback_days_backtest_value=execution_settings.pnls_max_lookback_days_backtest_value,
+        execution_model=model,
     )
 
 
@@ -1745,6 +2047,13 @@ def log_backtest_execution_settings(
     logging.info(
         "[backtest]   pnls_max_lookback_days = %s (live)",
         execution_settings.pnls_max_lookback_days,
+    )
+    logging.info(
+        "[backtest]   execution_model = enabled=%s basis=%s latency_ms=%s partial_fill_ratios=%s",
+        execution_settings.execution_model["enabled"],
+        execution_settings.execution_model["mark_price_basis"],
+        execution_settings.execution_model["latency_ms"],
+        execution_settings.execution_model["partial_fill_ratios"],
     )
 
 
@@ -1962,6 +2271,7 @@ def prep_backtest_args(
                 or 0.0
             ),
             "liquidation_threshold": liquidation_threshold,
+            "execution_model": dict(execution_settings.execution_model),
         }
     return bot_params_list, exchange_params, backtest_params
 

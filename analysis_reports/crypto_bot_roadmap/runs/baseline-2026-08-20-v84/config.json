@@ -1,0 +1,16 @@
+{
+  "strategy_id": "crypto-grid-shadow-stream-engineering-v1",
+  "quote": "USDT",
+  "leverage": 3.0,
+  "initial_balance": 1000.0,
+  "order_amount": 0.001,
+  "entry_offset_bps": 0.0,
+  "exit_offset_bps": 0.0,
+  "order_type": "limit",
+  "max_source_gap_seconds": 300.0,
+  "shadow_policy": {
+    "entry_bps": 5.0,
+    "take_profit_bps": 5.0,
+    "order_amount": 0.001
+  }
+}

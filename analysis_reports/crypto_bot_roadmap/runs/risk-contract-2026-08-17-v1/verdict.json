@@ -1,0 +1,42 @@
+{
+  "blocked_count": 4,
+  "failed_count": 0,
+  "gate_count": 4,
+  "gates": [
+    {
+      "id": "risk_contract.risk_contract_implemented",
+      "metric": "risk_contract_implemented",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "risk_contract.live_tester_decisions_identical",
+      "metric": "live_tester_decisions_identical",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "id": "risk_contract.risk_limits_enforced_in_live_and_tester",
+      "metric": "risk_limits_enforced_in_live_and_tester",
+      "reason": "missing_metric",
+      "status": "blocked"
+    },
+    {
+      "blockers": [
+        {
+          "stage": "baseline",
+          "status": "stale"
+        }
+      ],
+      "id": "stage.prerequisites",
+      "required": [
+        "baseline"
+      ],
+      "status": "blocked"
+    }
+  ],
+  "passed_count": 0,
+  "schema_version": "crypto-grid-experiment-v1",
+  "stage": "risk_contract",
+  "status": "blocked"
+}

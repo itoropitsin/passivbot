@@ -1,0 +1,212 @@
+{
+  "config_hash": "f6354f970c5fbfbbe497e4fd90c9330c42591b84f97ed7c4e271197ab52a5bc0",
+  "event_count": 220,
+  "events_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/public-stream-process-24h-2026-08-18-v3/events.ndjson",
+  "ledger_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/public-stream-process-24h-2026-08-18-v3/paper_ledger.json",
+  "next_seq": 220,
+  "processed_snapshot_ids": [
+    "0308ec05ac0035769d3dfefa27a36f241716bbfe3222e2c50504d629112d2148",
+    "0ce953dde119491557c3ec22ec5b674de68eb8fac063b95e4578e9fb88572704",
+    "11f785778febc9e5928d769903e76517b0cb857e36a82e32dddb80615ca87012",
+    "143e32c8ec8a56a8dd76d7135141370db9d69ac773bd480523dbd37b825b825b",
+    "14df0417cc5f7b28b6a1f975a8fa895b9130488902c808d328be07cdf56474a8",
+    "16602e87c1b39b37b19f4a2fd5a87db0e8242707b8c3047640ad11bb6b848a07",
+    "1c8a8f943e518adfd63c0e4a73da9e902182d1b50f0b16952774613d5c0e39fc",
+    "1f559369be9fca7acb7f367dcfe052a7c96aa1c37c82d9c0ac6dc17c66343c23",
+    "23f66da1a1e58c5ba5d2bc8b95344e289e66e660811b1f84b3f99d34f7873a39",
+    "3a1497ac01cb25efcf20e68b363203d7d33da47464384ae49bc84eba12ecc4e9",
+    "491234414d65d1941215a6d0618272502f44cfdb905b3895bbcbda7fca4b22ee",
+    "5ed21bd1573076726a3aa094b03878557422616ff78a26c33901a0441315ab8c",
+    "61fe9886433d90263ca17db2734ddfd7f02a5912f4ab60f6eaf4f9a7120a99a2",
+    "7c979452fee743b6a62b6b9b7f9b889534eee1fe41141ba1493e5925060e7866",
+    "92c6c216dec1fd32c3693b79854d7a610316e784adae71d13e9bc734ecda20ff",
+    "b06a446ef90f9dd3d710a26ee053decc0b710fec85a81b15fd9de1b7778eda36",
+    "b7bfbbfadf72f39ad513b75549848e5134f3bca6dee1fc9b214ccdb91a1f9e9a",
+    "b9ac190f4f6bc046858f81256defdd3044b66e0317b71f0d12ffae76361a08e8",
+    "bc9417587a5f72efa7f88b2b73d905c7be491924f76b9ba953d0c0ac507fbf6f",
+    "c32e177336371b115bd71cdb0288c3460cf5ec56c7920bb7064c47cb823d594c",
+    "c6476111e10f0a7619eeec7164e872ea8dabc49f2bf74782e009c52c25bd02cf",
+    "c96fcb8fb01fab9fe8f53777165b62c75e67de2ae91b7676cb550c980abf3172",
+    "e0778ba08811c07acb45f52b909b45821617a47911ff062d3b22ef6305296425",
+    "e337ed93a49a1f973b01c08f4b6c72e4b6f2006aba8f464771db295adc16f90e",
+    "f142f0aacd8918c3edf4575d0bc9a3c6ab69fb38e56825587861f3c18926bb90",
+    "f530492407ab553ae522bdf544d3061e6105d672701d50735496a8e39a3ad102",
+    "fb6932d4d06aa45c9164574c6b89df658a177dca1cdb62f2d53fa481c36cba5d"
+  ],
+  "replay_operations": [],
+  "restart_operations": [
+    {
+      "event_count_before": 212,
+      "evidence_source": "pre-existing_local_shadow_artifacts",
+      "operation": "restart",
+      "operation_id": "restart-0001",
+      "preexisting_artifacts": {
+        "checkpoint": {
+          "exists": true,
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/public-stream-process-24h-2026-08-18-v3/checkpoint.json",
+          "sha256": "9be90e95e9ad514d3acf653d98671dd2912d02d579147dd4e7be4c67fdc99c64"
+        },
+        "events": {
+          "exists": true,
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/public-stream-process-24h-2026-08-18-v3/events.ndjson",
+          "sha256": "882ef208fe4d356c73d41572f63e63107c24521b3a01cd52f12b2edea5ee10b8"
+        },
+        "ledger": {
+          "exists": true,
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/public-stream-process-24h-2026-08-18-v3/paper_ledger.json",
+          "sha256": "0859349833f949f936dbd8dba6c95fcbd6944e4a2ffefc8bdcf8cfbbe028c532"
+        }
+      },
+      "processed_snapshot_count_before": 26,
+      "recovered_at_snapshot_id": "1c8a8f943e518adfd63c0e4a73da9e902182d1b50f0b16952774613d5c0e39fc",
+      "recovered_event_count": 212,
+      "recovered_processed_snapshot_count": 26,
+      "recovery_completed": true,
+      "recovery_duration_ms": 1448.511,
+      "recovery_duration_seconds": 1.448511,
+      "status": "completed"
+    }
+  ],
+  "schema_version": "crypto-strategy-shadow-v1",
+  "snapshot_provenance": [
+    {
+      "snapshot_id": "0308ec05ac0035769d3dfefa27a36f241716bbfe3222e2c50504d629112d2148",
+      "source_hash": "64c73d7c32a5cd15bb455ec0b047b9626bb8e2b810c2ff8b3c7fa26fa642c178",
+      "timestamp": 1787050892399
+    },
+    {
+      "snapshot_id": "0ce953dde119491557c3ec22ec5b674de68eb8fac063b95e4578e9fb88572704",
+      "source_hash": "ad2ed278573145e3e37dc26dd19766cff0bc6a5b771929798a626cd7203bddec",
+      "timestamp": 1787050585259
+    },
+    {
+      "snapshot_id": "11f785778febc9e5928d769903e76517b0cb857e36a82e32dddb80615ca87012",
+      "source_hash": "dfb22989bfb8a649b9a7ca2554d5325654d24a49c284be8737c818f2a73fff17",
+      "timestamp": 1787050953870
+    },
+    {
+      "snapshot_id": "143e32c8ec8a56a8dd76d7135141370db9d69ac773bd480523dbd37b825b825b",
+      "source_hash": "650339d93c7e99b6da30047650aecadd76dd7ef310e04f19749c2b869a93d34c",
+      "timestamp": 1787050708084
+    },
+    {
+      "snapshot_id": "14df0417cc5f7b28b6a1f975a8fa895b9130488902c808d328be07cdf56474a8",
+      "source_hash": "98317c22a9ab2672c5a2bc3c5a1b8320e4cc1785e4f821eec1233d2d396efa52",
+      "timestamp": 1787050400907
+    },
+    {
+      "snapshot_id": "16602e87c1b39b37b19f4a2fd5a87db0e8242707b8c3047640ad11bb6b848a07",
+      "source_hash": "f7deb54e3fc5e3820b0a7389976aa7e5e4dc8c6ef5a3615c13843251138bbe06",
+      "timestamp": 1787051015396
+    },
+    {
+      "snapshot_id": "1c8a8f943e518adfd63c0e4a73da9e902182d1b50f0b16952774613d5c0e39fc",
+      "source_hash": "1286e93c616a8d10bddb3e5b2e480c7960506638aa9126b3bdb400724d57a902",
+      "timestamp": 1787051021097
+    },
+    {
+      "snapshot_id": "1f559369be9fca7acb7f367dcfe052a7c96aa1c37c82d9c0ac6dc17c66343c23",
+      "source_hash": "760f1f783a37901bd167458d36de75d0be10b969d79933c02c9b64cc66c36d62",
+      "timestamp": 1787049724679
+    },
+    {
+      "snapshot_id": "23f66da1a1e58c5ba5d2bc8b95344e289e66e660811b1f84b3f99d34f7873a39",
+      "source_hash": "81370e37f6157937e1ec2723f4ac80347310a9524577fee831f7b0214bed0042",
+      "timestamp": 1787049970682
+    },
+    {
+      "snapshot_id": "3a1497ac01cb25efcf20e68b363203d7d33da47464384ae49bc84eba12ecc4e9",
+      "source_hash": "9026e7a9fbbbbed41df53c3a6d1df2488af6f5d939c190d1aa943beb719755ef",
+      "timestamp": 1787049601774
+    },
+    {
+      "snapshot_id": "491234414d65d1941215a6d0618272502f44cfdb905b3895bbcbda7fca4b22ee",
+      "source_hash": "71d619982ed7d293d8ee3f759c68c1132c06cb3793b12afb9f464d6f3e99bfb6",
+      "timestamp": 1787050278048
+    },
+    {
+      "snapshot_id": "5ed21bd1573076726a3aa094b03878557422616ff78a26c33901a0441315ab8c",
+      "source_hash": "5ff5c69ae5760ace5587c55ec3b0c11ae2a70816725fcf4d6170dc52488d9359",
+      "timestamp": 1787050032198
+    },
+    {
+      "snapshot_id": "61fe9886433d90263ca17db2734ddfd7f02a5912f4ab60f6eaf4f9a7120a99a2",
+      "source_hash": "a349d17f0cf730680a13569f92a37e5e25c374f69c80b34b8cebd043876c96d0",
+      "timestamp": 1787050093644
+    },
+    {
+      "snapshot_id": "7c979452fee743b6a62b6b9b7f9b889534eee1fe41141ba1493e5925060e7866",
+      "source_hash": "40cf90875d8cbbec04465c8f61910a05b61828ff844c6908270fe078e1f539f4",
+      "timestamp": 1787050769479
+    },
+    {
+      "snapshot_id": "92c6c216dec1fd32c3693b79854d7a610316e784adae71d13e9bc734ecda20ff",
+      "source_hash": "d9363af96dc6423a898188d5cf15c151a6fd6dac89801e1277bad0e7755fc00d",
+      "timestamp": 1787050462329
+    },
+    {
+      "snapshot_id": "b06a446ef90f9dd3d710a26ee053decc0b710fec85a81b15fd9de1b7778eda36",
+      "source_hash": "3a21a4a525e32a6ac2c77c0a08b29acfb11967dbac886be08a14087b973109cd",
+      "timestamp": 1787049786122
+    },
+    {
+      "snapshot_id": "b7bfbbfadf72f39ad513b75549848e5134f3bca6dee1fc9b214ccdb91a1f9e9a",
+      "source_hash": "49446fa89dd73ad1e7467bf109bd068537aefe6696f9332e0d0173dbf981b79f",
+      "timestamp": 1787049478759
+    },
+    {
+      "snapshot_id": "b9ac190f4f6bc046858f81256defdd3044b66e0317b71f0d12ffae76361a08e8",
+      "source_hash": "a41a57d56763fe026bd8a21386b1b4c34869aeb098e13fdae8fdebadce590cb2",
+      "timestamp": 1787049908949
+    },
+    {
+      "snapshot_id": "bc9417587a5f72efa7f88b2b73d905c7be491924f76b9ba953d0c0ac507fbf6f",
+      "source_hash": "9dcc7d082c9beba7810eae9bf8bec0246589552c9b8918c7721a8ed74c520117",
+      "timestamp": 1787050155065
+    },
+    {
+      "snapshot_id": "c32e177336371b115bd71cdb0288c3460cf5ec56c7920bb7064c47cb823d594c",
+      "source_hash": "4180637aee163ed30ccdc879b304fe083de08e6880882cf667d5cd44754c9a9a",
+      "timestamp": 1787049847551
+    },
+    {
+      "snapshot_id": "c6476111e10f0a7619eeec7164e872ea8dabc49f2bf74782e009c52c25bd02cf",
+      "source_hash": "1a6d9276b54c754f38b6671363357a53b29bec299ac48f88b491c1376bd2523e",
+      "timestamp": 1787049663235
+    },
+    {
+      "snapshot_id": "c96fcb8fb01fab9fe8f53777165b62c75e67de2ae91b7676cb550c980abf3172",
+      "source_hash": "ba5b2788fbcb9ea297daa6b301cbb3436f5cf3977cd093a74a8066584a482f6f",
+      "timestamp": 1787050523860
+    },
+    {
+      "snapshot_id": "e0778ba08811c07acb45f52b909b45821617a47911ff062d3b22ef6305296425",
+      "source_hash": "3dedd70d57b81f1a8ee056646cc4cc2da665aeeb5c12466c36f7fd63a023d9f6",
+      "timestamp": 1787050216441
+    },
+    {
+      "snapshot_id": "e337ed93a49a1f973b01c08f4b6c72e4b6f2006aba8f464771db295adc16f90e",
+      "source_hash": "b417fa631776fec0b422ae424c4e8f95d615c190f5f1f2f9cd1e39980e80a661",
+      "timestamp": 1787050646658
+    },
+    {
+      "snapshot_id": "f142f0aacd8918c3edf4575d0bc9a3c6ab69fb38e56825587861f3c18926bb90",
+      "source_hash": "36a36751f003231257703669096284f98bac980efd5f8013a3eb095b321471f0",
+      "timestamp": 1787050339538
+    },
+    {
+      "snapshot_id": "f530492407ab553ae522bdf544d3061e6105d672701d50735496a8e39a3ad102",
+      "source_hash": "7c0ebc23a7db9771ccfd1a1b8edb8ae806009a53e80704bbdb9cf98f18950db5",
+      "timestamp": 1787049540319
+    },
+    {
+      "snapshot_id": "fb6932d4d06aa45c9164574c6b89df658a177dca1cdb62f2d53fa481c36cba5d",
+      "source_hash": "d12c9269b271aef8d87f09bfd4cfd0556d1b89e2937b3e97189623dcebf41724",
+      "timestamp": 1787050830922
+    }
+  ],
+  "strategy_id": "crypto-grid-shadow-stream-engineering-v1",
+  "symbols": [
+    "BTCUSDT/USDT:USDT"
+  ]
+}

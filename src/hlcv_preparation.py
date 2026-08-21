@@ -1180,11 +1180,35 @@ async def try_prepare_hlcvs_v2_local(
             if rng is None:
                 logging.info("[%s] v2 local incomplete local range for %s; falling back", exchange, coin)
                 return None
+            trailing_missing_minutes = _trailing_missing_minutes_to_end(rng, int(end_ts))
+            gap_tolerance_minutes = int(float(getattr(om, "gap_tolerance_ohlcvs_minutes", 120.0)))
+            if trailing_missing_minutes > gap_tolerance_minutes:
+                logging.info(
+                    "[%s] v2 local trailing gap for %s exceeds tolerance; "
+                    "valid_end=%s requested_end=%s missing_minutes=%d tolerance_minutes=%d; falling back",
+                    exchange,
+                    coin,
+                    ts_to_date(int(rng.timestamps[np.flatnonzero(rng.valid)[-1]])),
+                    ts_to_date(int(end_ts)),
+                    int(trailing_missing_minutes),
+                    int(gap_tolerance_minutes),
+                )
+                return None
 
             coin_symbols[coin] = symbol
             coin_source_windows[coin] = (int(rng.timestamps[0]), int(rng.timestamps[-1]))
             mss[coin] = om.get_market_specific_settings(coin)
-            global_start_ts = adjusted_start_ts if global_start_ts is None else min(global_start_ts, adjusted_start_ts)
+            # A partial but contiguous window may start later than the requested
+            # warm-up boundary.  Materialization must use the actual source
+            # window; otherwise the BTC benchmark can have a different number of
+            # rows than the target series and the run fails before its coverage
+            # metadata can be recorded.
+            source_start_ts = int(rng.timestamps[0])
+            global_start_ts = (
+                source_start_ts
+                if global_start_ts is None
+                else min(global_start_ts, source_start_ts)
+            )
 
         if not coin_symbols:
             return None
@@ -2045,6 +2069,14 @@ def _extract_single_valid_window(rng):
         values=rng.values[start_idx : end_idx + 1].copy(),
         valid=np.ones(end_idx - start_idx + 1, dtype=np.bool_),
     )
+
+
+def _trailing_missing_minutes_to_end(rng, end_ts: int) -> int:
+    valid_idx = np.flatnonzero(rng.valid)
+    if valid_idx.size == 0:
+        return 0
+    last_valid_ts = int(rng.timestamps[int(valid_idx[-1])])
+    return max(0, int((int(end_ts) - last_valid_ts) // 60_000))
 
 
 def _extract_valid_suffix_window(rng):

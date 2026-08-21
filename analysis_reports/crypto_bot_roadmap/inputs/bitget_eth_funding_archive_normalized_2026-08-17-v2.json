@@ -1,0 +1,1360 @@
+{
+  "exchange": "bitget",
+  "funding_history": [
+    {
+      "funding_rate": 7.2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779177600000
+    },
+    {
+      "funding_rate": 9.3e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779206400000
+    },
+    {
+      "funding_rate": 0.0001,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779235200000
+    },
+    {
+      "funding_rate": 7.2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779264000000
+    },
+    {
+      "funding_rate": 7.4e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779292800000
+    },
+    {
+      "funding_rate": 5.7e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779321600000
+    },
+    {
+      "funding_rate": 5.8e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779350400000
+    },
+    {
+      "funding_rate": 6.7e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779379200000
+    },
+    {
+      "funding_rate": 3.5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779408000000
+    },
+    {
+      "funding_rate": 6.7e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779436800000
+    },
+    {
+      "funding_rate": 0.0001,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779465600000
+    },
+    {
+      "funding_rate": -1.6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779494400000
+    },
+    {
+      "funding_rate": 5.6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779523200000
+    },
+    {
+      "funding_rate": -3.3e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779552000000
+    },
+    {
+      "funding_rate": 4e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779580800000
+    },
+    {
+      "funding_rate": 8.9e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779609600000
+    },
+    {
+      "funding_rate": 7.2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779638400000
+    },
+    {
+      "funding_rate": 6.3e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779667200000
+    },
+    {
+      "funding_rate": 5.8e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779696000000
+    },
+    {
+      "funding_rate": 1e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779724800000
+    },
+    {
+      "funding_rate": 4.1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779753600000
+    },
+    {
+      "funding_rate": 3.9e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779782400000
+    },
+    {
+      "funding_rate": 4.6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779811200000
+    },
+    {
+      "funding_rate": 9e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779840000000
+    },
+    {
+      "funding_rate": 3.1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779868800000
+    },
+    {
+      "funding_rate": 6.2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779897600000
+    },
+    {
+      "funding_rate": 8.2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779926400000
+    },
+    {
+      "funding_rate": 9.5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779955200000
+    },
+    {
+      "funding_rate": 3.6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1779984000000
+    },
+    {
+      "funding_rate": 3.6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780012800000
+    },
+    {
+      "funding_rate": 8.6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780041600000
+    },
+    {
+      "funding_rate": 0.0001,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780070400000
+    },
+    {
+      "funding_rate": 7.9e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780099200000
+    },
+    {
+      "funding_rate": 6.4e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780128000000
+    },
+    {
+      "funding_rate": 2.9e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780156800000
+    },
+    {
+      "funding_rate": 4.1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780185600000
+    },
+    {
+      "funding_rate": 2.5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780214400000
+    },
+    {
+      "funding_rate": 4.1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780243200000
+    },
+    {
+      "funding_rate": 0.0001,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780272000000
+    },
+    {
+      "funding_rate": 0.0001,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780300800000
+    },
+    {
+      "funding_rate": 0.0001,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780329600000
+    },
+    {
+      "funding_rate": 0.0001,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780358400000
+    },
+    {
+      "funding_rate": 7.3e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780387200000
+    },
+    {
+      "funding_rate": 8e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780416000000
+    },
+    {
+      "funding_rate": 5.8e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780444800000
+    },
+    {
+      "funding_rate": 3.6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780473600000
+    },
+    {
+      "funding_rate": 3.1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780502400000
+    },
+    {
+      "funding_rate": 2.9e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780531200000
+    },
+    {
+      "funding_rate": -6e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780560000000
+    },
+    {
+      "funding_rate": -2.9e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780588800000
+    },
+    {
+      "funding_rate": 1.2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780617600000
+    },
+    {
+      "funding_rate": -2.6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780646400000
+    },
+    {
+      "funding_rate": -8.4e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780675200000
+    },
+    {
+      "funding_rate": -7.4e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780704000000
+    },
+    {
+      "funding_rate": -7.9e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780732800000
+    },
+    {
+      "funding_rate": -1.7e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780761600000
+    },
+    {
+      "funding_rate": -3.6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780790400000
+    },
+    {
+      "funding_rate": -8.3e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780819200000
+    },
+    {
+      "funding_rate": -5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780848000000
+    },
+    {
+      "funding_rate": -2.6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780876800000
+    },
+    {
+      "funding_rate": -4.6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780905600000
+    },
+    {
+      "funding_rate": -2.1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780934400000
+    },
+    {
+      "funding_rate": -8.7e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780963200000
+    },
+    {
+      "funding_rate": -6e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1780992000000
+    },
+    {
+      "funding_rate": 2.7e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781020800000
+    },
+    {
+      "funding_rate": -1.2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781049600000
+    },
+    {
+      "funding_rate": -1.7e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781078400000
+    },
+    {
+      "funding_rate": -2.7e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781107200000
+    },
+    {
+      "funding_rate": -1e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781136000000
+    },
+    {
+      "funding_rate": -3.5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781164800000
+    },
+    {
+      "funding_rate": -1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781193600000
+    },
+    {
+      "funding_rate": 3.1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781222400000
+    },
+    {
+      "funding_rate": 3.4e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781251200000
+    },
+    {
+      "funding_rate": 1.7e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781280000000
+    },
+    {
+      "funding_rate": 0.0001,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781308800000
+    },
+    {
+      "funding_rate": 0.0001,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781337600000
+    },
+    {
+      "funding_rate": -7e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781366400000
+    },
+    {
+      "funding_rate": 8.1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781395200000
+    },
+    {
+      "funding_rate": 5.5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781424000000
+    },
+    {
+      "funding_rate": 0.0001,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781452800000
+    },
+    {
+      "funding_rate": 9.8e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781481600000
+    },
+    {
+      "funding_rate": -8e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781510400000
+    },
+    {
+      "funding_rate": 2e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781539200000
+    },
+    {
+      "funding_rate": 7.8e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781568000000
+    },
+    {
+      "funding_rate": -5.8e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781596800000
+    },
+    {
+      "funding_rate": 4.4e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781625600000
+    },
+    {
+      "funding_rate": 5.5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781654400000
+    },
+    {
+      "funding_rate": 5.6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781683200000
+    },
+    {
+      "funding_rate": -3.3e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781712000000
+    },
+    {
+      "funding_rate": -4e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781740800000
+    },
+    {
+      "funding_rate": 1.8e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781769600000
+    },
+    {
+      "funding_rate": 1.8e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781798400000
+    },
+    {
+      "funding_rate": 2.1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781827200000
+    },
+    {
+      "funding_rate": -2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781856000000
+    },
+    {
+      "funding_rate": 3.5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781884800000
+    },
+    {
+      "funding_rate": -3.1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781913600000
+    },
+    {
+      "funding_rate": 1.1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781942400000
+    },
+    {
+      "funding_rate": 1.9e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1781971200000
+    },
+    {
+      "funding_rate": 4.5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782000000000
+    },
+    {
+      "funding_rate": -1.2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782028800000
+    },
+    {
+      "funding_rate": -6e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782057600000
+    },
+    {
+      "funding_rate": 1.2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782086400000
+    },
+    {
+      "funding_rate": 2.7e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782115200000
+    },
+    {
+      "funding_rate": 1.1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782144000000
+    },
+    {
+      "funding_rate": 4.9e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782172800000
+    },
+    {
+      "funding_rate": -3e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782201600000
+    },
+    {
+      "funding_rate": -3.8e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782230400000
+    },
+    {
+      "funding_rate": 6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782259200000
+    },
+    {
+      "funding_rate": 2.4e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782288000000
+    },
+    {
+      "funding_rate": 2.9e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782316800000
+    },
+    {
+      "funding_rate": 2e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782345600000
+    },
+    {
+      "funding_rate": 3e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782374400000
+    },
+    {
+      "funding_rate": -4.3e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782403200000
+    },
+    {
+      "funding_rate": -2e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782432000000
+    },
+    {
+      "funding_rate": -1.1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782460800000
+    },
+    {
+      "funding_rate": 2.6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782489600000
+    },
+    {
+      "funding_rate": -2.9e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782518400000
+    },
+    {
+      "funding_rate": 1.8e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782547200000
+    },
+    {
+      "funding_rate": 7e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782576000000
+    },
+    {
+      "funding_rate": -4e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782604800000
+    },
+    {
+      "funding_rate": -3e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782633600000
+    },
+    {
+      "funding_rate": 2.2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782662400000
+    },
+    {
+      "funding_rate": 1.8e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782691200000
+    },
+    {
+      "funding_rate": -1.5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782720000000
+    },
+    {
+      "funding_rate": 4.2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782748800000
+    },
+    {
+      "funding_rate": 2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782777600000
+    },
+    {
+      "funding_rate": 2.9e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782806400000
+    },
+    {
+      "funding_rate": 7.1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782835200000
+    },
+    {
+      "funding_rate": 8.3e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782864000000
+    },
+    {
+      "funding_rate": 7.6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782892800000
+    },
+    {
+      "funding_rate": 8e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782921600000
+    },
+    {
+      "funding_rate": 1.6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782950400000
+    },
+    {
+      "funding_rate": 5.1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1782979200000
+    },
+    {
+      "funding_rate": 4.4e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783008000000
+    },
+    {
+      "funding_rate": 4.3e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783036800000
+    },
+    {
+      "funding_rate": 8e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783065600000
+    },
+    {
+      "funding_rate": 6.2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783094400000
+    },
+    {
+      "funding_rate": 7.4e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783123200000
+    },
+    {
+      "funding_rate": 4.7e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783152000000
+    },
+    {
+      "funding_rate": 3.4e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783180800000
+    },
+    {
+      "funding_rate": 6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783209600000
+    },
+    {
+      "funding_rate": 8.1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783238400000
+    },
+    {
+      "funding_rate": 4.5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783267200000
+    },
+    {
+      "funding_rate": 3.5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783296000000
+    },
+    {
+      "funding_rate": 4.6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783324800000
+    },
+    {
+      "funding_rate": 4.9e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783353600000
+    },
+    {
+      "funding_rate": 6.4e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783382400000
+    },
+    {
+      "funding_rate": 3e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783411200000
+    },
+    {
+      "funding_rate": 4.7e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783440000000
+    },
+    {
+      "funding_rate": 5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783468800000
+    },
+    {
+      "funding_rate": 1.5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783497600000
+    },
+    {
+      "funding_rate": 5.3e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783526400000
+    },
+    {
+      "funding_rate": 7.7e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783555200000
+    },
+    {
+      "funding_rate": 1e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783584000000
+    },
+    {
+      "funding_rate": 4.2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783612800000
+    },
+    {
+      "funding_rate": 3.5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783641600000
+    },
+    {
+      "funding_rate": 7e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783670400000
+    },
+    {
+      "funding_rate": 1.3e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783699200000
+    },
+    {
+      "funding_rate": 1.2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783728000000
+    },
+    {
+      "funding_rate": -2.3e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783756800000
+    },
+    {
+      "funding_rate": -1.8e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783785600000
+    },
+    {
+      "funding_rate": -4e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783814400000
+    },
+    {
+      "funding_rate": 1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783843200000
+    },
+    {
+      "funding_rate": 2.1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783872000000
+    },
+    {
+      "funding_rate": 4e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783900800000
+    },
+    {
+      "funding_rate": 2.6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783929600000
+    },
+    {
+      "funding_rate": 5.2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783958400000
+    },
+    {
+      "funding_rate": 2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1783987200000
+    },
+    {
+      "funding_rate": -1.7e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784016000000
+    },
+    {
+      "funding_rate": 6.9e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784044800000
+    },
+    {
+      "funding_rate": 9e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784073600000
+    },
+    {
+      "funding_rate": 7.8e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784102400000
+    },
+    {
+      "funding_rate": 6.4e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784131200000
+    },
+    {
+      "funding_rate": 2.7e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784160000000
+    },
+    {
+      "funding_rate": 8.5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784188800000
+    },
+    {
+      "funding_rate": 9.2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784217600000
+    },
+    {
+      "funding_rate": 7.1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784246400000
+    },
+    {
+      "funding_rate": 0.0001,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784275200000
+    },
+    {
+      "funding_rate": 4.6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784304000000
+    },
+    {
+      "funding_rate": 3.7e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784332800000
+    },
+    {
+      "funding_rate": 6.8e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784361600000
+    },
+    {
+      "funding_rate": 2.5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784390400000
+    },
+    {
+      "funding_rate": 4e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784419200000
+    },
+    {
+      "funding_rate": 9.2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784448000000
+    },
+    {
+      "funding_rate": 6.5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784476800000
+    },
+    {
+      "funding_rate": 5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784505600000
+    },
+    {
+      "funding_rate": 2.4e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784534400000
+    },
+    {
+      "funding_rate": 3.8e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784563200000
+    },
+    {
+      "funding_rate": 1.8e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784592000000
+    },
+    {
+      "funding_rate": 2.4e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784620800000
+    },
+    {
+      "funding_rate": 3.7e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784649600000
+    },
+    {
+      "funding_rate": 4.7e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784678400000
+    },
+    {
+      "funding_rate": 3e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784707200000
+    },
+    {
+      "funding_rate": 2.8e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784736000000
+    },
+    {
+      "funding_rate": 2.5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784764800000
+    },
+    {
+      "funding_rate": 1.7e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784793600000
+    },
+    {
+      "funding_rate": 8e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784822400000
+    },
+    {
+      "funding_rate": -3e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784851200000
+    },
+    {
+      "funding_rate": 4e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784880000000
+    },
+    {
+      "funding_rate": 4.2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784908800000
+    },
+    {
+      "funding_rate": 7.5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784937600000
+    },
+    {
+      "funding_rate": 9.3e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784966400000
+    },
+    {
+      "funding_rate": 6.9e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1784995200000
+    },
+    {
+      "funding_rate": -2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785024000000
+    },
+    {
+      "funding_rate": 3e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785052800000
+    },
+    {
+      "funding_rate": 1.3e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785081600000
+    },
+    {
+      "funding_rate": 4.6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785110400000
+    },
+    {
+      "funding_rate": 1.4e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785139200000
+    },
+    {
+      "funding_rate": 1.5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785168000000
+    },
+    {
+      "funding_rate": -5e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785196800000
+    },
+    {
+      "funding_rate": 1.7e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785225600000
+    },
+    {
+      "funding_rate": 1.1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785254400000
+    },
+    {
+      "funding_rate": 5.5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785283200000
+    },
+    {
+      "funding_rate": 2.2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785312000000
+    },
+    {
+      "funding_rate": 3.3e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785340800000
+    },
+    {
+      "funding_rate": 5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785369600000
+    },
+    {
+      "funding_rate": 4.4e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785398400000
+    },
+    {
+      "funding_rate": 1.5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785427200000
+    },
+    {
+      "funding_rate": 5.8e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785456000000
+    },
+    {
+      "funding_rate": 4.9e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785484800000
+    },
+    {
+      "funding_rate": 6.7e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785513600000
+    },
+    {
+      "funding_rate": 0.0001,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785542400000
+    },
+    {
+      "funding_rate": 0.0001,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785571200000
+    },
+    {
+      "funding_rate": 0.0001,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785600000000
+    },
+    {
+      "funding_rate": 6.9e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785628800000
+    },
+    {
+      "funding_rate": 3.1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785657600000
+    },
+    {
+      "funding_rate": 8.6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785686400000
+    },
+    {
+      "funding_rate": 5.9e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785715200000
+    },
+    {
+      "funding_rate": 0.0001,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785744000000
+    },
+    {
+      "funding_rate": 5.7e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785772800000
+    },
+    {
+      "funding_rate": 5.4e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785801600000
+    },
+    {
+      "funding_rate": 5.8e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785830400000
+    },
+    {
+      "funding_rate": 5.6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785859200000
+    },
+    {
+      "funding_rate": 3.3e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785888000000
+    },
+    {
+      "funding_rate": 4e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785916800000
+    },
+    {
+      "funding_rate": 4.6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785945600000
+    },
+    {
+      "funding_rate": -0.000109,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1785974400000
+    },
+    {
+      "funding_rate": 1e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786003200000
+    },
+    {
+      "funding_rate": -2.3e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786032000000
+    },
+    {
+      "funding_rate": -1.2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786060800000
+    },
+    {
+      "funding_rate": 2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786089600000
+    },
+    {
+      "funding_rate": -1.4e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786118400000
+    },
+    {
+      "funding_rate": 3.8e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786147200000
+    },
+    {
+      "funding_rate": 4.6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786176000000
+    },
+    {
+      "funding_rate": 1.1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786204800000
+    },
+    {
+      "funding_rate": -2.2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786233600000
+    },
+    {
+      "funding_rate": 3.1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786262400000
+    },
+    {
+      "funding_rate": -1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786291200000
+    },
+    {
+      "funding_rate": 1.4e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786320000000
+    },
+    {
+      "funding_rate": 1.1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786348800000
+    },
+    {
+      "funding_rate": 0.0001,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786377600000
+    },
+    {
+      "funding_rate": 0.0001,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786406400000
+    },
+    {
+      "funding_rate": 0.0001,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786435200000
+    },
+    {
+      "funding_rate": 5.5e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786464000000
+    },
+    {
+      "funding_rate": 8.6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786492800000
+    },
+    {
+      "funding_rate": -2e-06,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786521600000
+    },
+    {
+      "funding_rate": 4.4e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786550400000
+    },
+    {
+      "funding_rate": 0.0001,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786579200000
+    },
+    {
+      "funding_rate": 8.8e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786608000000
+    },
+    {
+      "funding_rate": 5.8e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786636800000
+    },
+    {
+      "funding_rate": 7.6e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786665600000
+    },
+    {
+      "funding_rate": 9.3e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786694400000
+    },
+    {
+      "funding_rate": 9.4e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786723200000
+    },
+    {
+      "funding_rate": 3.2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786752000000
+    },
+    {
+      "funding_rate": 2.7e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786780800000
+    },
+    {
+      "funding_rate": 8.1e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786809600000
+    },
+    {
+      "funding_rate": 3.4e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786838400000
+    },
+    {
+      "funding_rate": 8.9e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786867200000
+    },
+    {
+      "funding_rate": 5.2e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786896000000
+    },
+    {
+      "funding_rate": 8.3e-05,
+      "symbol": "ETHUSDT",
+      "timestamp_ms": 1786924800000
+    }
+  ],
+  "requested_end_utc": "2026-08-17T00:00:00+00:00",
+  "requested_start_utc": "2024-07-01T00:00:00+00:00",
+  "schema_version": "bitget-funding-archive-v1",
+  "source_sha256": "8dee9f7252663355e43c672a838b34314470a69ee62d67462755c4e75f43e75f",
+  "symbol": "ETHUSDT"
+}

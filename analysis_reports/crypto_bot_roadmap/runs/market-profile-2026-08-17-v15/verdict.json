@@ -1,0 +1,35 @@
+{
+  "blocked_count": 0,
+  "failed_count": 0,
+  "gate_count": 3,
+  "gates": [
+    {
+      "actual": true,
+      "id": "market_profile.input_present",
+      "limit": true,
+      "metric": "market_profile_input_present",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "market_profile.public_api_only",
+      "limit": true,
+      "metric": "market_profile_public_api_only",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": false,
+      "id": "market_profile.private_api_data_absent",
+      "limit": false,
+      "metric": "market_profile_private_api_data_present",
+      "operator": "==",
+      "status": "passed"
+    }
+  ],
+  "passed_count": 3,
+  "schema_version": "crypto-grid-experiment-v1",
+  "stage": "market_profile",
+  "status": "passed"
+}

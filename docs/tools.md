@@ -99,11 +99,267 @@ passivbot tool iterative-history-plot backtests/.../fills.csv
 
 - `passivbot download` – Pre-warm the v2 OHLCV store using the same config/date/exchange selection as backtesting.
 - `passivbot tool inspect-ohlcvs` – Inspect v2 OHLCV cache metadata and gaps.
+- `passivbot tool bitget-ohlcv-quality` – Check the exact stored Bitget HLCV range for missing, invalid, future, or checksum-broken rows without downloading or changing it.
+- `passivbot tool bitget-public-market-profile` – Build a normalized public Bitget market profile from a saved public execution-input file without downloading, reading credentials, or accessing account endpoints.
 - `passivbot tool pad-historical-daily` – Ensures daily OHLCV shards are present for the downloader when new coins are added.
 - `passivbot tool verify-hlcvs-data` – Validates prepared HLCV datasets and coverage metadata before long optimizations/backtests.
 - `passivbot tool streamline-json` – Normalizes/compacts JSON configs (`passivbot tool streamline-json configs/examples/default_trailing_grid_long_npos7.json`).
 - `passivbot tool candle-doctor` – Audits legacy `caches/ohlcv/...` shards for corruption, stale index entries, and legacy-format issues; add `--fix` to apply automatic repairs before importing into the v2 store.
 - `passivbot tool migrate-historical-data` – Converts legacy `historical_data/ohlcvs_<exchange>/...` shards into the current `caches/ohlcv/...` layout.
+
+## Crypto research gates and Bitget recorder
+
+The crypto roadmap uses immutable run bundles under
+`analysis_reports/crypto_bot_roadmap/runs/<run_id>/`.
+
+```shell
+passivbot tool research-gates --help
+passivbot tool bitget-profile --help
+passivbot tool bitget-public-data --help
+passivbot tool bitget-public-market-profile --help
+passivbot tool bitget-ohlcv-repair --help
+passivbot tool bitget-ohlcv-quality --help
+passivbot tool bitget-funding-archive --help
+passivbot tool bitget-funding-horizon --help
+passivbot tool crypto-historical-preflight --help
+passivbot tool crypto-runtime-evidence --help
+passivbot tool strategy-shadow --help
+passivbot tool strategy-shadow-process --help
+passivbot tool strategy-shadow-stream --help
+passivbot tool strategy-shadow-stream-process --help
+passivbot tool crypto-risk-grid --help
+passivbot tool risk-parity-harness --help
+```
+
+Parity-harness сравнивает уже сохранённые решения двух adapters. Fixture-adapters
+нужны только для регрессий; допуск даёт только evidence из настоящего Python
+live gate и Rust `Backtest` gate. Если хотя бы один adapter или обязательное поле
+snapshot отсутствует, результат `blocked`, а эффективное решение `deny`:
+
+```shell
+passivbot tool risk-parity-harness \
+  --snapshot path/to/risk_snapshot.json \
+  --left-decision path/to/live_decision.json \
+  --right-decision path/to/tester_decision.json \
+  --output path/to/parity.json
+```
+
+Перед историческим отбором можно выполнить локальные сценарии безопасности без
+подключения к счёту. Команда запускает Rust/Python-проверки, сохраняет хэши её
+вывода и создаёт машинные признаки для `research-gates`:
+
+```shell
+passivbot tool crypto-risk-grid \
+  --output analysis_reports/crypto_bot_roadmap/inputs/risk_grid_scenarios_2026-08-17.json
+```
+
+Для проверки завершённого paper/live-периода передайте журнал monitor-событий.
+Команда считает длительность, открытые заявки, исполнения, повторы и закрытые
+торговые циклы из самого журнала:
+
+```shell
+passivbot tool crypto-runtime-evidence \
+  --events path/to/events.ndjson \
+  --output analysis_reports/crypto_bot_roadmap/runs/<run_id>/runtime_evidence.json
+```
+
+Журнал считается доказательным только если каждая строка содержит в `payload`
+идентификаторы `strategy_id`, `cycle_id` и `config_hash`; отсутствие любого из
+них блокирует paper/live gates.
+
+`strategy-shadow` принимает только сохранённые public snapshots и создаёт
+`result.json` с длительностью, количеством плановых заявок, фактическими
+restarts/replays, хэшами входа и тремя независимыми local-only прогонами. Для
+`shadow_readiness` этот результат можно передать напрямую как `--metrics`;
+gate сам извлечёт измерения и не примет отдельно переписанные цифры:
+
+```shell
+passivbot tool strategy-shadow \
+  --input path/to/public_snapshots.json \
+  --output-dir analysis_reports/crypto_bot_roadmap/runs/<shadow_run_id>
+passivbot tool strategy-shadow-process \
+  --input path/to/public_snapshots.json \
+  --output-dir analysis_reports/crypto_bot_roadmap/runs/<shadow_process_run_id> \
+  --config path/to/shadow_config.json \
+  --restart-count 5 \
+  --deterministic-replay-runs 3
+passivbot tool research-gates \
+  --stage shadow_readiness \
+  --metrics analysis_reports/crypto_bot_roadmap/runs/<shadow_process_run_id>/result.json \
+  --events analysis_reports/crypto_bot_roadmap/runs/<shadow_process_run_id>/events.ndjson \
+  --market-profile path/to/public_market_profile.json \
+  --config path/to/shadow_config.json \
+  --dataset path/to/public_snapshots.json \
+  --run-id <readiness_run_id>
+```
+
+`strategy-shadow-process` запускает тот же local-only driver в отдельных
+дочерних процессах. Он сохраняет PID, коды завершения, хэши состояния и время
+восстановления, а также связывает результат с хэшами текущего кода,
+конфигурации и входного файла. Это инженерное evidence для readiness gate, но
+оно не заменяет фактические 24 часа работы и не создаёт заявок на бирже.
+
+`strategy-shadow-stream` — непрерывный local-only наблюдатель для следующего
+этапа. Он получает только публичные снимки Bitget, добавляет явно описанную
+детерминированную policy-пробу и передаёт их в существующий `strategy-shadow`.
+Заявки и исполнения остаются в локальном paper ledger. Команда требует
+`--duration-seconds` или `--max-samples`, сохраняет исходные ответы Bitget,
+хэши, решения policy и checkpoint восстановления. Время стратегии берётся
+только из `source_timestamp_ms` ответа биржи; `observed_at_ms` используется
+только для наблюдения и расписания. Повтор одинакового source event записывается
+как heartbeat и не вызывает шаг стратегии. Сырые market snapshots и внутренние
+strategy inputs хранятся раздельно. Ошибка публичного сбора помечает результат
+как failed, а ошибка обработки останавливает сессию fail-closed. Эта policy не
+является оптимизированным сетом и не может быть допущена к реальной торговле.
+
+Пример ограниченного smoke-run:
+
+```shell
+passivbot tool strategy-shadow-stream \
+  --output-dir analysis_reports/crypto_bot_roadmap/runs/<stream_run_id> \
+  --symbol BTCUSDT --category USDT-FUTURES \
+  --side long --interval-seconds 60 --max-source-gap-seconds 300 \
+  --duration-seconds 3600
+```
+
+Для `shadow_readiness` нужны фактические 24 часа по времени источника и wall
+clock, не менее 20 плановых заявок, пять подтверждённых переходов процесса и
+отсутствие разрыва source timestamps выше `--max-source-gap-seconds`.
+Требования в 100 заявок и 30 закрытых циклов относятся к зачётному paper
+периоду, а не к короткому readiness gate. Smoke-run проверяет код и
+восстановление, но не открывает readiness gate.
+
+`strategy-shadow-stream-process` запускает stream в шести последовательных
+локальных процессах по умолчанию. Общие checkpoint, policy state, paper ledger,
+raw market log и strategy-input log сохраняются в одном каталоге. В результате
+есть PID, коды завершения, хэши состояния и пять переходов между процессами.
+Опция `--fixture` предназначена только для тестов процесса и всегда помечает
+результат как fixture-mode; такой запуск не может пройти readiness gate.
+
+The market recorder uses only public Bitget ticker, order-book, current
+funding-rate, and latest-settlement requests. Each new snapshot keeps the
+current funding rate, funding interval, next settlement time, latest observed
+settlement, source responses, and response hashes. A
+one-shot snapshot is safe to run without an API key:
+
+```shell
+passivbot tool bitget-market-recorder \
+  --symbol BTCUSDT --category USDT-FUTURES \
+  --duration-seconds 0 --max-samples 1 \
+  --output analysis_reports/crypto_bot_roadmap/inputs/bitget_market_snapshots.jsonl
+passivbot tool bitget-market-recorder --verify \
+  --output analysis_reports/crypto_bot_roadmap/inputs/bitget_market_snapshots.jsonl
+```
+
+Для ежедневной проверки непрерывности накопленного журнала задайте допустимый
+перерыв между снимками и потребуйте непрерывность расчётов funding. Команда
+только проверяет файл и не обращается к счёту:
+
+```shell
+passivbot tool bitget-market-recorder --verify \
+  --output analysis_reports/crypto_bot_roadmap/inputs/bitget_market_snapshots.jsonl \
+  --max-gap-seconds 86400 \
+  --use-source-timestamp \
+  --require-funding-continuity \
+  --integrity-output analysis_reports/crypto_bot_roadmap/inputs/bitget_market_snapshots.integrity.json
+```
+
+Отчёт содержит хэш всего журнала, максимальный перерыв, наблюдённые даты
+settlement funding и число пропущенных расчётов между первым и последним
+наблюдением. Пропущенные строки не создаются автоматически; при разрыве
+проверка завершается со статусом `failed`.
+
+The recorder has no account, order, or transfer path. Historical promotion
+still requires a complete funding archive and replay events; a public market
+snapshot alone never opens a trading gate.
+
+When the crypto profile is enabled, a real `live` process also requires the
+separate `--authorize-crypto-live` command-line flag. Without it, the process
+stops before exchange configuration or order writes. The flag is not needed
+for the fake/paper exchange and is never implied by the presence of API keys.
+
+### Bitget paper mode
+
+Bitget paper mode is selected by an explicit local user entry with `paper: true`.
+The entry may contain `paper_symbols` and `paper_initial_balance`; it does not
+need API credentials. The adapter creates no authenticated CCXT client:
+
+```json
+{
+  "bitget_btc_paper": {
+    "exchange": "bitget",
+    "quote": "USDT",
+    "paper": true,
+    "paper_symbols": ["BTC"],
+    "paper_initial_balance": 1000.0
+  }
+}
+```
+
+The bot reads Bitget public market data and keeps balances, positions, orders,
+fills and fees in a local ledger. With an explicit state path, the current
+prototype also persists and restores that basic state atomically; this is not
+yet a write-ahead event journal. Orders are never sent to Bitget. A paper run
+is still not historical evidence: its event journal must cover the full
+calendar and event-count gates before it can be checked by
+`crypto-runtime-evidence`. Funding, queue and partial-fill modelling are not
+complete, and the paper liquidation price is an explicitly named simulation
+assumption rather than Bitget's live liquidation formula.
+
+Do not put a real API key in a paper entry. For a real account, use a separate
+entry and the explicit `--authorize-crypto-live` barrier only after all earlier
+roadmap gates have passed.
+
+To record exactly how far the two public Bitget funding-history endpoints reach
+for a requested window, run the horizon probe. It saves response hashes and
+the oldest observed settlement; it does not fill the missing part:
+
+```shell
+passivbot tool bitget-funding-horizon \
+  --symbol BTCUSDT \
+  --start 2024-07-01T00:00:00+00:00 \
+  --end 2026-08-17T00:00:00+00:00 \
+  --output analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_funding_horizon_2026-08-17.json
+```
+
+An external funding archive can be checked without changing the saved market
+inputs. The validator accepts JSON, JSONL, CSV, or TSV and records the source
+hash. It returns `blocked` when any expected settlement is missing, duplicated,
+invalid, outside the requested window, or only present in an observed subrange:
+
+```shell
+passivbot tool bitget-funding-archive \
+  --archive /path/to/bitget_btc_funding.csv \
+  --symbol BTCUSDT \
+  --start 2024-07-01T00:00:00+00:00 \
+  --end 2026-08-17T00:00:00+00:00 \
+  --output analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_funding_archive_validation.json \
+  --normalized-output analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_funding_archive_normalized.json
+```
+
+The command never interpolates rows or substitutes another exchange. A
+successful validation report is necessary but is not sufficient for a
+historical candidate: the Bitget account profile, OHLCV, mark/index prices,
+execution model, and all later risk gates must also pass.
+Rows explicitly labelled with a different symbol are excluded and block the
+archive, so a BTC validation cannot silently consume ETH funding rows.
+
+For a large minute archive, `bitget-ohlcv-repair` can use at most eight
+unauthenticated public workers. Pages are sorted before their hash is written;
+this keeps the result reproducible while avoiding a new TLS connection for
+every page:
+
+```shell
+passivbot tool bitget-ohlcv-repair \
+  --symbol 'ETH/USDT:USDT' --api-symbol ETHUSDT \
+  --start 2024-07-01 --end 2026-08-17T00:00:00Z \
+  --max-pages 12000 --parallel-workers 4 --delay-seconds 0 \
+  --output analysis_reports/crypto_bot_roadmap/inputs/bitget_eth_ohlcv_repair.json
+```
+
+The repairer writes only rows confirmed by Bitget market candles. It never
+creates a row for a missing minute, and it reports `blocked` if any gap stays
+unresolved.
 
 ## Fill Events Tooling
 
@@ -211,3 +467,18 @@ The archive helper also supports symmetric `pull` and local `extract` modes, inc
 ```shell
 passivbot tool generate-mcap-list -n 80 -m 200 -e binance,bybit -o configs/approved_coins_top80.json
 ```
+### Crypto historical protocol
+
+`passivbot tool crypto-historical-protocol` writes the dated BTC/ETH
+walk-forward procedure, generated safe research configs, optimizer commands,
+validation templates, neighbour checks, holdout, and synchronized portfolio
+check. It refuses to start while the read-only historical preflight is blocked.
+
+The optional `--execute` flag starts only local optimizer processes after the
+preflight passes. It never sends an exchange request and never promotes a
+candidate to trading.
+
+`passivbot tool crypto-historical-select --input CANDIDATES.json --output
+SELECTION.json` verifies the four validation windows, five seeds, stress
+metrics, and 32 one-parameter neighbours for each candidate. The holdout is
+recorded as reserved and is not used to choose a candidate.

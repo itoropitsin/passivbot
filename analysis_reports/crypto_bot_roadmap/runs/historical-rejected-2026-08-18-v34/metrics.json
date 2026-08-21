@@ -1,0 +1,19 @@
+{
+  "candidate_count": 0,
+  "events_present": false,
+  "failure_evidence": "Historical preflight v10 is blocked by incomplete Bitget funding history; no optimizer job or candidate selection was run.",
+  "funding_actual_rows": 270,
+  "funding_expected_rows": 2332,
+  "funding_known_coverage_ratio": 0.11578044596912522,
+  "market_profile_contract_valid": true,
+  "market_profile_input_present": true,
+  "market_profile_private_api_data_present": false,
+  "market_profile_private_markers_count": 0,
+  "market_profile_public_api_only": true,
+  "market_profile_source_profile_sha256_malformed": false,
+  "market_profile_source_profile_sha256_not_placeholder": true,
+  "market_profile_source_profile_sha256_placeholder": false,
+  "market_profile_source_profile_sha256_present": false,
+  "preflight_report": "analysis_reports/crypto_bot_roadmap/preflight/historical_preflight_2026-08-18-v10.json",
+  "preflight_status": "blocked"
+}

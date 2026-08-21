@@ -1,0 +1,350 @@
+[
+  {
+    "candidate_index": 0,
+    "decision": "allow",
+    "execution_type": "limit",
+    "order_id": "risk-order-v1:BTC/USDT:USDT:long:buy:entry_initial_normal_long:limit:ro=0:panic=0:0.191:100:0",
+    "order_side": "buy",
+    "order_type": "entry_initial_normal_long",
+    "panic_close": false,
+    "position_side": "long",
+    "price": 100.0,
+    "qty": 0.191,
+    "reason": "portfolio_risk_gate_allow",
+    "reduce_only": false,
+    "requested_notional": 19.1,
+    "snapshot": {
+      "as_of_ms": 1704067380000,
+      "balance": {
+        "available": 1000.0,
+        "equity": 1000.0
+      },
+      "daily_loss": {
+        "ratio": 0.0
+      },
+      "hsl": {
+        "long": {
+          "state": "disabled"
+        },
+        "short": {
+          "state": "disabled"
+        }
+      },
+      "leverage": {
+        "long": 3.0,
+        "short": 3.0
+      },
+      "margin_tiers": [
+        {
+          "maintenance_margin_rate": 0.005,
+          "max_notional": 200000.0,
+          "min_notional": 0.0,
+          "symbol": "BTC/USDT:USDT",
+          "tier": 1
+        }
+      ],
+      "mark_prices": {
+        "BTC/USDT:USDT": 100.0
+      },
+      "pending_orders": [],
+      "positions": {
+        "long": [],
+        "short": []
+      },
+      "schema_version": "risk-snapshot-v1"
+    },
+    "step": 3,
+    "symbol": "BTC/USDT:USDT",
+    "timestamp_ms": 1704067380000
+  },
+  {
+    "candidate_index": 1,
+    "decision": "allow",
+    "execution_type": "limit",
+    "order_id": "risk-order-v1:BTC/USDT:USDT:long:buy:entry_grid_normal_long:limit:ro=0:panic=0:0.191:97.900000000000006:0",
+    "order_side": "buy",
+    "order_type": "entry_grid_normal_long",
+    "panic_close": false,
+    "position_side": "long",
+    "price": 97.9,
+    "qty": 0.191,
+    "reason": "portfolio_risk_gate_allow",
+    "reduce_only": false,
+    "requested_notional": 18.698900000000002,
+    "snapshot": {
+      "as_of_ms": 1704067380000,
+      "balance": {
+        "available": 1000.0,
+        "equity": 1000.0
+      },
+      "daily_loss": {
+        "ratio": 0.0
+      },
+      "hsl": {
+        "long": {
+          "state": "disabled"
+        },
+        "short": {
+          "state": "disabled"
+        }
+      },
+      "leverage": {
+        "long": 3.0,
+        "short": 3.0
+      },
+      "margin_tiers": [
+        {
+          "maintenance_margin_rate": 0.005,
+          "max_notional": 200000.0,
+          "min_notional": 0.0,
+          "symbol": "BTC/USDT:USDT",
+          "tier": 1
+        }
+      ],
+      "mark_prices": {
+        "BTC/USDT:USDT": 100.0
+      },
+      "pending_orders": [],
+      "positions": {
+        "long": [],
+        "short": []
+      },
+      "schema_version": "risk-snapshot-v1"
+    },
+    "step": 3,
+    "symbol": "BTC/USDT:USDT",
+    "timestamp_ms": 1704067380000
+  },
+  {
+    "candidate_index": 2,
+    "decision": "allow",
+    "execution_type": "limit",
+    "order_id": "risk-order-v1:BTC/USDT:USDT:long:buy:entry_grid_normal_long:limit:ro=0:panic=0:0.382:96.799999999999997:0",
+    "order_side": "buy",
+    "order_type": "entry_grid_normal_long",
+    "panic_close": false,
+    "position_side": "long",
+    "price": 96.8,
+    "qty": 0.382,
+    "reason": "portfolio_risk_gate_allow",
+    "reduce_only": false,
+    "requested_notional": 36.9776,
+    "snapshot": {
+      "as_of_ms": 1704067380000,
+      "balance": {
+        "available": 1000.0,
+        "equity": 1000.0
+      },
+      "daily_loss": {
+        "ratio": 0.0
+      },
+      "hsl": {
+        "long": {
+          "state": "disabled"
+        },
+        "short": {
+          "state": "disabled"
+        }
+      },
+      "leverage": {
+        "long": 3.0,
+        "short": 3.0
+      },
+      "margin_tiers": [
+        {
+          "maintenance_margin_rate": 0.005,
+          "max_notional": 200000.0,
+          "min_notional": 0.0,
+          "symbol": "BTC/USDT:USDT",
+          "tier": 1
+        }
+      ],
+      "mark_prices": {
+        "BTC/USDT:USDT": 100.0
+      },
+      "pending_orders": [],
+      "positions": {
+        "long": [],
+        "short": []
+      },
+      "schema_version": "risk-snapshot-v1"
+    },
+    "step": 3,
+    "symbol": "BTC/USDT:USDT",
+    "timestamp_ms": 1704067380000
+  },
+  {
+    "candidate_index": 3,
+    "decision": "allow",
+    "execution_type": "limit",
+    "order_id": "risk-order-v1:BTC/USDT:USDT:long:buy:entry_grid_normal_long:limit:ro=0:panic=0:0.764:95.599999999999994:0",
+    "order_side": "buy",
+    "order_type": "entry_grid_normal_long",
+    "panic_close": false,
+    "position_side": "long",
+    "price": 95.6,
+    "qty": 0.764,
+    "reason": "portfolio_risk_gate_allow",
+    "reduce_only": false,
+    "requested_notional": 73.0384,
+    "snapshot": {
+      "as_of_ms": 1704067380000,
+      "balance": {
+        "available": 1000.0,
+        "equity": 1000.0
+      },
+      "daily_loss": {
+        "ratio": 0.0
+      },
+      "hsl": {
+        "long": {
+          "state": "disabled"
+        },
+        "short": {
+          "state": "disabled"
+        }
+      },
+      "leverage": {
+        "long": 3.0,
+        "short": 3.0
+      },
+      "margin_tiers": [
+        {
+          "maintenance_margin_rate": 0.005,
+          "max_notional": 200000.0,
+          "min_notional": 0.0,
+          "symbol": "BTC/USDT:USDT",
+          "tier": 1
+        }
+      ],
+      "mark_prices": {
+        "BTC/USDT:USDT": 100.0
+      },
+      "pending_orders": [],
+      "positions": {
+        "long": [],
+        "short": []
+      },
+      "schema_version": "risk-snapshot-v1"
+    },
+    "step": 3,
+    "symbol": "BTC/USDT:USDT",
+    "timestamp_ms": 1704067380000
+  },
+  {
+    "candidate_index": 4,
+    "decision": "allow",
+    "execution_type": "limit",
+    "order_id": "risk-order-v1:BTC/USDT:USDT:long:buy:entry_grid_normal_long:limit:ro=0:panic=0:1.528:94.299999999999997:0",
+    "order_side": "buy",
+    "order_type": "entry_grid_normal_long",
+    "panic_close": false,
+    "position_side": "long",
+    "price": 94.3,
+    "qty": 1.528,
+    "reason": "portfolio_risk_gate_allow",
+    "reduce_only": false,
+    "requested_notional": 144.0904,
+    "snapshot": {
+      "as_of_ms": 1704067380000,
+      "balance": {
+        "available": 1000.0,
+        "equity": 1000.0
+      },
+      "daily_loss": {
+        "ratio": 0.0
+      },
+      "hsl": {
+        "long": {
+          "state": "disabled"
+        },
+        "short": {
+          "state": "disabled"
+        }
+      },
+      "leverage": {
+        "long": 3.0,
+        "short": 3.0
+      },
+      "margin_tiers": [
+        {
+          "maintenance_margin_rate": 0.005,
+          "max_notional": 200000.0,
+          "min_notional": 0.0,
+          "symbol": "BTC/USDT:USDT",
+          "tier": 1
+        }
+      ],
+      "mark_prices": {
+        "BTC/USDT:USDT": 100.0
+      },
+      "pending_orders": [],
+      "positions": {
+        "long": [],
+        "short": []
+      },
+      "schema_version": "risk-snapshot-v1"
+    },
+    "step": 3,
+    "symbol": "BTC/USDT:USDT",
+    "timestamp_ms": 1704067380000
+  },
+  {
+    "candidate_index": 5,
+    "decision": "allow",
+    "execution_type": "limit",
+    "order_id": "risk-order-v1:BTC/USDT:USDT:long:buy:entry_grid_cropped_long:limit:ro=0:panic=0:1.556:92.700000000000003:0",
+    "order_side": "buy",
+    "order_type": "entry_grid_cropped_long",
+    "panic_close": false,
+    "position_side": "long",
+    "price": 92.7,
+    "qty": 1.556,
+    "reason": "portfolio_risk_gate_allow",
+    "reduce_only": false,
+    "requested_notional": 144.24120000000002,
+    "snapshot": {
+      "as_of_ms": 1704067380000,
+      "balance": {
+        "available": 1000.0,
+        "equity": 1000.0
+      },
+      "daily_loss": {
+        "ratio": 0.0
+      },
+      "hsl": {
+        "long": {
+          "state": "disabled"
+        },
+        "short": {
+          "state": "disabled"
+        }
+      },
+      "leverage": {
+        "long": 3.0,
+        "short": 3.0
+      },
+      "margin_tiers": [
+        {
+          "maintenance_margin_rate": 0.005,
+          "max_notional": 200000.0,
+          "min_notional": 0.0,
+          "symbol": "BTC/USDT:USDT",
+          "tier": 1
+        }
+      ],
+      "mark_prices": {
+        "BTC/USDT:USDT": 100.0
+      },
+      "pending_orders": [],
+      "positions": {
+        "long": [],
+        "short": []
+      },
+      "schema_version": "risk-snapshot-v1"
+    },
+    "step": 3,
+    "symbol": "BTC/USDT:USDT",
+    "timestamp_ms": 1704067380000
+  }
+]

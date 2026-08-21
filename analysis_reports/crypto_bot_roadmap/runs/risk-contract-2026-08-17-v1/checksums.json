@@ -1,0 +1,31 @@
+{
+  "files": {
+    "config.json": {
+      "sha256": "7eb752600e60e12600870178806ecac123a8ae1566b0997f00aec662505f29c8",
+      "size_bytes": 31319
+    },
+    "events.jsonl.gz": {
+      "sha256": "6128bc491eca44f500f329952ccabc4970c492d75954875ca883c4a7c4f08985",
+      "size_bytes": 33
+    },
+    "manifest.json": {
+      "sha256": "93c20de73e9f51af8a6182706ad30e28a25ea036a1abc97f5b019e5ab10a2fcc",
+      "size_bytes": 1239
+    },
+    "metrics.json": {
+      "sha256": "74177a736c27be3d0cebbebbd178b77554731aac2a77a3ae138df2524863a938",
+      "size_bytes": 1774
+    },
+    "report.md": {
+      "sha256": "3fb9f9e4c40339961fc9d1a51e57bf21b32db20a95c6a3248d96b93183f4cec6",
+      "size_bytes": 638
+    },
+    "verdict.json": {
+      "sha256": "aa58f928328c150fa32e998e45871b914b9b980a2463c82ab867fc09eb1ae28f",
+      "size_bytes": 992
+    }
+  },
+  "run_id": "risk-contract-2026-08-17-v1",
+  "schema_version": "crypto-grid-run-checksums-v1",
+  "stage": "risk_contract"
+}

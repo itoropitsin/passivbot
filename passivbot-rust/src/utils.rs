@@ -210,6 +210,108 @@ pub fn calc_new_psize_pprice(
     )
 }
 
+/// Estimate isolated liquidation distance from one projected position.
+///
+/// The exchange-specific tier is supplied by the caller. Missing or invalid
+/// surfaces return None so an entry can fail closed. This conservative model
+/// still needs separate Bitget calibration before it can authorize trading.
+pub fn calc_liquidation_distance_for_position(
+    size: f64,
+    entry_price: f64,
+    mark: f64,
+    c_mult: f64,
+    leverage: f64,
+    maintenance_margin_rate: f64,
+    taker_fee: f64,
+    is_long: bool,
+) -> Option<f64> {
+    if !size.is_finite()
+        || size == 0.0
+        || !entry_price.is_finite()
+        || entry_price <= 0.0
+        || !mark.is_finite()
+        || mark <= 0.0
+        || !c_mult.is_finite()
+        || c_mult <= 0.0
+        || !leverage.is_finite()
+        || leverage <= 0.0
+        || !maintenance_margin_rate.is_finite()
+        || maintenance_margin_rate < 0.0
+        || maintenance_margin_rate >= 1.0
+        || !taker_fee.is_finite()
+    {
+        return None;
+    }
+    let maintenance_rate = maintenance_margin_rate + taker_fee.max(0.0);
+    if !maintenance_rate.is_finite() || maintenance_rate >= 1.0 {
+        return None;
+    }
+    let size = size.abs();
+    let qty_value = size * c_mult;
+    let entry_notional = qty_value * entry_price;
+    if !qty_value.is_finite() || qty_value <= 0.0 || !entry_notional.is_finite() {
+        return None;
+    }
+    let isolated_margin = entry_notional / leverage;
+    let liquidation_price = if is_long {
+        let denominator = qty_value * (1.0 - maintenance_rate);
+        if denominator <= 0.0 {
+            return None;
+        }
+        (entry_notional - isolated_margin) / denominator
+    } else {
+        let denominator = qty_value * (1.0 + maintenance_rate);
+        if denominator <= 0.0 {
+            return None;
+        }
+        (entry_notional + isolated_margin) / denominator
+    };
+    if !liquidation_price.is_finite() {
+        return None;
+    }
+    if liquidation_price <= 0.0 {
+        return Some(1.0);
+    }
+    let distance = if is_long {
+        if liquidation_price >= mark {
+            0.0
+        } else {
+            (mark - liquidation_price) / mark
+        }
+    } else if liquidation_price <= mark {
+        0.0
+    } else {
+        (liquidation_price - mark) / mark
+    };
+    if !distance.is_finite() {
+        return None;
+    }
+    Some(distance.clamp(0.0, 1.0))
+}
+
+#[pyfunction(name = "calc_liquidation_distance_for_position")]
+pub fn calc_liquidation_distance_for_position_py(
+    size: f64,
+    entry_price: f64,
+    mark: f64,
+    c_mult: f64,
+    leverage: f64,
+    maintenance_margin_rate: f64,
+    taker_fee: f64,
+    is_long: bool,
+) -> Option<f64> {
+    calc_liquidation_distance_for_position(
+        size,
+        entry_price,
+        mark,
+        c_mult,
+        leverage,
+        maintenance_margin_rate,
+        taker_fee,
+        is_long,
+    )
+}
+
 fn nan_to_0(value: f64) -> f64 {
     if value.is_nan() {
         0.0

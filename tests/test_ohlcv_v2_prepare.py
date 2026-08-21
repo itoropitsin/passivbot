@@ -1,5 +1,6 @@
 import importlib
 import json
+import logging
 import sys
 from types import SimpleNamespace
 
@@ -2400,6 +2401,96 @@ async def test_try_prepare_hlcvs_v2_local_fetches_missing_remote_range_into_stor
     )
     assert len(attempts) == 1
     assert attempts[0].outcome == "ok"
+
+
+@pytest.mark.asyncio
+async def test_try_prepare_hlcvs_v2_local_rejects_excessive_trailing_gap(
+    monkeypatch, tmp_path, caplog
+):
+    monkeypatch.chdir(tmp_path)
+    start = month_start_ts(2026, 4)
+    end = start + 24 * 60 * 60_000
+    timestamps = np.array([start + i * 60_000 for i in range(3)], dtype=np.int64)
+    values = np.array(
+        [
+            [101.0, 99.0, 100.0, 10.0],
+            [102.0, 100.0, 101.0, 11.0],
+            [103.0, 101.0, 102.0, 12.0],
+        ],
+        dtype=np.float32,
+    )
+    catalog = OhlcvCatalog(tmp_path / "caches" / "ohlcvs" / "catalog.sqlite")
+    store = OhlcvStore(tmp_path / "caches" / "ohlcvs", catalog)
+    store.write_rows("binance", "1m", "ETH/USDT:USDT", timestamps, values)
+    catalog.mark_gap(
+        exchange="binance",
+        timeframe="1m",
+        symbol="ETH/USDT:USDT",
+        start_ts=int(start + 3 * 60_000),
+        end_ts=int(end),
+        reason="no_archive",
+        persistent=True,
+        retry_count=3,
+        last_attempt_at=0,
+        next_retry_at=4102444800000,
+    )
+
+    async def fake_load_markets(exchange, verbose=False, **kwargs):
+        return {
+            "ETH/USDT:USDT": {
+                "base": "ETH",
+                "maker": 0.0002,
+                "taker": 0.00055,
+                "contractSize": 1.0,
+                "limits": {"cost": {"min": 0.01}, "amount": {"min": 0.001}},
+                "precision": {"price": 0.1, "amount": 0.001},
+            },
+            "BTC/USDT:USDT": {
+                "base": "BTC",
+                "maker": 0.0002,
+                "taker": 0.00055,
+                "contractSize": 1.0,
+                "limits": {"cost": {"min": 0.01}, "amount": {"min": 0.001}},
+                "precision": {"price": 0.1, "amount": 0.001},
+            },
+        }
+
+    async def fake_first_timestamps_unified(coins, exchange=None):
+        return {coin: int(start) for coin in coins}
+
+    async def fail_fetch_ohlcvs_for_v2_store(self, coin, *, start_ts, end_ts):
+        raise AssertionError("future persistent trailing gaps should not be retried")
+
+    monkeypatch.setattr("hlcv_preparation.load_markets", fake_load_markets)
+    monkeypatch.setattr("hlcv_preparation.get_first_timestamps_unified", fake_first_timestamps_unified)
+    monkeypatch.setattr(
+        "hlcv_preparation.HLCVManager.fetch_ohlcvs_for_v2_store",
+        fail_fetch_ohlcvs_for_v2_store,
+    )
+
+    config = {
+        "backtest": {
+            "start_date": "2026-04-01",
+            "end_date": "2026-04-02",
+            "gap_tolerance_ohlcvs_minutes": 120.0,
+            "cm_debug_level": 0,
+            "cm_progress_log_interval_seconds": 0.0,
+        },
+        "live": {
+            "approved_coins": {"long": ["ETH"], "short": []},
+            "minimum_coin_age_days": 0.0,
+            "warmup_ratio": 0.0,
+            "max_warmup_minutes": 0.0,
+        },
+        "bot": _minimal_bot_config(),
+    }
+
+    caplog.set_level(logging.INFO)
+    prepared = await try_prepare_hlcvs_v2_local(config, "binance")
+
+    assert prepared is None
+    assert "v2 local trailing gap for ETH exceeds tolerance" in caplog.text
+    assert "missing_minutes=1438" in caplog.text
 
 
 @pytest.mark.asyncio

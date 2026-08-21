@@ -320,6 +320,119 @@ def test_log_new_fill_events_records_fill_history():
     assert bot._health_pnl == pytest.approx(1.25)
 
 
+def test_monitor_typed_fill_payload_does_not_invent_missing_order_or_reference():
+    import passivbot as pb_mod
+
+    class FakeBot:
+        _monitor_fill_payload = pb_mod.Passivbot._monitor_fill_payload
+
+        def __init__(self):
+            self.quote = "USDT"
+
+    bot = FakeBot()
+    event = SimpleNamespace(
+        id="fill-without-order-id",
+        timestamp=1234,
+        symbol="BTC/USDT:USDT",
+        side="buy",
+        position_side="long",
+        qty=0.01,
+        price=100_000.0,
+        pnl=0.0,
+        fee=0.1,
+        pb_order_type="entry_grid_normal_long",
+        client_order_id=None,
+        source_ids=[],
+        raw=[],
+    )
+
+    payload = bot._monitor_fill_payload(event)
+
+    assert payload["fill_id"] == "fill-without-order-id"
+    assert payload["order_id"] is None
+    assert payload["part_sequence"] is None
+    assert payload["fee"] == {
+        "amount": 0.1,
+        "currency": "USDT",
+        "rate": pytest.approx(0.0001),
+    }
+    assert payload["slippage"] == {
+        "reference_price": None,
+        "executed_price": 100_000.0,
+    }
+
+
+def test_monitor_typed_fill_payload_reads_nested_paper_fill_evidence():
+    import passivbot as pb_mod
+
+    class FakeBot:
+        _monitor_fill_payload = pb_mod.Passivbot._monitor_fill_payload
+
+        def __init__(self):
+            self.quote = "USDT"
+
+    bot = FakeBot()
+    event = SimpleNamespace(
+        id="fill-paper-1",
+        timestamp=1234,
+        symbol="BTC/USDT:USDT",
+        side="buy",
+        position_side="long",
+        qty=0.01,
+        price=100_100.0,
+        pnl=0.0,
+        fee_paid=-0.55055,
+        fee_currency="USDT",
+        fee_ratio=-0.00055,
+        pb_order_type="entry_grid_normal_long",
+        client_order_id="cid-1",
+        source_ids=["fill-paper-1"],
+        raw=[
+            {
+                "source": "fetch_my_trades",
+                "data": {
+                    "order": "order-paper-1",
+                    "info": {
+                        "typed_fee": {
+                            "amount": 0.55055,
+                            "currency": "USDT",
+                            "rate": 0.00055,
+                        },
+                        "typed_slippage": {
+                            "reference_price": 100_000.0,
+                            "executed_price": 100_100.0,
+                        },
+                        "part_sequence": 1,
+                        "quantity_before": 0.0,
+                        "quantity_after": 0.01,
+                        "strategy_id": "bitget:paper",
+                        "cycle_id": "cycle-1",
+                        "config_hash": "config-hash-1",
+                    },
+                },
+            }
+        ],
+    )
+
+    payload = bot._monitor_fill_payload(event)
+
+    assert payload["order_id"] == "order-paper-1"
+    assert payload["fee"] == {
+        "amount": pytest.approx(0.55055),
+        "currency": "USDT",
+        "rate": pytest.approx(0.00055),
+    }
+    assert payload["slippage"] == {
+        "reference_price": 100_000.0,
+        "executed_price": 100_100.0,
+    }
+    assert payload["quantity_before"] == pytest.approx(0.0)
+    assert payload["quantity_after"] == pytest.approx(0.01)
+    assert payload["strategy_id"] == "bitget:paper"
+    assert payload["cycle_id"] == "cycle-1"
+    assert payload["config_hash"] == "config-hash-1"
+
+
 def test_monitor_record_price_ticks_delegates_valid_prices_only():
     import passivbot as pb_mod
 

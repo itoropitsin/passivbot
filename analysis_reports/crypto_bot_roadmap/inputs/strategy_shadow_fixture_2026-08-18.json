@@ -1,0 +1,35 @@
+[
+  {
+    "snapshot_id": "fixture-1",
+    "timestamp": 1787059200000,
+    "symbol": "BTC/USDT:USDT",
+    "bid": 63000.0,
+    "ask": 63010.0,
+    "last": 63005.0,
+    "mark_price": 63005.0,
+    "index_price": 63020.0,
+    "signals": {"long": "enter", "short": "enter"}
+  },
+  {
+    "snapshot_id": "fixture-2",
+    "timestamp": 1787059260000,
+    "symbol": "BTC/USDT:USDT",
+    "bid": 63020.0,
+    "ask": 63030.0,
+    "last": 63025.0,
+    "mark_price": 63005.0,
+    "index_price": 63015.0,
+    "signals": {"long": "hold", "short": "hold"}
+  },
+  {
+    "snapshot_id": "fixture-3",
+    "timestamp": 1787059320000,
+    "symbol": "BTC/USDT:USDT",
+    "bid": 63040.0,
+    "ask": 63050.0,
+    "last": 63045.0,
+    "mark_price": 63005.0,
+    "index_price": 63010.0,
+    "signals": {"long": "exit", "short": "exit"}
+  }
+]

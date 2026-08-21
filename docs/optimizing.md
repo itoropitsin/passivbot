@@ -385,6 +385,14 @@ Each optimization run creates a directory:
 optimize_results/YYYY-MM-DDTHH_MM_SS_{exchanges}_{n_days}days_{coin_label}_{hash}/
 ```
 
+Use `--seed` when an optimization is one of several independent research
+runs. It seeds Python and NumPy before the optimizer starts, so the seed can
+be written into the experiment passport and the run can be repeated:
+
+```bash
+passivbot optimize configs/your_config.json --seed 101
+```
+
 Contents:
 - `all_results.bin`: Binary log of all evaluated configs (msgpack format)
 - `pareto/`: JSON files for Pareto-optimal configurations

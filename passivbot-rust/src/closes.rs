@@ -43,6 +43,26 @@ pub fn calc_close_qty(
     }
 }
 
+fn is_risk_close_order_type(order_type: OrderType) -> bool {
+    matches!(
+        order_type,
+        OrderType::CloseAutoReduceWelLong
+            | OrderType::CloseAutoReduceWelShort
+            | OrderType::CloseAutoReduceTwelLong
+            | OrderType::CloseAutoReduceTwelShort
+    )
+}
+
+fn merge_close_order_type(previous: OrderType, current: OrderType) -> OrderType {
+    if is_risk_close_order_type(previous) {
+        previous
+    } else if is_risk_close_order_type(current) {
+        current
+    } else {
+        current
+    }
+}
+
 fn calc_wel_auto_reduce_long(
     exchange_params: &ExchangeParams,
     state_params: &StateParams,
@@ -929,13 +949,17 @@ pub fn calc_closes_long(
             }
             if closes[closes.len() - 1].price == close.price {
                 let previous_close = closes.pop();
+                let previous_order_type = previous_close
+                    .as_ref()
+                    .map(|order| order.order_type)
+                    .unwrap_or(close.order_type);
                 let merged_close = Order {
                     qty: round_(
                         previous_close.unwrap().qty + close.qty,
                         exchange_params.qty_step,
                     ),
                     price: close.price,
-                    order_type: close.order_type,
+                    order_type: merge_close_order_type(previous_order_type, close.order_type),
                 };
                 let mut merged_close = merged_close;
                 merged_close.price = quantize_price(
@@ -1003,13 +1027,17 @@ pub fn calc_closes_short(
             }
             if closes[closes.len() - 1].price == close.price {
                 let previous_close = closes.pop();
+                let previous_order_type = previous_close
+                    .as_ref()
+                    .map(|order| order.order_type)
+                    .unwrap_or(close.order_type);
                 let merged_close = Order {
                     qty: round_(
                         previous_close.unwrap().qty + close.qty,
                         exchange_params.qty_step,
                     ),
                     price: close.price,
-                    order_type: close.order_type,
+                    order_type: merge_close_order_type(previous_order_type, close.order_type),
                 };
                 let mut merged_close = merged_close;
                 merged_close.price = quantize_price(

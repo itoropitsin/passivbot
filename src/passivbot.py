@@ -1,6 +1,7 @@
 from __future__ import annotations
 import os
 import time
+import hashlib
 
 # fix Crashes on Windows
 from tools.event_loop_policy import set_windows_event_loop_policy
@@ -63,6 +64,12 @@ from config.access import (
     require_config_value,
     require_live_value,
 )
+from research.risk_policy import (
+    CryptoRiskLimits,
+    capped_sizing_balance,
+    select_maintenance_margin_rate,
+)
+from research.live_risk_snapshot import export_live_gate_decisions
 from config.coerce import (
     normalize_hsl_cooldown_position_policy,
     normalize_hsl_signal_mode,
@@ -602,8 +609,60 @@ class Passivbot:
             lvl = 1
         self.logging_level = max(0, min(int(lvl), 3))
         self.user = require_live_value(config, "user")
-        self.user_info = load_user_info(self.user)
+        try:
+            self.user_info = load_user_info(self.user, safe_only=True)
+        except TypeError:
+            # Keep compatibility with test/user-provided loaders that expose
+            # the old one-argument callable. The real loader supports the safe
+            # paper-routing form above.
+            self.user_info = load_user_info(self.user)
         self.exchange = self.user_info["exchange"]
+        self._paper_mode = bool(
+            config.get("_paper_mode")
+            or get_optional_live_value(config, "paper_mode", False)
+            or self.user_info.get("paper")
+            or self.user_info.get("paper_mode")
+        )
+        if not self._paper_mode:
+            self.user_info = load_user_info(self.user)
+        self._crypto_live_authorized = bool(
+            config.get("_crypto_live_authorized", False)
+        )
+        self.strategy_id = f"{self.exchange}:{self.user}"
+        self._monitor_cycle_id = 0
+        self._monitor_trade_cycle_sequence = 0
+        self._monitor_trade_cycles = {}
+        # Keep event identity stable without hashing credentials or other
+        # exchange-specific runtime state. The full experiment passport still
+        # hashes the complete input configuration separately.
+        config_identity = {
+            "exchange": self.exchange,
+            "user": self.user,
+            "bot": get_optional_config_value(config, "bot", {}),
+            "portfolio_risk": get_optional_live_value(config, "portfolio_risk", {}),
+            "sizing_balance_cap": get_optional_live_value(
+                config, "sizing_balance_cap", None
+            ),
+            "margin_mode_preference": get_optional_live_value(
+                config, "margin_mode_preference", None
+            ),
+            "leverage": get_optional_live_value(config, "leverage", None),
+            "hedge_mode": get_optional_live_value(config, "hedge_mode", None),
+            "paper_mode": self._paper_mode,
+            "paper_symbols": get_optional_live_value(config, "paper_symbols", None),
+            "paper_initial_balance": get_optional_live_value(
+                config, "paper_initial_balance", None
+            ),
+        }
+        self.config_hash = hashlib.sha256(
+            json.dumps(
+                config_identity,
+                sort_keys=True,
+                ensure_ascii=False,
+                default=str,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        ).hexdigest()
         self.broker_code = load_broker_code(self.user_info["exchange"])
         self.exchange_ccxt_id = to_ccxt_exchange_id(self.exchange)
         self.endpoint_override = resolve_custom_endpoint_override(self.exchange_ccxt_id)
@@ -1020,6 +1079,11 @@ class Passivbot:
     _monitor_fill_payload = pb_monitor._monitor_fill_payload
     _monitor_record_fill_history = pb_monitor._monitor_record_fill_history
     _monitor_record_price_ticks = pb_monitor._monitor_record_price_ticks
+    _monitor_record_runtime_observations = pb_monitor._monitor_record_runtime_observations
+    _monitor_record_funding_evidence = pb_monitor._monitor_record_funding_evidence
+    _monitor_record_reconciliation_evidence = (
+        pb_monitor._monitor_record_reconciliation_evidence
+    )
     _monitor_handle_candlestick_persist = pb_monitor._monitor_handle_candlestick_persist
     _build_health_summary_payload = pb_monitor._build_health_summary_payload
     _monitor_recent_orders_payload = pb_monitor._monitor_recent_orders_payload
@@ -1121,6 +1185,13 @@ class Passivbot:
 
     def _equity_hard_stop_enabled(self) -> bool:
         return bool(self.equity_hard_stop_loss["enabled"])
+
+    def _runtime_path(self, relative_path: str) -> str:
+        """Resolve an optional per-run test root without changing live defaults."""
+        runtime_root = get_optional_config_value(self.config, "_runtime_root", None)
+        if runtime_root:
+            return make_get_filepath(str(Path(str(runtime_root)).expanduser() / relative_path))
+        return make_get_filepath(relative_path)
 
     def _equity_hard_stop_latch_path(self) -> str:
         return make_get_filepath(
@@ -5515,6 +5586,7 @@ class Passivbot:
 
     async def execute_to_exchange(self, *, prepare_cycle: bool = True):
         """Run one execution cycle including config sync and order placement/cancellation."""
+        self._monitor_cycle_id = int(getattr(self, "_monitor_cycle_id", 0) or 0) + 1
         return await executor.execute_to_exchange(self, prepare_cycle=prepare_cycle)
 
     async def _filter_fresh_market_snapshot_creations(
@@ -6866,13 +6938,588 @@ class Passivbot:
         allowance_pct = float(self.bp(pside, "risk_we_excess_allowance_pct", symbol))
         allowance_multiplier = 1.0 + max(0.0, allowance_pct)
         effective_limit = base_limit * allowance_multiplier
-        return self.get_hysteresis_snapped_balance() * effective_limit * self.bp(
+        return self.get_sizing_balance() * effective_limit * self.bp(
             pside, "entry_initial_qty_pct", symbol
         ) >= self.effective_min_cost.get(symbol, float("inf"))
 
     def get_hysteresis_snapped_balance(self) -> float:
         """Return hysteresis-snapped balance used for sizing."""
         return float(getattr(self, "balance", 0.0) or 0.0)
+
+    def get_sizing_balance(self) -> float:
+        """Return the balance allowed to determine order size.
+
+        The cap is opt-in so existing non-crypto configurations retain their
+        historical behaviour. Once the crypto portfolio profile is enabled,
+        leverage cannot increase the sizing balance and a loss can only reduce
+        it.
+        """
+        profile = get_optional_live_value(getattr(self, "config", {}), "portfolio_risk", {})
+        if not isinstance(profile, dict) or not bool(profile.get("enabled", False)):
+            return self.get_hysteresis_snapped_balance()
+        # The crypto profile follows the exchange-reported balance directly;
+        # hysteresis is useful for ordinary legacy sizing but would delay the
+        # plan's required reduction after a loss.
+        balance = self.get_raw_balance()
+        cap = get_optional_live_value(
+            getattr(self, "config", {}), "sizing_balance_cap", 1_000.0
+        )
+        return capped_sizing_balance(balance, float(cap))
+
+    def _update_crypto_daily_loss_ratio(self, equity: float, *, now_ms: int | None = None) -> None:
+        """Track loss from the UTC day opening equity for the opt-in profile.
+
+        The value is deliberately only a measurement. The portfolio boundary
+        below decides whether a new entry is allowed and fails closed when the
+        measurement has not been established yet.
+        """
+        profile = get_optional_live_value(getattr(self, "config", {}), "portfolio_risk", {})
+        if not isinstance(profile, dict) or not bool(profile.get("enabled", False)):
+            return
+        value = float(equity)
+        if not math.isfinite(value) or value <= 0.0:
+            self._crypto_daily_loss_ratio = None
+            return
+        timestamp_ms = int(now_ms if now_ms is not None else utc_ms())
+        day = timestamp_ms // 86_400_000
+        if getattr(self, "_crypto_loss_day", None) != day:
+            self._crypto_loss_day = day
+            self._crypto_day_open_equity = value
+        day_open = float(getattr(self, "_crypto_day_open_equity", 0.0) or 0.0)
+        if not math.isfinite(day_open) or day_open <= 0.0:
+            self._crypto_daily_loss_ratio = None
+            return
+        self._crypto_daily_loss_ratio = max(0.0, min(1.0, (day_open - value) / day_open))
+
+    async def _refresh_crypto_market_surfaces_for_risk(
+        self, symbols: Iterable[str]
+    ) -> None:
+        """Refresh exchange-specific risk inputs before the synchronous gate."""
+
+        profile = get_optional_live_value(self.config, "portfolio_risk", {})
+        if not isinstance(profile, dict) or not bool(profile.get("enabled", False)):
+            return
+        refresh = getattr(self, "refresh_crypto_market_surfaces", None)
+        if not callable(refresh):
+            return
+        ordered = list(dict.fromkeys(str(symbol) for symbol in symbols if str(symbol).strip()))
+        if ordered:
+            await refresh(ordered)
+
+    def _apply_crypto_portfolio_risk_limits(
+        self, ideal_orders: dict[str, list], last_prices: dict[str, float]
+    ) -> dict[str, list]:
+        """Remove entry orders that would cross the opt-in crypto portfolio caps.
+
+        The Rust planner remains the source of order geometry. This final
+        shared live/backtest boundary applies portfolio-wide limits that are
+        not part of one symbol's grid calculation. Missing daily-loss data,
+        or missing liquidation data after a position exists, fail closed for
+        new entries; the first entry has its own 3% cap and reduce-only orders
+        remain available for recovery.
+        """
+        profile = get_optional_live_value(self.config, "portfolio_risk", {})
+        if not isinstance(profile, dict) or not bool(profile.get("enabled", False)):
+            return ideal_orders
+
+        policy_keys = {
+            "max_total_exposure_ratio",
+            "max_used_margin_ratio",
+            "new_entry_min_liquidation_distance",
+            "reduce_only_min_liquidation_distance",
+            "emergency_liquidation_distance",
+            "max_active_grids",
+            "max_symbol_exposure_ratio",
+            "daily_loss_stop_ratio",
+            "max_automatic_restarts_per_day",
+        }
+        policy_values = {key: profile[key] for key in policy_keys if key in profile}
+        policy_values["max_initial_entry_pct"] = profile.get(
+            "max_initial_entry_sizing_balance_pct", 0.03
+        )
+        policy = CryptoRiskLimits.from_mapping(policy_values)
+
+        # Bitget supplies the risk mark, fee and maintenance tiers through a
+        # validated public market surface.  Keep the generic fallback for
+        # isolated unit fixtures, while the real Bitget adapter is explicitly
+        # fail-closed when one of these values is absent.
+        surfaces = getattr(self, "_crypto_market_surfaces", {}) or {}
+        surface_required = bool(
+            getattr(self, "_crypto_market_surface_required", False)
+        )
+        risk_mark_prices = {} if surface_required else dict(last_prices)
+        surface_taker_fees: dict[str, float] = {}
+        surface_tiers: dict[str, Any] = {}
+        required_surface_symbols = set(str(symbol) for symbol in ideal_orders)
+        required_surface_symbols.update(
+            str(symbol) for symbol in (getattr(self, "positions", {}) or {})
+        )
+        missing_surface_symbols: set[str] = set()
+        for symbol in required_surface_symbols:
+            surface = surfaces.get(symbol) if isinstance(surfaces, dict) else None
+            if not isinstance(surface, dict):
+                if surface_required:
+                    missing_surface_symbols.add(symbol)
+                continue
+            try:
+                mark = float(surface["mark_price"])
+                fee = float(surface["taker_fee"])
+                tiers = surface["margin_tiers"]
+                if not math.isfinite(mark) or mark <= 0.0:
+                    raise ValueError("mark_price")
+                if not math.isfinite(fee) or fee < 0.0:
+                    raise ValueError("taker_fee")
+                if not isinstance(tiers, list) or not tiers:
+                    raise ValueError("margin_tiers")
+            except (KeyError, TypeError, ValueError):
+                if surface_required:
+                    missing_surface_symbols.add(symbol)
+                continue
+            risk_mark_prices[symbol] = mark
+            surface_taker_fees[symbol] = fee
+            surface_tiers[symbol] = tiers
+
+        def surface_number(symbol: str, field: str, fallback: Any) -> float | None:
+            if not surface_required:
+                try:
+                    value = float(fallback)
+                except (TypeError, ValueError):
+                    return None
+                return value if math.isfinite(value) else None
+            surface = surfaces.get(symbol) if isinstance(surfaces, dict) else None
+            if not isinstance(surface, dict):
+                return None
+            try:
+                value = float(surface[field])
+            except (KeyError, TypeError, ValueError):
+                return None
+            return value if math.isfinite(value) and value > 0.0 else None
+
+        def is_close_order(order) -> bool:
+            """Recognise both raw planner tuples and executable order dicts."""
+            if isinstance(order, dict):
+                return bool(order.get("reduce_only", False)) or "close" in str(
+                    order.get("pb_order_type") or order.get("order_type") or ""
+                ).lower()
+            if isinstance(order, (tuple, list)) and len(order) >= 3:
+                return "close" in str(order[2]).lower()
+            return False
+
+        balance = self.get_sizing_balance()
+        if not math.isfinite(balance) or balance <= 0.0:
+            return {
+                symbol: [order for order in orders if is_close_order(order)]
+                for symbol, orders in ideal_orders.items()
+            }
+
+        def cost(symbol: str, qty: float, price: float) -> float:
+            multiplier = surface_number(
+                symbol,
+                "contract_size",
+                (getattr(self, "c_mults", {}) or {}).get(symbol, 1.0),
+            )
+            if multiplier is None:
+                return float("nan")
+            return abs(qty) * price * multiplier
+
+        def position_side_for_order(order_type: str, order: Any) -> str | None:
+            if isinstance(order, dict):
+                explicit = str(order.get("position_side") or order.get("pside") or "").lower()
+                if explicit in {"long", "short"}:
+                    return explicit
+            if "short" in order_type:
+                return "short"
+            if "long" in order_type:
+                return "long"
+            return None
+
+        def combine_position(
+            symbol: str,
+            side: str,
+            qty: float,
+            price: float,
+            projected_positions: dict[tuple[str, str], tuple[float, float]],
+        ) -> tuple[float, float] | None:
+            current_size, current_price = projected_positions.get((symbol, side), (0.0, 0.0))
+            qty_step = surface_number(
+                symbol,
+                "qty_step",
+                (getattr(self, "qty_steps", {}) or {}).get(symbol, 0.0),
+            )
+            if qty_step is None:
+                return None
+            if current_size == 0.0:
+                return abs(qty), price
+            if qty_step <= 0.0 or not math.isfinite(qty_step):
+                return None
+            rust_combiner = getattr(pbr, "calc_new_psize_pprice", None)
+            if not callable(rust_combiner):
+                return None
+            try:
+                new_size, new_price = rust_combiner(
+                    abs(float(current_size)),
+                    float(current_price),
+                    abs(float(qty)),
+                    float(price),
+                    qty_step,
+                )
+                new_size = float(new_size)
+                new_price = float(new_price)
+            except (TypeError, ValueError, ArithmeticError):
+                return None
+            if (
+                not math.isfinite(new_size)
+                or not math.isfinite(new_price)
+                or new_size <= 0.0
+                or new_price <= 0.0
+            ):
+                return None
+            return new_size, new_price
+
+        def projected_distance(
+            symbol: str,
+            side: str,
+            projected_position: tuple[float, float],
+            mark: float,
+        ) -> tuple[float, str] | None:
+            size, entry_price = projected_position
+            multiplier = surface_number(
+                symbol,
+                "contract_size",
+                (getattr(self, "c_mults", {}) or {}).get(symbol, 0.0),
+            )
+            if multiplier is None:
+                return None
+            leverage = float(get_optional_live_value(self.config, "leverage", 0.0) or 0.0)
+            market = getattr(self, "markets_dict", {}).get(symbol, {}) or {}
+            if not isinstance(market, dict):
+                return None
+            taker_fee = surface_taker_fees.get(symbol, market.get("taker"))
+            if taker_fee in (None, ""):
+                return None
+            try:
+                notional = abs(size) * mark * multiplier
+                selected = select_maintenance_margin_rate(
+                    surface_tiers.get(
+                        symbol, getattr(self, "_crypto_margin_tiers", None)
+                    ),
+                    symbol=symbol,
+                    notional=notional,
+                )
+                if selected is None:
+                    return None
+                maintenance_rate, _tier_id = selected
+                calculator = getattr(pbr, "calc_liquidation_distance_for_position", None)
+                if not callable(calculator):
+                    return None
+                distance = calculator(
+                    size,
+                    entry_price,
+                    mark,
+                    multiplier,
+                    leverage,
+                    maintenance_rate,
+                    float(taker_fee),
+                    side == "long",
+                )
+                if distance is None:
+                    return None
+                distance = float(distance)
+                return (distance, str(_tier_id)) if math.isfinite(distance) else None
+            except (TypeError, ValueError, ArithmeticError):
+                return None
+
+        symbol_exposure: dict[str, float] = {}
+        total_exposure = 0.0
+        active_symbols: set[str] = set()
+        projected_positions: dict[tuple[str, str], tuple[float, float]] = {}
+        existing_positions_present = False
+        current_projected_distance_ready = True
+        current_min_projected_distance = 1.0
+        projected_risk_trace: list[dict[str, Any]] = []
+        for symbol, sides in getattr(self, "positions", {}).items():
+            side_map = sides if isinstance(sides, dict) else {}
+            try:
+                price = float(risk_mark_prices.get(symbol, 0.0) or 0.0)
+            except (TypeError, ValueError):
+                price = 0.0
+            if price <= 0.0:
+                for pside in ("long", "short"):
+                    try:
+                        size = float(side_map.get(pside, {}).get("size", 0.0) or 0.0)
+                    except (AttributeError, TypeError, ValueError):
+                        size = float("nan")
+                    if size != 0.0:
+                        existing_positions_present = True
+                        current_projected_distance_ready = False
+                continue
+            symbol_total = 0.0
+            for pside in ("long", "short"):
+                position = side_map.get(pside, {})
+                try:
+                    size = float(position.get("size", 0.0) or 0.0)
+                except (AttributeError, TypeError, ValueError):
+                    size = float("nan")
+                if size == 0.0:
+                    continue
+                existing_positions_present = True
+                if not math.isfinite(size):
+                    current_projected_distance_ready = False
+                    continue
+                position_cost = cost(symbol, size, price)
+                if not math.isfinite(position_cost) or position_cost <= 0.0:
+                    current_projected_distance_ready = False
+                    continue
+                symbol_total += position_cost
+                try:
+                    position_price = float(position.get("price", 0.0) or 0.0)
+                except (AttributeError, TypeError, ValueError):
+                    position_price = 0.0
+                if not math.isfinite(position_price) or position_price <= 0.0:
+                    current_projected_distance_ready = False
+                    continue
+                projected_position = (abs(size), position_price)
+                projected_positions[(symbol, pside)] = projected_position
+                risk_result = projected_distance(
+                    symbol, pside, projected_position, price
+                )
+                if risk_result is None:
+                    current_projected_distance_ready = False
+                else:
+                    current_min_projected_distance = min(
+                        current_min_projected_distance, risk_result[0]
+                    )
+            if symbol_total > 0.0:
+                symbol_exposure[symbol] = symbol_total
+                total_exposure += symbol_total
+                active_symbols.add(symbol)
+
+        # Daily loss is required for every entry. With a validated projected
+        # surface, the liquidation distance applies to initial and grid entries
+        # alike. A compatibility fixture without that surface may still admit
+        # an initial entry only under the separate 3% hard cap below; the real
+        # Bitget path marks the surface as required and therefore fails closed.
+        min_liquidation_distance = getattr(self, "_crypto_min_liquidation_distance", None)
+        daily_loss_ratio = getattr(self, "_crypto_daily_loss_ratio", None)
+        liquidation_measurement_ready = min_liquidation_distance is not None
+        daily_loss_measurement_ready = daily_loss_ratio is not None
+        if liquidation_measurement_ready:
+            try:
+                min_liquidation_distance = float(min_liquidation_distance)
+            except (TypeError, ValueError):
+                liquidation_measurement_ready = False
+        if daily_loss_measurement_ready:
+            try:
+                daily_loss_ratio = float(daily_loss_ratio)
+            except (TypeError, ValueError):
+                daily_loss_measurement_ready = False
+        if liquidation_measurement_ready and (
+            not math.isfinite(min_liquidation_distance)
+            or min_liquidation_distance < 0.0
+        ):
+            liquidation_measurement_ready = False
+        if daily_loss_measurement_ready and (
+            not math.isfinite(daily_loss_ratio) or daily_loss_ratio < 0.0
+        ):
+            daily_loss_measurement_ready = False
+
+        current_position_risk_blocked = False
+        if existing_positions_present:
+            if not current_projected_distance_ready:
+                current_position_risk_blocked = True
+            else:
+                if current_min_projected_distance < policy.emergency_liquidation_distance:
+                    current_threshold = policy.emergency_liquidation_distance
+                elif current_min_projected_distance < policy.reduce_only_min_liquidation_distance:
+                    current_threshold = policy.reduce_only_min_liquidation_distance
+                else:
+                    current_threshold = policy.new_entry_min_liquidation_distance
+                current_position_risk_blocked = (
+                    current_min_projected_distance < current_threshold
+                )
+
+        # A missing surface for any open position or candidate makes the
+        # portfolio-wide exposure state incomplete. Keep closes available but
+        # do not authorize entries for another symbol using a partial state.
+        surface_blocks_all_entries = surface_required and bool(missing_surface_symbols)
+
+        out: dict[str, list] = {}
+        blocked_reasons: Counter[str] = Counter()
+        for symbol, orders in ideal_orders.items():
+            kept: list = []
+            pending_symbol = symbol_exposure.get(symbol, 0.0)
+            has_entry = False
+            for order in orders:
+                if isinstance(order, dict):
+                    order_type = str(
+                        order.get("pb_order_type")
+                        or order.get("order_type")
+                        or ""
+                    ).lower()
+                    execution_type = str(
+                        order.get("type") or order.get("execution_type") or "limit"
+                    ).lower()
+                    reduce_only = bool(order.get("reduce_only", False))
+                    raw_qty = order.get("qty")
+                    raw_price = order.get("price")
+                elif isinstance(order, (tuple, list)) and len(order) >= 3:
+                    order_type = str(order[2]).lower()
+                    execution_type = (
+                        str(order[4]).lower() if len(order) >= 5 else "limit"
+                    )
+                    reduce_only = "close" in order_type
+                    raw_qty = order[0]
+                    raw_price = order[1]
+                else:
+                    blocked_reasons["invalid_order_shape"] += 1
+                    continue
+
+                is_close = reduce_only or "close" in order_type
+                is_emergency_close = is_close and any(
+                    token in order_type for token in ("panic", "emergency")
+                )
+                if execution_type == "market" and not is_emergency_close:
+                    blocked_reasons["ordinary_market_order"] += 1
+                    continue
+                if is_close:
+                    kept.append(order)
+                    continue
+                if surface_blocks_all_entries:
+                    blocked_reasons["missing_market_surface"] += 1
+                    continue
+                if not daily_loss_measurement_ready:
+                    blocked_reasons["missing_daily_loss"] += 1
+                    continue
+                if current_position_risk_blocked:
+                    blocked_reasons["current_projected_liquidation_distance"] += 1
+                    continue
+                if daily_loss_ratio >= policy.daily_loss_stop:
+                    blocked_reasons["daily_loss"] += 1
+                    continue
+                try:
+                    qty = float(raw_qty)
+                    price = float(raw_price)
+                except (TypeError, ValueError):
+                    blocked_reasons["invalid_order_numbers"] += 1
+                    continue
+                order_cost = cost(symbol, qty, price)
+                if not math.isfinite(order_cost) or order_cost <= 0.0:
+                    blocked_reasons["invalid_order_cost"] += 1
+                    continue
+                projected_symbol = pending_symbol + order_cost
+                projected_total = total_exposure + order_cost
+                projected_margin = projected_total / max(balance, 1e-12) / max(
+                    float(get_optional_live_value(self.config, "leverage", 3.0) or 3.0),
+                    1.0,
+                )
+                if projected_symbol / balance > policy.max_symbol_exposure:
+                    blocked_reasons["symbol_exposure"] += 1
+                    continue
+                if projected_total / balance > policy.max_total_exposure:
+                    blocked_reasons["total_exposure"] += 1
+                    continue
+                if projected_margin > policy.max_used_margin:
+                    blocked_reasons["used_margin"] += 1
+                    continue
+                if symbol not in active_symbols and len(active_symbols) >= policy.max_active_grids:
+                    blocked_reasons["active_grids"] += 1
+                    continue
+                if order_type.startswith("entry_initial_"):
+                    if order_cost / max(balance, 1e-12) > policy.max_initial_entry_pct:
+                        blocked_reasons["initial_entry_size"] += 1
+                        continue
+                position_side = position_side_for_order(order_type, order)
+                if position_side is None:
+                    blocked_reasons["missing_position_side"] += 1
+                    continue
+                projected_position = combine_position(
+                    symbol, position_side, qty, price, projected_positions
+                )
+                if projected_position is None:
+                    blocked_reasons["missing_projected_position_surface"] += 1
+                    continue
+                projected_trace = {
+                    "symbol": symbol,
+                    "position_side": position_side,
+                    "qty": abs(qty),
+                    "price": price,
+                    "projected_position_size": projected_position[0],
+                    "projected_entry_price": projected_position[1],
+                    "projected_mark_price": float(
+                        risk_mark_prices.get(symbol, 0.0) or 0.0
+                    ),
+                    "projected_margin_tier": None,
+                    "projected_liquidation_distance": None,
+                }
+                is_initial_entry = order_type.startswith("entry_initial_")
+                mark = float(risk_mark_prices.get(symbol, 0.0) or 0.0)
+                risk_result = projected_distance(
+                    symbol, position_side, projected_position, mark
+                )
+                if risk_result is None:
+                    if not is_initial_entry:
+                        projected_trace["decision"] = "deny"
+                        projected_trace["reason"] = "missing_projected_liquidation_distance"
+                        projected_risk_trace.append(projected_trace)
+                        blocked_reasons["missing_projected_liquidation_distance"] += 1
+                        continue
+                else:
+                    distance, tier_id = risk_result
+                    projected_trace["projected_margin_tier"] = tier_id
+                    projected_trace["projected_liquidation_distance"] = distance
+                    if distance < policy.new_entry_min_liquidation_distance:
+                        projected_trace["decision"] = "deny"
+                        projected_trace["reason"] = "projected_liquidation_distance"
+                        projected_risk_trace.append(projected_trace)
+                        blocked_reasons["projected_liquidation_distance"] += 1
+                        continue
+                projected_trace["decision"] = "allow"
+                projected_trace["reason"] = "portfolio_risk_gate_allow"
+                projected_risk_trace.append(projected_trace)
+                kept.append(order)
+                pending_symbol = projected_symbol
+                total_exposure = projected_total
+                active_symbols.add(symbol)
+                projected_positions[(symbol, position_side)] = projected_position
+                has_entry = True
+            if kept:
+                out[symbol] = kept
+            if has_entry:
+                symbol_exposure[symbol] = pending_symbol
+        if blocked_reasons:
+            record_risk_event = getattr(self, "_monitor_record_event", None)
+            if callable(record_risk_event):
+                record_risk_event(
+                    "risk.entry_blocked",
+                    ("risk", "entry"),
+                    {
+                        "reasons": dict(blocked_reasons),
+                        "sizing_balance": float(balance),
+                        "min_liquidation_distance": min_liquidation_distance,
+                        "daily_loss_ratio": daily_loss_ratio,
+                    },
+                )
+        # Evidence export is deliberately after the actual gate.  It records
+        # what this live path accepted or rejected and never feeds a second
+        # policy back into order planning.  Missing exchange surfaces make
+        # the export blocked; the existing fail-closed order gate remains the
+        # only trading decision.
+        self._last_crypto_risk_parity_export = export_live_gate_decisions(
+            self,
+            ideal_orders,
+            out,
+            risk_mark_prices,
+            as_of_ms=utc_ms(),
+            margin_tiers=getattr(
+                self,
+                "_crypto_risk_margin_tiers",
+                getattr(self, "_crypto_margin_tiers", None),
+            ),
+        )
+        if isinstance(self._last_crypto_risk_parity_export, dict):
+            self._last_crypto_risk_parity_export["projected_risk_trace"] = projected_risk_trace
+        self._last_crypto_projected_risk_trace = projected_risk_trace
+        return out
 
     def get_raw_balance(self) -> float:
         """Return raw wallet balance (fallback to snapped for legacy test stubs)."""
@@ -7834,6 +8481,9 @@ class Passivbot:
             try:
                 equity = balance_raw + (await self.calc_upnl_sum())
                 self._monitor_last_equity = float(equity)
+                update_daily_loss = getattr(self, "_update_crypto_daily_loss_ratio", None)
+                if callable(update_daily_loss):
+                    update_daily_loss(float(equity))
                 if should_log:
                     logging.info(
                         "[balance] raw %.6f -> %.6f | snap %.6f -> %.6f | equity: %.4f source: %s",
@@ -7846,19 +8496,19 @@ class Passivbot:
                     )
                     if raw_only:
                         self._last_raw_only_log_time = now
+                balance_event = {
+                    "previous_balance_raw": float(self._previous_balance_raw),
+                    "balance_raw": float(balance_raw),
+                    "previous_balance_snapped": float(self._previous_balance_snapped),
+                    "balance_snapped": float(balance_snapped),
+                    "equity": float(equity),
+                    "source": str(source),
+                }
+                daily_loss_ratio = getattr(self, "_crypto_daily_loss_ratio", None)
+                if daily_loss_ratio is not None:
+                    balance_event["crypto_daily_loss_ratio"] = float(daily_loss_ratio)
                 self._monitor_record_event(
-                    "account.balance",
-                    ("account", "balance"),
-                    {
-                        "previous_balance_raw": float(self._previous_balance_raw),
-                        "balance_raw": float(balance_raw),
-                        "previous_balance_snapped": float(
-                            self._previous_balance_snapped
-                        ),
-                        "balance_snapped": float(balance_snapped),
-                        "equity": float(equity),
-                        "source": str(source),
-                    },
+                    "account.balance", ("account", "balance"), balance_event
                 )
             except Exception as e:
                 if self._log_noncritical_market_snapshot_error(
@@ -7931,7 +8581,11 @@ class Passivbot:
             fetcher = _build_fetcher_for_bot(self, symbol_pool)
 
             # Create the FillEventsManager with its own cache path
-            cache_path = Path(f"caches/fill_events/{self.exchange}/{self.user}")
+            cache_relative_path = f"caches/fill_events/{self.exchange}/{self.user}"
+            if get_optional_config_value(self.config, "_runtime_root", None):
+                cache_path = Path(self._runtime_path(cache_relative_path))
+            else:
+                cache_path = Path(cache_relative_path)
 
             self._pnls_manager = FillEventsManager(
                 exchange=self.exchange,
@@ -9436,6 +10090,43 @@ class Passivbot:
             old = psold[(symbol, pside)]
             new = psnew[(symbol, pside)]
 
+            trade_key = (symbol, pside)
+            trade_cycles = getattr(self, "_monitor_trade_cycles", None)
+            if not isinstance(trade_cycles, dict):
+                trade_cycles = {}
+                self._monitor_trade_cycles = trade_cycles
+            if old["size"] == 0.0 and new["size"] != 0.0:
+                sequence = int(getattr(self, "_monitor_trade_cycle_sequence", 0) or 0) + 1
+                self._monitor_trade_cycle_sequence = sequence
+                strategy_id = str(getattr(self, "strategy_id", "unknown"))
+                trade_cycle_id = f"{strategy_id}:{symbol}:{pside}:{sequence}"
+                trade_cycles[trade_key] = trade_cycle_id
+                self._monitor_record_event(
+                    "strategy.cycle_started",
+                    ("strategy", "cycle", "start"),
+                    {"trade_cycle_id": trade_cycle_id, "reason": "position_opened"},
+                    symbol=symbol,
+                    pside=pside,
+                    ts=utc_ms(),
+                )
+            elif new["size"] == 0.0 and old["size"] != 0.0:
+                trade_cycle_id = trade_cycles.pop(trade_key, None)
+                if trade_cycle_id is None:
+                    strategy_id = str(getattr(self, "strategy_id", "unknown"))
+                    trade_cycle_id = f"{strategy_id}:{symbol}:{pside}:recovered"
+                self._monitor_record_event(
+                    "strategy.cycle_closed",
+                    ("strategy", "cycle", "closed"),
+                    {
+                        "trade_cycle_id": trade_cycle_id,
+                        "reason": "position_flat",
+                        "closed_position_size": abs(float(old["size"])),
+                    },
+                    symbol=symbol,
+                    pside=pside,
+                    ts=utc_ms(),
+                )
+
             # classify action ------------------------------------------------
             if old["size"] == 0.0 and new["size"] != 0.0:
                 action = "    new"
@@ -10260,7 +10951,11 @@ class Passivbot:
         # If either is False, we block same-coin hedging in the orchestrator.
         effective_hedge_mode = self._config_hedge_mode and self.hedge_mode
         input_dict = {
-            "balance": self.get_hysteresis_snapped_balance(),
+            "balance": (
+                self.get_sizing_balance()
+                if hasattr(self, "get_sizing_balance")
+                else self.get_hysteresis_snapped_balance()
+            ),
             "balance_raw": self.get_raw_balance(),
             "global": {
                 "filter_by_min_effective_cost": bool(
@@ -10468,6 +11163,11 @@ class Passivbot:
             ideal_orders, last_prices
         )
         ideal_orders_f = self._finalize_reduce_only_orders(ideal_orders_f, last_prices)
+        if hasattr(self, "_apply_crypto_portfolio_risk_limits"):
+            await self._refresh_crypto_market_surfaces_for_risk(ideal_orders_f.keys())
+            ideal_orders_f = self._apply_crypto_portfolio_risk_limits(
+                ideal_orders_f, last_prices
+            )
 
         if return_snapshot:
             snapshot_out = {
@@ -11238,7 +11938,11 @@ class Passivbot:
         # If either is False, we block same-coin hedging in the orchestrator.
         effective_hedge_mode = self._config_hedge_mode and self.hedge_mode
         input_dict = {
-            "balance": self.get_hysteresis_snapped_balance(),
+            "balance": (
+                self.get_sizing_balance()
+                if hasattr(self, "get_sizing_balance")
+                else self.get_hysteresis_snapped_balance()
+            ),
             "balance_raw": self.get_raw_balance(),
             "global": {
                 "filter_by_min_effective_cost": bool(
@@ -11458,6 +12162,11 @@ class Passivbot:
             ideal_orders, last_prices
         )
         ideal_orders_f = self._finalize_reduce_only_orders(ideal_orders_f, last_prices)
+        if hasattr(self, "_apply_crypto_portfolio_risk_limits"):
+            await self._refresh_crypto_market_surfaces_for_risk(ideal_orders_f.keys())
+            ideal_orders_f = self._apply_crypto_portfolio_risk_limits(
+                ideal_orders_f, last_prices
+            )
 
         if return_snapshot:
             snapshot = {
@@ -13180,6 +13889,11 @@ class Passivbot:
 
     async def execute_order(self, order: dict) -> dict:
         """Place a single order via the exchange client."""
+        enforce_crypto_live_authorization(
+            getattr(self, "config", {}),
+            self.exchange,
+            authorized=bool(getattr(self, "_crypto_live_authorized", False)),
+        )
         params = {
             "symbol": order["symbol"],
             "type": order.get("type", "limit"),
@@ -13197,6 +13911,11 @@ class Passivbot:
 
     async def execute_cancellation(self, order: dict) -> dict:
         """Cancel a single order via the exchange client."""
+        enforce_crypto_live_authorization(
+            getattr(self, "config", {}),
+            self.exchange,
+            authorized=bool(getattr(self, "_crypto_live_authorized", False)),
+        )
         executed = None
         try:
             executed = await self.cca.cancel_order(order["id"], symbol=order["symbol"])
@@ -13237,15 +13956,30 @@ class Passivbot:
 
 def setup_bot(config):
     """Instantiate the correct exchange bot implementation based on configuration."""
-    user_info = load_user_info(require_live_value(config, "user"))
+    requested_user = require_live_value(config, "user")
+    try:
+        user_info = load_user_info(requested_user, safe_only=True)
+    except TypeError:
+        user_info = load_user_info(requested_user)
     if user_info["exchange"] == "bybit":
         from exchanges.bybit import BybitBot
 
         bot = BybitBot(config)
     elif user_info["exchange"] == "bitget":
-        from exchanges.bitget import BitgetBot
+        paper_mode = bool(
+            config.get("_paper_mode")
+            or get_optional_live_value(config, "paper_mode", False)
+            or user_info.get("paper")
+            or user_info.get("paper_mode")
+        )
+        if paper_mode:
+            from exchanges.paper import PaperBitgetBot
 
-        bot = BitgetBot(config)
+            bot = PaperBitgetBot(config)
+        else:
+            from exchanges.bitget import BitgetBot
+
+            bot = BitgetBot(config)
     elif user_info["exchange"] == "binance":
         from exchanges.binance import BinanceBot
 
@@ -13301,6 +14035,36 @@ async def shutdown_bot(bot):
         print(f"Error during shutdown: {e}")
 
 
+def enforce_crypto_live_authorization(
+    config: dict, exchange: str, *, authorized: bool = False
+) -> None:
+    """Require a separate user action before a crypto live process can write.
+
+    The research profile is intentionally usable for read-only and simulated
+    runs without this flag. A real exchange process, however, must not infer
+    permission from the presence of an API key or from a valid configuration.
+    """
+
+    profile = get_optional_live_value(config, "portfolio_risk", {})
+    if bool(config.get("_paper_mode")) or bool(
+        get_optional_live_value(config, "paper_mode", False)
+    ):
+        return
+    if not isinstance(profile, dict) or not bool(profile.get("enabled", False)):
+        return
+    if not bool(profile.get("require_explicit_live_authorization", True)):
+        raise FatalBotException(
+            "crypto portfolio risk must require explicit live authorization"
+        )
+    if str(exchange).strip().lower() in {"fake", "paper", "simulated"}:
+        return
+    if not authorized:
+        raise FatalBotException(
+            "crypto live trading is not authorized; rerun only after explicit "
+            "user approval with --authorize-crypto-live"
+        )
+
+
 async def main():
     """Entry point: parse CLI args, load config, and launch the bot lifecycle."""
     global bot
@@ -13354,6 +14118,15 @@ async def main():
         help=(
             "Path to custom endpoints JSON for this run. "
             "Use 'none' to disable overrides even if a default file exists."
+        ),
+    )
+    runtime_group.add_argument(
+        "--authorize-crypto-live",
+        action="store_true",
+        default=False,
+        help=(
+            "Explicitly authorize real exchange writes for an enabled crypto "
+            "profile; omitted by default and unnecessary for paper/fake runs."
         ),
     )
 
@@ -13476,6 +14249,17 @@ async def main():
     )
 
     user_info = load_user_info(live_user)
+    paper_mode = bool(
+        get_optional_live_value(config, "paper_mode", False)
+        or user_info.get("paper")
+        or user_info.get("paper_mode")
+    )
+    config["_paper_mode"] = paper_mode
+    enforce_crypto_live_authorization(
+        config,
+        user_info["exchange"],
+        authorized=bool(args.authorize_crypto_live),
+    )
     # Reconfigure logging with exchange prefix now that we know the exchange
     exchange_prefix = user_info["exchange"]
     configure_logging(
@@ -13484,6 +14268,7 @@ async def main():
     await load_markets(user_info["exchange"], verbose=True)
 
     config = parse_overrides(config, verbose=True)
+    config["_crypto_live_authorized"] = bool(args.authorize_crypto_live)
     cooldown_secs = 60
     restarts = []
     while True:

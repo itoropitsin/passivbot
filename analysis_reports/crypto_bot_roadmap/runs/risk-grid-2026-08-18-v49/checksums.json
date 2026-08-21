@@ -1,0 +1,35 @@
+{
+  "files": {
+    "config.json": {
+      "sha256": "afa812b11f5631621573af47747805a53a746c258141ff490c4d550eb6488fed",
+      "size_bytes": 19389
+    },
+    "events.jsonl.gz": {
+      "sha256": "508752538f7498794bfff3fe49811b835646d0fa843677d95fc06d61412c7e45",
+      "size_bytes": 33
+    },
+    "manifest.json": {
+      "sha256": "aea5e3f4332cee82b690456eb5d446e9073f26d2b585c9fb0406d060d7ae316d",
+      "size_bytes": 2543
+    },
+    "market_profile.json": {
+      "sha256": "aa7038a79a0883e5bbd03bd0d4d36b2c22194e4311534a2951500763baed5e2c",
+      "size_bytes": 4240
+    },
+    "metrics.json": {
+      "sha256": "1c85ef7f3a5ded012cbaf27c8da9348487b132ffa7f6365e58304ed755cd8239",
+      "size_bytes": 70024
+    },
+    "report.md": {
+      "sha256": "d7c3d785a5e60d796554c119e7184bdf05c46a899bbfa3cbd42269fe09ccf1f3",
+      "size_bytes": 1206
+    },
+    "verdict.json": {
+      "sha256": "fee18959b94f1cebf5eb81b86b8a7f21ae4e235c5942618b6a66db17130a8e7d",
+      "size_bytes": 2941
+    }
+  },
+  "run_id": "risk-grid-2026-08-18-v49",
+  "schema_version": "crypto-grid-run-checksums-v1",
+  "stage": "risk_grid"
+}

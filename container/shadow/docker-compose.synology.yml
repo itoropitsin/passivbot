@@ -1,0 +1,61 @@
+# Historical DSM template for the finished v6 exam container `passivbot-shadow`.
+# Do not docker start that container. The next 24h is a separate docker run:
+# passivbot-shadow-v7 → /data/public-stream-process-24h-2026-08-21-v7
+# See docs/ai/commands.md. Do not copy this file over a running v7 setup.
+#
+# Synology Container Manager copy: place this file at
+# /volume1/docker/_cm/passivbot-shadow/docker-compose.yml
+# with repo/ inputs/ data/ siblings. Public Bitget only. No API keys.
+
+services:
+  passivbot-shadow:
+    build:
+      context: ./repo
+      dockerfile: Dockerfile_shadow
+    image: passivbot-shadow:v6
+    container_name: passivbot-shadow
+    restart: "on-failure:1"
+    mem_limit: 768m
+    pids_limit: 256
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      TZ: Europe/Amsterdam
+      PYTHONUNBUFFERED: "1"
+      SHADOW_RESUME: "${SHADOW_RESUME:-0}"
+    volumes:
+      - ./data:/data
+      - ./inputs:/inputs:ro
+    working_dir: /app
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    command:
+      - --output-dir
+      - /data/public-stream-process-24h-2026-08-19-v6
+      - --config
+      - /inputs/strategy_shadow_stream_config_v1.json
+      - --market-profile
+      - /inputs/bitget_btc_market_profile_public_only_2026-08-17.json
+      - --symbol
+      - BTCUSDT
+      - --category
+      - USDT-FUTURES
+      - --depth
+      - "20"
+      - --side
+      - long
+      - --interval-seconds
+      - "60"
+      - --max-source-gap-seconds
+      - "300"
+      - --segment-duration-seconds
+      - "14520"
+      - --restart-count
+      - "5"
+      - --deterministic-replay-runs
+      - "3"
+      - --repo-root
+      - /app

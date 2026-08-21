@@ -1,0 +1,36 @@
+{
+  "baseline_scope": "repository baseline only; no trading authorization",
+  "determinism_note": "three full pytest runs returned 0; their complete outputs matched byte-for-byte and produced the same output hash in inputs/baseline_determinism_2026-08-17-v4.json",
+  "determinism_status": "passed",
+  "editable_install_note": "the virtual environment points to this repository source tree",
+  "editable_install_status": "passed",
+  "environment": {
+    "cargo": "1.96.0",
+    "editable_direct_url": "file:///Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka",
+    "entrypoints_checked": [
+      ".venv/bin/python",
+      ".venv/bin/pytest",
+      ".venv/bin/pip",
+      ".venv/bin/passivbot"
+    ],
+    "passivbot": "7.12.0",
+    "pytest": "8.4.2",
+    "python": "3.12.13",
+    "rustc": "1.96.0",
+    "setuptools_rust": "1.13.0"
+  },
+  "fake_live_test_command": ".venv/bin/pytest -q tests/test_run_fake_live.py",
+  "fake_live_test_scope": "separate slow fake-live group",
+  "fake_live_tests_status": "passed",
+  "observed_at": "2026-08-17",
+  "python_test_command": ".venv/bin/pytest -q --disable-warnings",
+  "python_tests_collected": 2278,
+  "python_tests_status": "passed",
+  "rust_extension_source_stamp_note": "the loaded site-packages extension fingerprint equals the current passivbot-rust source fingerprint; no local src shadow extension remains",
+  "rust_extension_source_stamp_status": "passed",
+  "rust_fmt_status": "passed",
+  "rust_test_command": "PYO3_PYTHON=/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python ./passivbot-rust/cargotest.sh --lib",
+  "rust_tests_note": "138 Rust unit tests passed after rebuilding the editable extension; the test helper links the exact PYO3_PYTHON interpreter and does not inject a dynamic library at process exit",
+  "rust_tests_status": "passed",
+  "timezone": "Europe/Amsterdam"
+}

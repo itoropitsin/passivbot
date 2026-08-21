@@ -1,0 +1,123 @@
+{
+  "blocked_count": 0,
+  "failed_count": 2,
+  "gate_count": 14,
+  "gates": [
+    {
+      "actual": true,
+      "id": "market_profile.market_profile_input_present",
+      "limit": true,
+      "metric": "market_profile_input_present",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "market_profile.market_profile_public_api_only",
+      "limit": true,
+      "metric": "market_profile_public_api_only",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": false,
+      "id": "market_profile.market_profile_private_api_data_present",
+      "limit": false,
+      "metric": "market_profile_private_api_data_present",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "data.history_through_plan_date",
+      "limit": true,
+      "metric": "history_through_plan_date",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": false,
+      "id": "data.funding_history_complete",
+      "limit": true,
+      "metric": "funding_history_complete",
+      "operator": "==",
+      "status": "failed"
+    },
+    {
+      "actual": true,
+      "id": "data.mark_price_history_complete",
+      "limit": true,
+      "metric": "mark_price_history_complete",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "data.position_tiers_captured",
+      "limit": true,
+      "metric": "position_tiers_captured",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "data.execution_model_implemented",
+      "limit": true,
+      "metric": "execution_model_implemented",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": 1.0,
+      "id": "data.history_coverage",
+      "limit": 0.9995,
+      "metric": "history_coverage_ratio",
+      "operator": ">=",
+      "status": "passed"
+    },
+    {
+      "actual": 0,
+      "id": "data.synthetic_rows_marked",
+      "limit": 0,
+      "metric": "unmarked_synthetic_rows",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": 0,
+      "id": "data.nan_rows",
+      "limit": 0,
+      "metric": "nan_rows",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": 0,
+      "id": "data.future_data",
+      "limit": 0,
+      "metric": "future_data_violations",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": 0.11578044596912522,
+      "id": "data.funding_coverage",
+      "limit": 1.0,
+      "metric": "funding_known_coverage_ratio",
+      "operator": ">=",
+      "status": "failed"
+    },
+    {
+      "actual": 3,
+      "id": "data.determinism",
+      "limit": 3,
+      "metric": "identical_run_count",
+      "operator": ">=",
+      "status": "passed"
+    }
+  ],
+  "passed_count": 12,
+  "schema_version": "crypto-grid-experiment-v1",
+  "stage": "data",
+  "status": "failed"
+}

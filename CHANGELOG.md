@@ -4,6 +4,47 @@ All notable user-facing changes will be documented in this file.
 
 ## Unreleased
 
+- Paper Bitget positions now require named mark/index prices and bound
+  maintenance tiers. Ticker `last` is not used as mark, a hardcoded 0.5%
+  maintenance rate is not assumed, and queue/depth stay unmodeled with
+  `qualifying=false` plus a mandatory execution-evidence writer.
+- Bitget public market-surface timestamps must be exact integers. Fractional
+  floats such as `1.9` are rejected instead of being truncated by `int()`.
+
+- Historical preflight and qualifying paper now share one immutable funding
+  data passport (`crypto-data-passport-v1`). Incomplete windows, mark-before-settlement
+  gaps, and undeclared exploratory feeds stay `qualifying=false`; a single
+  applied settlement no longer counts as a complete funding window.
+- Risk-engine and risk-contract admission now require a bound production-path
+  evidence bundle (`risk-parity-production-evidence-v1`) that called
+  `Passivbot._apply_crypto_portfolio_risk_limits` and the Rust `Backtest`.
+  The 14-scenario research surface remains a fixture matrix and can no longer
+  set `risk_limits_enforced_in_live_and_tester=true` by itself.
+- Public strategy-shadow supervisor can resume an unfinished output directory
+  after a host cutover (`--resume-existing-output`) when the market log still
+  satisfies the 300-second source-gap limit. A completed `process_supervisor.json`
+  is rejected, and timestamps are not rewritten.
+- Added a public-only Synology Docker path for the 24-hour strategy shadow
+  (`Dockerfile_shadow`, `passivbot-shadow:v6`). The image has no API keys and
+  does not run live orders.
+- Added the staged crypto-grid research gates and Bitget read-only market
+  recorder. Historical, paper, and live promotion now require prior passed
+  stages and real replay-event evidence; missing funding history remains a
+  hard failure.
+- Hardened research evidence: run bundles now receive full-package
+  `checksums.json`, reused run IDs are rejected, `--overwrite` requires an
+  explicit scratch run, stale passed snapshots are detected, and runtime
+  admission requires daily coverage, heartbeats, unique cycles, and event-backed
+  financial evidence.
+- Added the opt-in crypto portfolio risk contract: capped sizing, isolated
+  hedge-mode validation, shared exposure limits, bounded grids, explicit
+  execution inputs, and fail-closed entry handling.
+- Added OKX public daily candle archive fetching for swap OHLCV backfills, using
+  all-swap ZIP archives and `vol_ccy` as Passivbot candle volume before falling
+  back to CCXT for unavailable/recent days.
+- Fixed v2 local HLCV backtest preparation so an excessive trailing gap to the
+  requested end date is rejected instead of being materialized as synthetic data,
+  forcing explicit refetch/repair before Bitget-native validation can pass.
 - Added `live.limit_order_create_max_market_dist_pct` with a default of `0.8`
   so live skips limit-order creations far outside fresh market price bands
   instead of repeatedly submitting exchange-invalid deep orders.

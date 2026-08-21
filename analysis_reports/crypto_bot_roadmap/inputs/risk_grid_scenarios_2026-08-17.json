@@ -1,0 +1,128 @@
+{
+  "api_outage_safe": true,
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "passivbot-rust/Cargo.toml",
+        "--lib",
+        "crypto_portfolio_entry_gate_blocks_entries_inside_liquidation_buffer"
+      ],
+      "exit_code": 0,
+      "name": "no_liquidations",
+      "output_sha256": "9540561908a88ea3d722b0c522250859c7e2c2da7f219ebb635123adf823f5f6",
+      "output_tail": "\nrunning 1 test\ntest backtest::tests::crypto_portfolio_entry_gate_blocks_entries_inside_liquidation_buffer ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 137 filtered out; finished in 0.00s\n\n\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.07s\n     Running unittests src/lib.rs (passivbot-rust/target/debug/deps/passivbot_rust-eb4bd43d671304d7)\n",
+      "passed": true
+    },
+    {
+      "command": [
+        "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_passivbot_balance_split.py::test_disappeared_emitted_order_record_arms_duplicate_guardrail_without_recent_execution"
+      ],
+      "exit_code": 0,
+      "name": "no_duplicate_orders",
+      "output_sha256": "f6390eccc19899be8ac2cfa83774b23f5b1e46ed4d4a6c809c11f627ebf65ff2",
+      "output_tail": ".                                                                        [100%]\n=============================== warnings summary ===============================\ntests/test_passivbot_balance_split.py::test_disappeared_emitted_order_record_arms_duplicate_guardrail_without_recent_execution\n  /Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/lib/python3.12/site-packages/portalocker/utils.py:231: UserWarning: timeout has no effect in blocking mode\n    warnings.warn(\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n",
+      "passed": true
+    },
+    {
+      "command": [
+        "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_passivbot_balance_split.py::test_crypto_portfolio_risk_caps_initial_entry_without_liquidation_price",
+        "tests/test_passivbot_balance_split.py::test_crypto_portfolio_risk_handles_executable_dicts_and_allows_only_panic_market_close"
+      ],
+      "exit_code": 0,
+      "name": "limits_not_bypassed",
+      "output_sha256": "99db33d5c94c6f7da021687c7391181685cc33299c5435b1c861e2db3be3ec87",
+      "output_tail": "..                                                                       [100%]\n",
+      "passed": true
+    },
+    {
+      "command": [
+        "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_passivbot_balance_split.py::test_restarted_inherited_order_disappearance_uses_confirmation_not_symbol_block",
+        "tests/test_passivbot_balance_split.py::test_bot_cancelled_order_disappearance_does_not_arm_duplicate_guardrail"
+      ],
+      "exit_code": 0,
+      "name": "state_recovery_consistent",
+      "output_sha256": "99db33d5c94c6f7da021687c7391181685cc33299c5435b1c861e2db3be3ec87",
+      "output_tail": "..                                                                       [100%]\n",
+      "passed": true
+    },
+    {
+      "command": [
+        "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_passivbot_balance_split.py::test_update_balance_failure_keeps_previous",
+        "tests/test_passivbot_balance_split.py::test_pre_create_snapshot_filter_blocks_stale_market_snapshots"
+      ],
+      "exit_code": 0,
+      "name": "api_outage_safe",
+      "output_sha256": "e5e0eee33ba356d23c5de812ebee1ce18130b63620e69b7aed97194edce46315",
+      "output_tail": "..                                                                       [100%]\n=============================== warnings summary ===============================\ntests/test_passivbot_balance_split.py::test_pre_create_snapshot_filter_blocks_stale_market_snapshots\n  /Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/lib/python3.12/site-packages/portalocker/utils.py:231: UserWarning: timeout has no effect in blocking mode\n    warnings.warn(\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n",
+      "passed": true
+    },
+    {
+      "command": [
+        "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_unstucking_safeguards.py::test_manual_mode_skips_side_orders",
+        "tests/test_passivbot_balance_split.py::test_unknown_manual_or_exchange_cancel_requests_confirmation_without_symbol_block"
+      ],
+      "exit_code": 0,
+      "name": "manual_position_safe",
+      "output_sha256": "99db33d5c94c6f7da021687c7391181685cc33299c5435b1c861e2db3be3ec87",
+      "output_tail": "..                                                                       [100%]\n",
+      "passed": true
+    },
+    {
+      "command": [
+        "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_passivbot_balance_split.py::test_crypto_portfolio_risk_handles_executable_dicts_and_allows_only_panic_market_close"
+      ],
+      "exit_code": 0,
+      "name": "ordinary_market_orders_blocked",
+      "output_sha256": "423b1d0e014eb1eab96f4420f7b344c2615be505dd574b756ac884826ca74f2d",
+      "output_tail": ".                                                                        [100%]\n",
+      "passed": true
+    }
+  ],
+  "limits_not_bypassed": true,
+  "manual_position_safe": true,
+  "metrics": {
+    "api_outage_safe": true,
+    "limits_not_bypassed": true,
+    "manual_position_safe": true,
+    "no_duplicate_orders": true,
+    "no_liquidations": true,
+    "ordinary_market_orders_blocked": true,
+    "state_recovery_consistent": true
+  },
+  "no_duplicate_orders": true,
+  "no_liquidations": true,
+  "ordinary_market_orders_blocked": true,
+  "read_only_external_operations": true,
+  "schema_version": "crypto-risk-grid-scenarios-v1",
+  "stage": "risk_grid",
+  "state_recovery_consistent": true,
+  "status": "passed",
+  "trading_operations_count": 0
+}

@@ -94,6 +94,18 @@ def test_market_snapshot_ticker_strategy_respects_explicit_override():
     assert bot._market_snapshot_ticker_strategy() == "bulk"
 
 
+def test_crypto_daily_loss_measurement_resets_at_utc_day_boundary():
+    bot = Passivbot.__new__(Passivbot)
+    bot.config = {"live": {"portfolio_risk": {"enabled": True}}}
+
+    bot._update_crypto_daily_loss_ratio(1_000.0, now_ms=86_400_000)
+    assert bot._crypto_daily_loss_ratio == 0.0
+    bot._update_crypto_daily_loss_ratio(900.0, now_ms=86_400_000 + 1_000)
+    assert bot._crypto_daily_loss_ratio == pytest.approx(0.10)
+    bot._update_crypto_daily_loss_ratio(850.0, now_ms=2 * 86_400_000)
+    assert bot._crypto_daily_loss_ratio == 0.0
+
+
 @pytest.mark.asyncio
 async def test_init_pnls_quarantines_and_rebuilds_unsupported_legacy_cache(monkeypatch):
     managers = []
@@ -2695,6 +2707,154 @@ def test_accessor_returns_raw_when_present():
     bot.balance_raw = 1010.0
     assert bot.get_raw_balance() == pytest.approx(1010.0)
     assert bot.get_hysteresis_snapped_balance() == pytest.approx(1000.0)
+
+
+def test_crypto_sizing_balance_is_capped_without_leverage_growth():
+    bot = Passivbot.__new__(Passivbot)
+    bot.balance = 1500.0
+    bot.config = {
+        "live": {
+            "portfolio_risk": {"enabled": True},
+            "sizing_balance_cap": 1000.0,
+        }
+    }
+
+    assert bot.get_sizing_balance() == pytest.approx(1000.0)
+
+
+def test_crypto_sizing_balance_follows_losses_below_cap():
+    bot = Passivbot.__new__(Passivbot)
+    bot.balance = 875.0
+    bot.config = {
+        "live": {
+            "portfolio_risk": {"enabled": True},
+            "sizing_balance_cap": 1000.0,
+        }
+    }
+
+    assert bot.get_sizing_balance() == pytest.approx(875.0)
+
+
+def test_crypto_sizing_balance_uses_raw_loss_before_hysteresis_snap():
+    bot = Passivbot.__new__(Passivbot)
+    bot.balance = 1_000.0
+    bot.balance_raw = 900.0
+    bot.config = {"live": {"portfolio_risk": {"enabled": True}}}
+
+    assert bot.get_sizing_balance() == pytest.approx(900.0)
+
+
+def test_crypto_portfolio_risk_keeps_closes_and_blocks_entries_without_measurements():
+    bot = Passivbot.__new__(Passivbot)
+    bot.balance = 1000.0
+    bot.config = {
+        "live": {
+            "portfolio_risk": {"enabled": True},
+            "sizing_balance_cap": 1000.0,
+            "leverage": 3.0,
+        }
+    }
+    bot.positions = {}
+    bot.c_mults = {"BTC/USDT:USDT": 1.0}
+    orders = {
+        "BTC/USDT:USDT": [
+            (0.01, 50_000.0, "entry_initial_normal_long", 0, "limit"),
+            (-0.01, 50_100.0, "close_grid_long", 7, "limit"),
+        ]
+    }
+
+    filtered = bot._apply_crypto_portfolio_risk_limits(
+        orders, {"BTC/USDT:USDT": 50_000.0}
+    )
+
+    assert [order[2] for order in filtered["BTC/USDT:USDT"]] == ["close_grid_long"]
+
+
+def test_crypto_portfolio_risk_handles_executable_dicts_and_allows_only_panic_market_close():
+    bot = Passivbot.__new__(Passivbot)
+    bot.balance = 1000.0
+    bot.config = {
+        "live": {
+            "portfolio_risk": {"enabled": True},
+            "sizing_balance_cap": 1000.0,
+            "leverage": 3.0,
+        }
+    }
+    bot.positions = {}
+    bot.c_mults = {"BTC/USDT:USDT": 1.0}
+    bot._crypto_daily_loss_ratio = 0.0
+    # Bitget has no liquidation price before the first isolated position.
+    bot._crypto_min_liquidation_distance = None
+    orders = {
+        "BTC/USDT:USDT": [
+            {
+                "symbol": "BTC/USDT:USDT",
+                "type": "limit",
+                "pb_order_type": "entry_initial_normal_long",
+                "qty": 0.0005,
+                "price": 50_000.0,
+                "reduce_only": False,
+            },
+            {
+                "symbol": "BTC/USDT:USDT",
+                "type": "market",
+                "pb_order_type": "close_grid_long",
+                "qty": 0.0005,
+                "price": 50_000.0,
+                "reduce_only": True,
+            },
+            {
+                "symbol": "BTC/USDT:USDT",
+                "type": "market",
+                "pb_order_type": "close_panic_long",
+                "qty": 0.0005,
+                "price": 50_000.0,
+                "reduce_only": True,
+            },
+        ]
+    }
+
+    filtered = bot._apply_crypto_portfolio_risk_limits(
+        orders, {"BTC/USDT:USDT": 50_000.0}
+    )
+
+    assert [order["pb_order_type"] for order in filtered["BTC/USDT:USDT"]] == [
+        "entry_initial_normal_long",
+        "close_panic_long",
+    ]
+
+
+def test_crypto_portfolio_risk_caps_initial_entry_without_liquidation_price():
+    bot = Passivbot.__new__(Passivbot)
+    bot.balance = 1000.0
+    bot.config = {
+        "live": {
+            "portfolio_risk": {"enabled": True},
+            "sizing_balance_cap": 1000.0,
+            "leverage": 3.0,
+        }
+    }
+    bot.positions = {}
+    bot.c_mults = {"BTC/USDT:USDT": 1.0}
+    bot._crypto_daily_loss_ratio = 0.0
+    bot._crypto_min_liquidation_distance = None
+
+    filtered = bot._apply_crypto_portfolio_risk_limits(
+        {
+            "BTC/USDT:USDT": [
+                {
+                    "type": "limit",
+                    "pb_order_type": "entry_initial_normal_long",
+                    "qty": 0.0007,
+                    "price": 50_000.0,
+                    "reduce_only": False,
+                }
+            ]
+        },
+        {"BTC/USDT:USDT": 50_000.0},
+    )
+
+    assert filtered == {}
 
 
 def test_get_wallet_exposure_limit_uses_configured_n_positions_only():

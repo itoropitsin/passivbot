@@ -203,7 +203,84 @@ impl Default for EquityHardStopLossConfig {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Debug, Clone, Default)]
+pub struct FundingEvent {
+    pub timestamp_ms: u64,
+    pub rate: f64,
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct BacktestPositionTier {
+    pub min_notional: f64,
+    pub max_notional: f64,
+    pub maintenance_margin_rate: f64,
+}
+
+#[derive(Debug, Clone)]
+pub struct BacktestPortfolioRisk {
+    pub enabled: bool,
+    pub sizing_balance_cap: f64,
+    /// Hard plan limit for the first entry, expressed as a fraction of the
+    /// balance used for sizing. This cannot be configured above 3%.
+    pub max_initial_entry_sizing_balance_pct: f64,
+    pub max_total_exposure: f64,
+    pub max_used_margin: f64,
+    pub max_symbol_exposure: f64,
+    pub max_active_grids: usize,
+    pub leverage: f64,
+    pub new_entry_min_liquidation_distance: f64,
+    pub reduce_only_min_liquidation_distance: f64,
+    pub emergency_liquidation_distance: f64,
+}
+
+impl BacktestPortfolioRisk {
+    pub const DEFAULT_MAX_INITIAL_ENTRY_SIZING_BALANCE_PCT: f64 = 0.03;
+}
+
+impl Default for BacktestPortfolioRisk {
+    fn default() -> Self {
+        Self {
+            enabled: false,
+            sizing_balance_cap: 0.0,
+            max_initial_entry_sizing_balance_pct:
+                Self::DEFAULT_MAX_INITIAL_ENTRY_SIZING_BALANCE_PCT,
+            max_total_exposure: 0.0,
+            max_used_margin: 0.0,
+            max_symbol_exposure: 0.0,
+            max_active_grids: 0,
+            leverage: 0.0,
+            new_entry_min_liquidation_distance: 0.0,
+            reduce_only_min_liquidation_distance: 0.0,
+            emergency_liquidation_distance: 0.0,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct BacktestExecutionModel {
+    pub enabled: bool,
+    pub funding_enabled: bool,
+    /// 0 = blocked, 1 = fail, 2 = zero.
+    pub funding_missing_data: u8,
+    /// 0 = last, 1 = mark, 2 = index.
+    pub mark_price_basis: u8,
+    pub latency_steps: usize,
+    pub partial_fill_ratios: Vec<f64>,
+    /// 0 = worst_case, 1 = best_case, 2 = ohlc.
+    pub adverse_same_candle_ordering: u8,
+    pub gap_stress_pct: f64,
+    pub emergency_close_slippage_pct: f64,
+    pub funding_events: Vec<FundingEvent>,
+    /// Flattened row-major [time, coin] prices. Empty means no auxiliary series.
+    pub mark_prices: Vec<f64>,
+    pub index_prices: Vec<f64>,
+    /// Position tiers indexed by coin. An empty set means that entries must
+    /// be blocked when the crypto portfolio gate is enabled.
+    pub position_tiers: Vec<Vec<BacktestPositionTier>>,
+    pub portfolio_risk: BacktestPortfolioRisk,
+}
+
+#[derive(Clone, Debug, Default)]
 pub struct BacktestParams {
     pub starting_balance: f64,
     pub maker_fee: f64,
@@ -232,6 +309,7 @@ pub struct BacktestParams {
     pub market_order_slippage_pct: f64,
     pub forager_score_hysteresis_pct: f64,
     pub candle_interval_minutes: u64, // 1 for 1m candles (default), 5 for 5m, etc.
+    pub execution_model: BacktestExecutionModel,
 }
 
 #[derive(Default, Debug, Clone, Copy, Serialize, Deserialize)]
@@ -385,6 +463,10 @@ pub struct BotParams {
     pub close_trailing_qty_pct: f64,
     pub close_trailing_threshold_pct: f64,
     pub entry_grid_double_down_factor: f64,
+    /// Maximum number of grid entries generated for one position.  The legacy
+    /// default is deliberately high; the crypto profile sets this to 8.
+    #[serde(default = "default_entry_grid_max_levels")]
+    pub entry_grid_max_levels: usize,
     pub entry_grid_spacing_volatility_weight: f64,
     pub entry_grid_spacing_we_weight: f64,
     pub entry_grid_spacing_pct: f64,
@@ -437,6 +519,10 @@ pub struct BotParams {
     pub unstuck_ema_dist: f64,
     pub unstuck_loss_allowance_pct: f64,
     pub unstuck_threshold: f64,
+}
+
+fn default_entry_grid_max_levels() -> usize {
+    500
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

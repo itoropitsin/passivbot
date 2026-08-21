@@ -1,0 +1,19 @@
+{
+  "risk_contract_implemented": true,
+  "risk_snapshot_contract_present": true,
+  "parity_harness_present": true,
+  "live_tester_decisions_identical": false,
+  "risk_limits_enforced_in_live_and_tester": false,
+  "risk_parity_reached": false,
+  "risk_contract_fails_closed_on_mismatch": true,
+  "adapter_status": {
+    "fixture_boundary": "connected",
+    "python_live_gate_exporter": "connected_after_actual_gate",
+    "rust_backtest_gate_trace": "connected_before_order_distribution",
+    "canonical_snapshot": "pending",
+    "stable_order_id": "pending"
+  },
+  "candidate_admission": false,
+  "trading_operations_count": 0,
+  "reason": "The live exporter and Rust Backtest trace are connected, but they do not yet emit comparable risk-snapshot-v1 and risk-decision-v1 outputs from the same canonical state."
+}

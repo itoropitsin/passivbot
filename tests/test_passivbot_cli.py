@@ -134,6 +134,7 @@ def test_tool_help_lists_supported_tools(capsys):
     assert "hyperliquid-order-margin-probe" in out
     assert "hyperliquid-position-probe" in out
     assert "inspect-ohlcvs" in out
+    assert "bitget-ohlcv-quality" in out
     assert "merge-paretos" in out
     assert "monitor-dev" in out
     assert "monitor-relay" in out
@@ -143,8 +144,77 @@ def test_tool_help_lists_supported_tools(capsys):
     assert "pareto-dash" in out
     assert "pareto-explorer" in out
     assert "streamline-json" in out
+    assert "strategy-shadow" in out
+    assert "strategy-shadow-process" in out
+    assert "strategy-shadow-stream" in out
+    assert "strategy-shadow-stream-process" in out
     assert "verify-hlcvs-data" in out
     assert "requires full install" in out
+
+
+def test_strategy_shadow_process_dispatch_forwards_module_and_prog(monkeypatch):
+    captured = {}
+
+    def fake_invoke_module_main(module_name):
+        captured["module_name"] = module_name
+        captured["argv"] = sys.argv[:]
+        captured["prog_env"] = os.environ.get("PASSIVBOT_CLI_PROG")
+        return True, 0
+
+    monkeypatch.setattr(cli_main, "_invoke_module_main", fake_invoke_module_main)
+    monkeypatch.setattr(cli_main, "_missing_full_install_markers", lambda: [])
+
+    assert cli_main.main(
+        [
+            "tool",
+            "strategy-shadow-process",
+            "--input",
+            "snapshots.json",
+            "--output-dir",
+            "session",
+            "--config",
+            "config.json",
+        ]
+    ) == 0
+
+    assert captured["module_name"] == "tools.strategy_shadow_process"
+    assert captured["argv"] == [
+        "passivbot tool strategy-shadow-process",
+        "--input",
+        "snapshots.json",
+        "--output-dir",
+        "session",
+        "--config",
+        "config.json",
+    ]
+    assert captured["prog_env"] == "passivbot tool strategy-shadow-process"
+
+
+def test_strategy_shadow_process_help_imports_real_module(capsys):
+    assert cli_main.main(["tool", "strategy-shadow-process", "--help"]) == 0
+
+    out = capsys.readouterr().out
+    assert "--input" in out
+    assert "--config" in out
+    assert "--restart-count" in out
+
+
+def test_strategy_shadow_stream_help_imports_real_module(capsys):
+    assert cli_main.main(["tool", "strategy-shadow-stream", "--help"]) == 0
+
+    out = capsys.readouterr().out
+    assert "--output-dir" in out
+    assert "--side" in out
+    assert "--duration-seconds" in out
+
+
+def test_strategy_shadow_stream_process_help_imports_real_module(capsys):
+    assert cli_main.main(["tool", "strategy-shadow-stream-process", "--help"]) == 0
+
+    out = capsys.readouterr().out
+    assert "--output-dir" in out
+    assert "--segment-duration-seconds" in out
+    assert "--restart-count" in out
 
 
 def test_console_main_reexecs_into_active_virtualenv(monkeypatch, tmp_path):

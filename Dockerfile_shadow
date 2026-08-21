@@ -1,0 +1,40 @@
+FROM python:3.12-slim-bookworm
+
+# Public-only strategy shadow image for Synology. No API keys, no live orders.
+ENV DEBIAN_FRONTEND=noninteractive
+ENV SKIP_RUST_COMPILE=true
+ENV CARGO_BUILD_JOBS=1
+ENV PATH="/root/.cargo/bin:${PATH}"
+ENV PYTHONUNBUFFERED=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        python3-dev \
+        pkg-config \
+        libssl-dev \
+        libgomp1 \
+        curl \
+        ca-certificates \
+        git \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain 1.90.0
+
+WORKDIR /app
+
+COPY pyproject.toml setup.py rust-toolchain.toml broker_codes.hjson requirements-live.txt requirements-rust.txt ./
+COPY src src
+COPY passivbot-rust passivbot-rust
+COPY container/shadow/entrypoint.sh container/shadow/entrypoint.sh
+
+RUN chmod +x /app/container/shadow/entrypoint.sh \
+    && pip install --no-cache-dir -r requirements-rust.txt aiohttp==3.13.1 \
+    && pip install --no-cache-dir -r requirements-live.txt \
+    && cd passivbot-rust \
+    && maturin build --release \
+    && pip install --no-cache-dir target/wheels/*.whl \
+    && rm -rf /root/.cache /tmp/* passivbot-rust/target
+
+ENV PYTHONPATH=/app/src
+
+ENTRYPOINT ["/app/container/shadow/entrypoint.sh"]

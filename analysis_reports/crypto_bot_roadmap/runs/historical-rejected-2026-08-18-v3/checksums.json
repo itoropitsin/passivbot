@@ -1,0 +1,35 @@
+{
+  "files": {
+    "config.json": {
+      "sha256": "86f94eaf7cdd868d8ca31363a3b72763913117ca99c20de0c3104de81391c056",
+      "size_bytes": 31124
+    },
+    "events.jsonl.gz": {
+      "sha256": "2d32ce1f5adf730cff56f74238418f5113474497b8bcb0453830b73ac79c9793",
+      "size_bytes": 33
+    },
+    "manifest.json": {
+      "sha256": "db4bf0eaf02bac6e9545652e7251e4919e0ab8ea6ec1a0c702952de61a28efca",
+      "size_bytes": 2320
+    },
+    "market_profile.json": {
+      "sha256": "7c36c253af60590f51a44116e616048d7e686e2b25e6aed8346f8ee6592b5424",
+      "size_bytes": 7511
+    },
+    "metrics.json": {
+      "sha256": "e56e23190d2b812022ba4b5c13c1ab43a7ae943993a36ab845286c4b58c22a3b",
+      "size_bytes": 668
+    },
+    "report.md": {
+      "sha256": "40f163ca9b4e36256b8b7c9d05933a0149d3f4e2aa51d35ec3000dfabc3a818a",
+      "size_bytes": 2341
+    },
+    "verdict.json": {
+      "sha256": "d357056665d7a75bfae45dc91ee9e121b7b809b6d979bea6347c759b8ef92dcd",
+      "size_bytes": 5026
+    }
+  },
+  "run_id": "historical-rejected-2026-08-18-v3",
+  "schema_version": "crypto-grid-run-checksums-v1",
+  "stage": "historical"
+}

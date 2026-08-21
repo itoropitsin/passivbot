@@ -1,0 +1,240 @@
+{
+  "account_controls": {
+    "ip_allowlist_enabled": null,
+    "source": "must be confirmed from API-key settings; not inferred from account data",
+    "withdrawals_enabled": null
+  },
+  "category": "USDT-FUTURES",
+  "collected_at_utc": "2026-08-17T00:15:22+00:00",
+  "errors": {
+    "account_assets": {
+      "error_type": "ExchangeError",
+      "message": "bitget {\"code\":\"40084\",\"msg\":\"You are in Classic Account mode, and the Unified Account API is not supported at this time\",\"requestTime\":1786925720187,\"data\":null}"
+    },
+    "account_fee_rate": {
+      "error_type": "ExchangeError",
+      "message": "bitget {\"code\":\"40084\",\"msg\":\"You are in Classic Account mode, and the Unified Account API is not supported at this time\",\"requestTime\":1786925720828,\"data\":null}"
+    },
+    "account_settings": {
+      "error_type": "ExchangeError",
+      "message": "bitget {\"code\":\"40084\",\"msg\":\"You are in Classic Account mode, and the Unified Account API is not supported at this time\",\"requestTime\":1786925720502,\"data\":null}"
+    }
+  },
+  "exchange": "bitget",
+  "normalized": {
+    "account_mode": "classic",
+    "collateral_currency": "USDT",
+    "leverage_long": null,
+    "leverage_short": null,
+    "margin_mode": null,
+    "position_mode": null
+  },
+  "plan_date": "2026-08-17",
+  "read_only_endpoints": {
+    "account_assets": "private_uta_get_v3_account_assets",
+    "account_fee_rate": "private_uta_get_v3_account_fee_rate",
+    "account_settings": "private_uta_get_v3_account_settings",
+    "market_current_fund_rate": "public_uta_get_v3_market_current_fund_rate",
+    "market_instruments": "public_uta_get_v3_market_instruments",
+    "market_position_tier": "public_uta_get_v3_market_position_tier",
+    "market_tickers": "public_uta_get_v3_market_tickers"
+  },
+  "read_only_only": true,
+  "reason": "The API key is in Classic Account mode; UTA isolated hedge trading cannot be authorized for this key.",
+  "response_sha256": {
+    "market_current_fund_rate": "a625908f4ef2202f55f777c973c108734e27e62321145aecb7c70122494bb279",
+    "market_instruments": "31935c469f56b251e45810cfa05da803e4fab39b64946afc015f812b0ba9c655",
+    "market_position_tier": "10be36165127b4cea3a3463a572a7e6a8ef3e0bed3a3c45ff26746415ef7ac1e",
+    "market_tickers": "9a2c985f0ccfb67d47b8bdfd08ca91109fb5c0a7117e60ec6e948abbc224319e"
+  },
+  "responses": {
+    "market_current_fund_rate": {
+      "code": "00000",
+      "data": [
+        {
+          "cashDividend": null,
+          "cashDividendNextUpdate": null,
+          "fundingRate": "0.000069",
+          "fundingRateInterval": "8",
+          "maxFundingRate": "0.003",
+          "minFundingRate": "-0.003",
+          "nextUpdate": "1786953600000",
+          "symbol": "BTCUSDT"
+        }
+      ],
+      "msg": "success",
+      "requestTime": "1786925722357"
+    },
+    "market_instruments": {
+      "code": "00000",
+      "data": [
+        {
+          "baseCoin": "BTC",
+          "buyLimitPriceRatio": "0.05",
+          "category": "USDT-FUTURES",
+          "deliveryPeriod": "",
+          "deliveryStartTime": "",
+          "deliveryTime": "",
+          "feeRateUpRatio": "0.005",
+          "fundInterval": "8",
+          "isRwa": "NO",
+          "launchTime": "0",
+          "limitOpenTime": "-1",
+          "maintainTime": "",
+          "makerFeeRate": "0.0002",
+          "maxLeverage": "150",
+          "maxMarketOrderQty": "220",
+          "maxOrderQty": "1200",
+          "maxPositionNum": "200",
+          "maxProductOrderNum": "400",
+          "maxSymbolOrderNum": "",
+          "minLeverage": "1",
+          "minOrderAmount": "5",
+          "minOrderQty": "0.0001",
+          "offTime": "-1",
+          "openCostUpRatio": "0.01",
+          "priceMultiplier": "0.1",
+          "pricePrecision": "1",
+          "quantityMultiplier": "0.0001",
+          "quantityPrecision": "4",
+          "quoteCoin": "USDT",
+          "quotePrecision": "",
+          "sellLimitPriceRatio": "0.05",
+          "status": "online",
+          "symbol": "BTCUSDT",
+          "symbolType": "crypto",
+          "takerFeeRate": "0.0006",
+          "type": "perpetual"
+        }
+      ],
+      "msg": "success",
+      "requestTime": "1786925721417"
+    },
+    "market_position_tier": {
+      "code": "00000",
+      "data": [
+        {
+          "leverage": "150",
+          "maxTierValue": "200000",
+          "minTierValue": "0",
+          "mmr": "0.004",
+          "tier": "1"
+        },
+        {
+          "leverage": "100",
+          "maxTierValue": "1000000",
+          "minTierValue": "200000",
+          "mmr": "0.005",
+          "tier": "2"
+        },
+        {
+          "leverage": "75",
+          "maxTierValue": "5000000",
+          "minTierValue": "1000000",
+          "mmr": "0.007",
+          "tier": "3"
+        },
+        {
+          "leverage": "50",
+          "maxTierValue": "15000000",
+          "minTierValue": "5000000",
+          "mmr": "0.01",
+          "tier": "4"
+        },
+        {
+          "leverage": "25",
+          "maxTierValue": "50000000",
+          "minTierValue": "15000000",
+          "mmr": "0.02",
+          "tier": "5"
+        },
+        {
+          "leverage": "20",
+          "maxTierValue": "100000000",
+          "minTierValue": "50000000",
+          "mmr": "0.03",
+          "tier": "6"
+        },
+        {
+          "leverage": "10",
+          "maxTierValue": "150000000",
+          "minTierValue": "100000000",
+          "mmr": "0.06",
+          "tier": "7"
+        },
+        {
+          "leverage": "5",
+          "maxTierValue": "300000000",
+          "minTierValue": "150000000",
+          "mmr": "0.12",
+          "tier": "8"
+        },
+        {
+          "leverage": "4",
+          "maxTierValue": "500000000",
+          "minTierValue": "300000000",
+          "mmr": "0.15",
+          "tier": "9"
+        },
+        {
+          "leverage": "3",
+          "maxTierValue": "700000000",
+          "minTierValue": "500000000",
+          "mmr": "0.2",
+          "tier": "10"
+        },
+        {
+          "leverage": "2",
+          "maxTierValue": "900000000",
+          "minTierValue": "700000000",
+          "mmr": "0.3",
+          "tier": "11"
+        },
+        {
+          "leverage": "1",
+          "maxTierValue": "1200000000",
+          "minTierValue": "900000000",
+          "mmr": "0.6",
+          "tier": "12"
+        }
+      ],
+      "msg": "success",
+      "requestTime": "1786925721732"
+    },
+    "market_tickers": {
+      "code": "00000",
+      "data": [
+        {
+          "ask1Price": "62877.3",
+          "ask1Size": "6.9445",
+          "bid1Price": "62877.2",
+          "bid1Size": "7.1047",
+          "category": "USDT-FUTURES",
+          "deliveryStartTime": "",
+          "deliveryStatus": "",
+          "deliveryTime": "",
+          "fundingRate": "0.000069",
+          "highPrice24h": "63358.3",
+          "indexPrice": "62902.3305",
+          "lastPrice": "62877.3",
+          "lowPrice24h": "62673.2",
+          "markPrice": "62878.3",
+          "openInterest": "40126.886400000172",
+          "openPrice24h": "63043.6",
+          "price24hPcnt": "-0.00264",
+          "symbol": "BTCUSDT",
+          "ts": "1786925721429",
+          "turnover24h": "632847429.93214",
+          "volume24h": "10038.3353"
+        }
+      ],
+      "msg": "success",
+      "requestTime": "1786925722049"
+    }
+  },
+  "schema_version": "bitget-uta-market-profile-v1",
+  "status": "failed_uta_account_mode",
+  "symbol": "BTCUSDT",
+  "trading_operations_count": 0,
+  "user": "bitget_01"
+}

@@ -1,0 +1,141 @@
+{
+  "category": "USDT-FUTURES",
+  "collected_at_utc": "2026-08-17T03:03:42.939000+00:00",
+  "exchange": "bitget",
+  "funding": {
+    "current_rate": 9.2e-05,
+    "interval_hours": 8,
+    "next_settlement_at_ms": 1786953600000
+  },
+  "instrument": {
+    "base_coin": "BTC",
+    "contract_type": "perpetual",
+    "funding_interval_hours": 8,
+    "maker_fee_rate": 0.0002,
+    "max_leverage": 150.0,
+    "min_order_amount": 5.0,
+    "min_order_qty": 0.0001,
+    "price_multiplier": 0.1,
+    "price_precision": 1,
+    "quantity_multiplier": 0.0001,
+    "quantity_precision": 4,
+    "quote_coin": "USDT",
+    "status": "online",
+    "taker_fee_rate": 0.0006
+  },
+  "margin_tiers": [
+    {
+      "maintenance_margin_rate": 0.004,
+      "max_leverage": 150.0,
+      "max_notional": 200000.0,
+      "min_notional": 0.0,
+      "tier": "1"
+    },
+    {
+      "maintenance_margin_rate": 0.005,
+      "max_leverage": 100.0,
+      "max_notional": 1000000.0,
+      "min_notional": 200000.0,
+      "tier": "2"
+    },
+    {
+      "maintenance_margin_rate": 0.007,
+      "max_leverage": 75.0,
+      "max_notional": 5000000.0,
+      "min_notional": 1000000.0,
+      "tier": "3"
+    },
+    {
+      "maintenance_margin_rate": 0.01,
+      "max_leverage": 50.0,
+      "max_notional": 15000000.0,
+      "min_notional": 5000000.0,
+      "tier": "4"
+    },
+    {
+      "maintenance_margin_rate": 0.02,
+      "max_leverage": 25.0,
+      "max_notional": 50000000.0,
+      "min_notional": 15000000.0,
+      "tier": "5"
+    },
+    {
+      "maintenance_margin_rate": 0.03,
+      "max_leverage": 20.0,
+      "max_notional": 100000000.0,
+      "min_notional": 50000000.0,
+      "tier": "6"
+    },
+    {
+      "maintenance_margin_rate": 0.06,
+      "max_leverage": 10.0,
+      "max_notional": 150000000.0,
+      "min_notional": 100000000.0,
+      "tier": "7"
+    },
+    {
+      "maintenance_margin_rate": 0.12,
+      "max_leverage": 5.0,
+      "max_notional": 300000000.0,
+      "min_notional": 150000000.0,
+      "tier": "8"
+    },
+    {
+      "maintenance_margin_rate": 0.15,
+      "max_leverage": 4.0,
+      "max_notional": 500000000.0,
+      "min_notional": 300000000.0,
+      "tier": "9"
+    },
+    {
+      "maintenance_margin_rate": 0.2,
+      "max_leverage": 3.0,
+      "max_notional": 700000000.0,
+      "min_notional": 500000000.0,
+      "tier": "10"
+    },
+    {
+      "maintenance_margin_rate": 0.3,
+      "max_leverage": 2.0,
+      "max_notional": 900000000.0,
+      "min_notional": 700000000.0,
+      "tier": "11"
+    },
+    {
+      "maintenance_margin_rate": 0.6,
+      "max_leverage": 1.0,
+      "max_notional": 1200000000.0,
+      "min_notional": 900000000.0,
+      "tier": "12"
+    }
+  ],
+  "mark_and_index": {
+    "ask_price": 63370.8,
+    "bid_price": 63370.7,
+    "index_price": 63402.413,
+    "mark_price": 63369.8,
+    "observed_at_ms": 1786935823734
+  },
+  "plan_date": "2026-08-17",
+  "read_only_only": true,
+  "schema_version": "bitget-public-market-profile-v1",
+  "source_documentation": {
+    "funding_history": "https://www.bitget.com/api-doc/uta/public/Get-History-Funding-Rate",
+    "history_candles": "https://www.bitget.com/api-doc/uta/public/Get-History-Candle-Data",
+    "instruments": "https://www.bitget.com/api-doc/uta/public/Get-Instruments",
+    "position_tier": "https://www.bitget.com/api-doc/uta/public/Get-Position-Tier-Data"
+  },
+  "source_execution_inputs_schema": "bitget-public-execution-inputs-v1",
+  "source_execution_inputs_sha256": "1100cdef902412ed067e509a194ab6cd4d9406dbbf90d17b027df5c54e5a088f",
+  "source_response_sha256": {
+    "current_funding": "e490156720a377e1fc27b180d72ae826bdab396fd96daee3658404ca7050fdc7",
+    "funding_history": "afc42ae42461fe1e724c2c7852bea24802aead070f10c4891d6e2b020fc4d20a",
+    "index_price_history": "0507f816350a7bbca08ae59caeb5463b559bf3bee12715d6ceb938afbba1610f",
+    "instruments": "2ecf16d7f1c350911daf6eb6f79b8f6f600a0858c3e7674e9956fc65ce7d1b6e",
+    "mark_price_history": "edb9752a4c026d08d7c766167856d4beb21eb46a38484cc76ebbc5b777efd2ff",
+    "position_tiers": "b26839319b7a7557e349659c79c2c27efbfc7a829e45995e2f2639a18eb2325d",
+    "tickers": "8df4485a988eece2f5d2e5d24b374f5935f81440adba65e33d0fe382ade4a0b6"
+  },
+  "symbol": "BTCUSDT",
+  "trading_operations_count": 0
+}

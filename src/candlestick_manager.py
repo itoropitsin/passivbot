@@ -4351,7 +4351,7 @@ class CandlestickManager:
         # Bybit's archive endpoint provides raw trades (not bucketed OHLCVs), so fetching
         # and bucketing trades costs ~700x more data for BTC. Keep the archive fetch logic
         # below for reference/optional use, but avoid it by default.
-        return exid in {"binanceusdm", "bitget", "kucoinfutures", "hyperliquid"}
+        return exid in {"binanceusdm", "bitget", "kucoinfutures", "hyperliquid", "okx"}
 
     @staticmethod
     def _archive_symbol_code(symbol: str) -> str:
@@ -4371,6 +4371,29 @@ class CandlestickManager:
         quote = (quote or "").replace("/", "").replace(":", "")
         return f"{base}{quote}" if quote else base
 
+    @staticmethod
+    def _archive_okx_inst_id(symbol: str) -> str:
+        """Return OKX archive instrument id for ccxt-style swap symbols."""
+        symbol = str(symbol or "").strip()
+        if not symbol:
+            return ""
+        if symbol.endswith("-SWAP") and "/" not in symbol and ":" not in symbol:
+            return symbol
+        base = symbol
+        quote = ""
+        if "/" in symbol:
+            base, rest = symbol.split("/", 1)
+            quote = rest.split(":", 1)[0] if ":" in rest else rest
+        elif ":" in symbol:
+            base, quote = symbol.split(":", 1)
+        elif "-" in symbol:
+            parts = symbol.split("-")
+            if len(parts) >= 2:
+                base, quote = parts[0], parts[1]
+        base = base.replace("/", "").replace(":", "").replace("-", "").strip()
+        quote = quote.replace("/", "").replace(":", "").replace("-", "").strip()
+        return f"{base}-{quote}-SWAP" if base and quote else ""
+
     async def _archive_fetch_day(self, symbol: str, day_key: str) -> Optional[np.ndarray]:
         """Fetch a full-day (1440x1m) candle array from external archives.
 
@@ -4380,7 +4403,7 @@ class CandlestickManager:
             exid = (self._ex_id or "").lower() if isinstance(self._ex_id, str) else ""
         except Exception:
             exid = ""
-        if exid not in {"binanceusdm", "bybit", "bitget", "kucoinfutures", "hyperliquid"}:
+        if exid not in {"binanceusdm", "bybit", "bitget", "kucoinfutures", "hyperliquid", "okx"}:
             return None
 
         symbol_code = self._archive_symbol_code(symbol)
@@ -4425,6 +4448,12 @@ class CandlestickManager:
 
         if exid == "hyperliquid":
             return await self._archive_fetch_hyperliquid(symbol, day_key)
+
+        if exid == "okx":
+            inst_id = self._archive_okx_inst_id(symbol)
+            if not inst_id:
+                return None
+            return await self._archive_fetch_okx_day(inst_id, day_key)
 
         return None
 
@@ -4639,6 +4668,104 @@ class CandlestickManager:
         if dfc.empty:
             return None
         return self._ohlcv_df_to_day_arr(dfc, day_key)
+
+    @staticmethod
+    def _okx_archive_url(day_key: str) -> str:
+        day_compact = day_key.replace("-", "")
+        return (
+            "https://static.okx.com/cdn/okex/traderecords/candlesticks/"
+            f"daily/{day_compact}/allswap-candlesticks-{day_key}.zip?v=999"
+        )
+
+    async def _archive_fetch_okx_day(self, inst_id: str, day_key: str) -> Optional[np.ndarray]:
+        import pandas as pd
+
+        start_ts, end_ts = self._date_range_of_key(day_key)
+        # OKX archive filenames use UTC+8 calendar days. One UTC day spans the tail
+        # of the same named OKX archive plus the head of the next OKX archive.
+        next_day_key = self._date_key(end_ts + ONE_MIN_MS)
+        dfs = []
+        for archive_day_key in (day_key, next_day_key):
+            df = await self._archive_fetch_okx_zip_rows(
+                inst_id,
+                self._okx_archive_url(archive_day_key),
+                start_ts=start_ts,
+                end_ts=end_ts,
+            )
+            if df is not None and not df.empty:
+                dfs.append(df)
+        if not dfs:
+            return None
+
+        col_names = ["timestamp", "open", "high", "low", "close", "volume"]
+        dfc = (
+            pd.concat(dfs, ignore_index=True)
+            .sort_values("timestamp")
+            .drop_duplicates(subset=["timestamp"], keep="last")
+            .reset_index(drop=True)
+        )
+        if (
+            len(dfc) != 1440
+            or int(dfc["timestamp"].iloc[0]) != int(start_ts)
+            or int(dfc["timestamp"].iloc[-1]) != int(end_ts)
+        ):
+            return None
+        return self._ohlcv_df_to_day_arr(dfc[col_names], day_key)
+
+    async def _archive_fetch_okx_zip_rows(
+        self, inst_id: str, url: str, *, start_ts: int, end_ts: int
+    ) -> Optional["pd.DataFrame"]:
+        raw = await self._archive_fetch_bytes(url)
+        if raw is None:
+            return None
+        import zipfile
+        from io import BytesIO
+        import pandas as pd
+
+        required = [
+            "instrument_name",
+            "open",
+            "high",
+            "low",
+            "close",
+            "vol",
+            "vol_ccy",
+            "vol_quote",
+            "open_time",
+            "confirm",
+        ]
+        dfs = []
+        with zipfile.ZipFile(BytesIO(raw), "r") as z:
+            for name in z.namelist():
+                with z.open(name) as f:
+                    df = pd.read_csv(f)
+                df.columns = [str(c).strip().lower() for c in df.columns]
+                missing = [c for c in required if c not in df.columns]
+                if missing:
+                    raise ValueError(f"okx archive missing columns {missing} in {url}")
+                dfs.append(df[required])
+        if not dfs:
+            return None
+
+        dfc = pd.concat(dfs, ignore_index=True)
+        dfc = dfc[dfc["instrument_name"].astype(str) == str(inst_id)]
+        if dfc.empty:
+            return None
+
+        dfc = dfc.rename(columns={"open_time": "timestamp", "vol_ccy": "volume"})
+        col_names = ["timestamp", "open", "high", "low", "close", "volume"]
+        for c in col_names:
+            dfc[c] = pd.to_numeric(dfc[c], errors="coerce")
+        dfc = (
+            dfc.dropna(subset=["timestamp"])
+            .sort_values("timestamp")
+            .drop_duplicates(subset=["timestamp"], keep="last")
+            .reset_index(drop=True)
+        )
+        dfc = dfc[(dfc["timestamp"] >= start_ts) & (dfc["timestamp"] <= end_ts)]
+        if dfc.empty:
+            return None
+        return dfc[col_names]
 
     async def _archive_fetch_bybit_trades(self, url: str, day_key: str) -> Optional[np.ndarray]:
         raw = await self._archive_fetch_bytes(url)

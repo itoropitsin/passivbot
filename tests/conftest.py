@@ -88,6 +88,40 @@ def _install_passivbot_rust_stub():
     stub.calc_wallet_exposure = (
         lambda c_mult, balance, size, price: abs(size) * price / max(balance, 1e-12)
     )
+
+    def _calc_new_psize_pprice(psize, pprice, qty, price, qty_step):
+        if qty == 0.0:
+            return psize, pprice
+        if psize == 0.0:
+            return qty, price
+        new_size = _round(psize + qty, qty_step)
+        if new_size == 0.0:
+            return 0.0, 0.0
+        return new_size, pprice * (psize / new_size) + price * (qty / new_size)
+
+    def _calc_liquidation_distance(
+        size,
+        entry_price,
+        mark,
+        c_mult,
+        leverage,
+        maintenance_margin_rate,
+        taker_fee,
+        is_long,
+    ):
+        if size == 0 or min(entry_price, mark, c_mult, leverage) <= 0:
+            return None
+        maintenance = maintenance_margin_rate + max(taker_fee, 0.0)
+        if not math.isfinite(maintenance) or maintenance < 0 or maintenance >= 1:
+            return None
+        if is_long:
+            liquidation = entry_price * (1 - 1 / leverage) / (1 - maintenance)
+            return max(0.0, min(1.0, (mark - liquidation) / mark))
+        liquidation = entry_price * (1 + 1 / leverage) / (1 + maintenance)
+        return max(0.0, min(1.0, (liquidation - mark) / mark))
+
+    stub.calc_new_psize_pprice = _calc_new_psize_pprice
+    stub.calc_liquidation_distance_for_position = _calc_liquidation_distance
     stub.cost_to_qty = lambda cost, price, c_mult=1.0: (
         0.0 if price == 0 else cost / (price * (c_mult if c_mult else 1.0))
     )

@@ -169,6 +169,90 @@ TOOL_COMMANDS: dict[str, CommandSpec] = {
         requires_full=True,
     ),
     "streamline-json": CommandSpec("tools.streamline_json", "reformat config or result JSON"),
+    "research-gates": CommandSpec(
+        "tools.research_gates",
+        "create a reproducible crypto research run and verify its gates",
+    ),
+    "crypto-historical-preflight": CommandSpec(
+        "research.historical_preflight",
+        "verify BTC/ETH historical-selection inputs before optimization",
+    ),
+    "crypto-historical-protocol": CommandSpec(
+        "research.historical_protocol",
+        "build the fixed BTC/ETH historical-selection procedure",
+    ),
+    "crypto-historical-select": CommandSpec(
+        "research.historical_selection",
+        "select a historical candidate only after all fixed gates pass",
+    ),
+    "crypto-runtime-evidence": CommandSpec(
+        "research.runtime_evidence",
+        "derive runtime gate counters from a monitor event log",
+    ),
+    "strategy-shadow": CommandSpec(
+        "tools.strategy_shadow",
+        "replay saved public snapshots through a local strategy shadow",
+    ),
+    "strategy-shadow-process": CommandSpec(
+        "tools.strategy_shadow_process",
+        "run strategy shadow across separate local processes with restart evidence",
+    ),
+    "strategy-shadow-stream": CommandSpec(
+        "tools.strategy_shadow_stream",
+        "run the local strategy shadow against public Bitget market data",
+    ),
+    "strategy-shadow-stream-process": CommandSpec(
+        "tools.strategy_shadow_stream_process",
+        "run the public strategy shadow across local processes with recovery evidence",
+    ),
+    "crypto-risk-grid": CommandSpec(
+        "tools.crypto_risk_grid",
+        "run deterministic crypto risk and recovery scenarios without trading",
+    ),
+    "risk-parity-harness": CommandSpec(
+        "tools.risk_parity_harness",
+        "compare saved live and tester risk decisions without trading",
+    ),
+    "bitget-profile": CommandSpec(
+        "tools.bitget_read_only_profile",
+        "collect a read-only Bitget UTA profile without trading operations",
+    ),
+    "bitget-public-data": CommandSpec(
+        "tools.bitget_public_execution_inputs",
+        "collect public Bitget execution inputs without trading operations",
+    ),
+    "bitget-data-metrics": CommandSpec(
+        "tools.bitget_public_data_metrics",
+        "derive data-quality metrics from saved public Bitget inputs",
+    ),
+    "bitget-public-market-profile": CommandSpec(
+        "tools.bitget_public_market_profile",
+        "build a normalized public Bitget market profile from saved inputs",
+    ),
+    "bitget-ohlcv-quality": CommandSpec(
+        "tools.bitget_ohlcv_quality",
+        "audit stored Bitget OHLCV values without downloading or changing them",
+    ),
+    "bitget-funding-archive": CommandSpec(
+        "tools.bitget_funding_archive",
+        "validate an external Bitget funding archive without filling gaps",
+    ),
+    "bitget-funding-horizon": CommandSpec(
+        "tools.bitget_funding_horizon_probe",
+        "measure public Bitget funding-history horizon without trading",
+    ),
+    "bitget-funding-promote": CommandSpec(
+        "tools.bitget_funding_promote",
+        "promote a validated external funding archive into a new execution input without trading",
+    ),
+    "bitget-ohlcv-repair": CommandSpec(
+        "tools.bitget_public_ohlcv_repair",
+        "repair missing Bitget OHLCV rows with public candles only",
+    ),
+    "bitget-market-recorder": CommandSpec(
+        "tools.bitget_market_recorder",
+        "record public Bitget ticker and order-book snapshots without trading",
+    ),
     "ticker-probe": CommandSpec(
         "tools.probe_ticker_capabilities",
         "read-only exchange ticker capability probe",

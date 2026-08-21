@@ -1,0 +1,294 @@
+{
+  "blocked_count": 0,
+  "check_status": "passed",
+  "failed_count": 0,
+  "gate_count": 35,
+  "gates": [
+    {
+      "actual": true,
+      "id": "risk_engine.risk_engine_implemented",
+      "limit": true,
+      "metric": "risk_engine_implemented",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_engine.risk_snapshot_contract_present",
+      "limit": true,
+      "metric": "risk_snapshot_contract_present",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_engine.parity_harness_present",
+      "limit": true,
+      "metric": "parity_harness_present",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_engine.live_tester_decisions_identical",
+      "limit": true,
+      "metric": "live_tester_decisions_identical",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_engine.risk_engine_fails_closed_on_mismatch",
+      "limit": true,
+      "metric": "risk_engine_fails_closed_on_mismatch",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_engine.risk_surface_matrix_validated",
+      "limit": true,
+      "metric": "risk_surface_matrix_validated",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_engine.risk_surface_matrix_artifact_bound",
+      "limit": true,
+      "metric": "risk_surface_matrix_artifact_bound",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": "research_policy",
+      "id": "risk_engine.risk_surface_matrix_source_mode",
+      "limit": "research_policy",
+      "metric": "risk_surface_matrix_source_mode",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_engine.risk_surface_matrix_fixture_mode",
+      "limit": true,
+      "metric": "risk_surface_matrix_fixture_mode",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": 14,
+      "id": "risk_engine.risk_surface_matrix_scenario_count",
+      "limit": 14,
+      "metric": "risk_surface_matrix_scenario_count",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": 14,
+      "id": "risk_engine.risk_surface_matrix_passed_count",
+      "limit": 14,
+      "metric": "risk_surface_matrix_passed_count",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": 0,
+      "id": "risk_engine.risk_surface_matrix_failed_count",
+      "limit": 0,
+      "metric": "risk_surface_matrix_failed_count",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_engine.risk_production_evidence_manifest_present",
+      "limit": true,
+      "metric": "risk_production_evidence_manifest_present",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_engine.risk_production_evidence_contract_valid",
+      "limit": true,
+      "metric": "risk_production_evidence_contract_valid",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_engine.risk_production_path_validated",
+      "limit": true,
+      "metric": "risk_production_path_validated",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_engine.risk_production_python_live_gate_called",
+      "limit": true,
+      "metric": "risk_production_python_live_gate_called",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": "Passivbot._apply_crypto_portfolio_risk_limits",
+      "id": "risk_engine.risk_production_python_live_gate_method",
+      "limit": "Passivbot._apply_crypto_portfolio_risk_limits",
+      "metric": "risk_production_python_live_gate_method",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": "python-live-gate",
+      "id": "risk_engine.risk_production_python_live_gate_engine",
+      "limit": "python-live-gate",
+      "metric": "risk_production_python_live_gate_engine",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_engine.risk_production_rust_backtest_called",
+      "limit": true,
+      "metric": "risk_production_rust_backtest_called",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_engine.risk_production_rust_trace_present",
+      "limit": true,
+      "metric": "risk_production_rust_trace_present",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": false,
+      "id": "risk_engine.risk_production_fixture_mode",
+      "limit": false,
+      "metric": "risk_production_fixture_mode",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": false,
+      "id": "risk_engine.risk_production_research_policy_used",
+      "limit": false,
+      "metric": "risk_production_research_policy_used",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": false,
+      "id": "risk_engine.risk_production_candidate_admission",
+      "limit": false,
+      "metric": "risk_production_candidate_admission",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": 0,
+      "id": "risk_engine.risk_production_trading_operations_count",
+      "limit": 0,
+      "metric": "risk_production_trading_operations_count",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": 0,
+      "id": "risk_engine.risk_production_transfers_count",
+      "limit": 0,
+      "metric": "risk_production_transfers_count",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": 0,
+      "id": "risk_engine.risk_production_account_changes_count",
+      "limit": 0,
+      "metric": "risk_production_account_changes_count",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_engine.risk_production_probe_bound",
+      "limit": true,
+      "metric": "risk_production_probe_bound",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_engine.risk_production_snapshot_bound",
+      "limit": true,
+      "metric": "risk_production_snapshot_bound",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_engine.risk_production_config_bound",
+      "limit": true,
+      "metric": "risk_production_config_bound",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_engine.risk_production_market_profile_bound",
+      "limit": true,
+      "metric": "risk_production_market_profile_bound",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_engine.risk_production_code_fingerprint_bound",
+      "limit": true,
+      "metric": "risk_production_code_fingerprint_bound",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_engine.risk_production_report_bound",
+      "limit": true,
+      "metric": "risk_production_report_bound",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_engine.risk_production_surface_matrix_bound",
+      "limit": true,
+      "metric": "risk_production_surface_matrix_bound",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_engine.risk_limits_enforced_in_live_and_tester",
+      "limit": true,
+      "metric": "risk_limits_enforced_in_live_and_tester",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_engine.risk_parity_reached",
+      "limit": true,
+      "metric": "risk_parity_reached",
+      "operator": "==",
+      "status": "passed"
+    }
+  ],
+  "outcome": "passed",
+  "passed_count": 35,
+  "schema_version": "crypto-grid-experiment-v1",
+  "stage": "risk_engine",
+  "stage_admission_status": "passed",
+  "status": "passed"
+}

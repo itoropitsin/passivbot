@@ -12,15 +12,19 @@ Guideline:
 2. Confirm which `passivbot_rust` module path Python resolves at runtime.
 3. If behavior is stale, clean rebuild and re-verify import path.
 
-## 2) `cargo test --lib` Linker Noise On PyO3
+## 2) `cargo test` Linker Failure On PyO3
 
-Problem: PyO3 projects often fail linking for `cargo test --lib` without Python runtime symbols.
+Problem: the PyO3 test executable fails linking without Python runtime symbols.
 
-Use instead:
+Use the repository wrapper for the full Rust test suite:
 
 ```bash
-cd passivbot-rust && cargo check --tests && cd ..
+PYO3_PYTHON="$(pwd)/.venv/bin/python" passivbot-rust/cargotest.sh
 ```
+
+Use `cargo check --tests` only as a compilation check; it does not replace the
+145 executable Rust tests. The Python path must be absolute because the wrapper
+changes its working directory.
 
 ## 3) `conftest.py` Stub vs Real Module Ordering
 

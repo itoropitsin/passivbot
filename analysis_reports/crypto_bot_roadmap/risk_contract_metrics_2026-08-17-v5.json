@@ -1,0 +1,24 @@
+{
+  "risk_contract_implemented": true,
+  "risk_snapshot_contract_present": true,
+  "parity_harness_present": true,
+  "live_tester_decisions_identical": false,
+  "risk_limits_enforced_in_live_and_tester": false,
+  "risk_parity_reached": false,
+  "risk_contract_fails_closed_on_mismatch": true,
+  "adapter_status": {
+    "fixture_boundary": "connected",
+    "python_live_gate_exporter": "connected_after_actual_gate",
+    "rust_backtest_gate_trace": "connected_before_order_distribution",
+    "rust_risk_snapshot": "connected_before_pending_order_queue_clear",
+    "risk_trace_adapter": "connected_read_only",
+    "harness_actual_trace_mode": "connected_read_only",
+    "rust_snapshot_failure_behavior": "new_entries_blocked; close_orders_retained",
+    "canonical_snapshot": "present_but_not_reconciled_with_live",
+    "stable_order_id": "shared_semantic_format_present; occurrence_canonicalization_pending",
+    "canonical_decisions": "pending_actual_engine_run"
+  },
+  "candidate_admission": false,
+  "trading_operations_count": 0,
+  "reason": "The read-only trace adapter and harness mode now accept actual Python live export and Rust Backtest trace files, validate the same external snapshot, and fail closed on incomplete evidence. A qualifying comparison has not been run from one reproducible engine state; Rust balance, daily loss, HSL, liquidation buffer and margin-tier semantics still require cross-engine reconciliation."
+}

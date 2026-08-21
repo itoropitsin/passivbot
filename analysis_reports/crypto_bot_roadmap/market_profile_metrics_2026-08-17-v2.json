@@ -1,0 +1,14 @@
+{
+  "market_profile_scope": "public BTCUSDT USDT-FUTURES instrument, fee, funding, mark/index, and margin-tier surfaces",
+  "market_profile_input_present": true,
+  "market_profile_public_api_only": true,
+  "market_profile_private_api_data_present": false,
+  "instrument_surface_complete": true,
+  "fee_surface_complete": true,
+  "funding_interval_surface_complete": true,
+  "mark_index_surface_complete": true,
+  "position_tier_surface_complete": true,
+  "trading_operations_count": 0,
+  "source_profile": "inputs/bitget_btc_market_profile_public_only_2026-08-17.json",
+  "source_profile_sha256": "pending_run_manifest"
+}

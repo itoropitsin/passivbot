@@ -1,0 +1,123 @@
+{
+  "captured_at_utc": "2026-08-18T09:54:54+00:00",
+  "category": "USDT-FUTURES",
+  "complete_requested_window_available": false,
+  "endpoints": {
+    "classic_v2": {
+      "category": "USDT-FUTURES",
+      "documentation": "https://www.bitget.com/api-doc/classic/contract/market/Get-History-Funding-Rate",
+      "endpoint": "classic_v2",
+      "error": null,
+      "foreign_symbol_rows": 0,
+      "last_page_empty": true,
+      "max_pages_requested": 100,
+      "newest_observed_timestamp_ms": 1787040000000,
+      "newest_observed_utc": "2026-08-18T08:00:00+00:00",
+      "observed_rows": 270,
+      "oldest_observed_timestamp_ms": 1779292800000,
+      "oldest_observed_utc": "2026-05-20T16:00:00+00:00",
+      "page_count": 4,
+      "page_limit": 100,
+      "page_row_counts": [
+        100,
+        100,
+        70,
+        0
+      ],
+      "path": "/api/v2/mix/market/history-fund-rate",
+      "quality_for_requested_window": {
+        "actual_rows": 266,
+        "complete_between_observed_bounds": true,
+        "complete_requested_window": false,
+        "duplicate_rows": 0,
+        "expected_interval_hours": 8,
+        "expected_rows": 2332,
+        "first_timestamp_ms": 1779292800000,
+        "future_rows": 4,
+        "interval_gaps": 0,
+        "invalid_rows": 0,
+        "last_timestamp_ms": 1787040000000,
+        "missing_rows": 2066,
+        "outside_requested_range": 4,
+        "rows": 270,
+        "synthetic_rows": 0,
+        "unexpected_in_range_rows": 0,
+        "window_alignment_valid": true
+      },
+      "response_sha256": [
+        "72221c27c9f39c27561488bdfe14d602c3844111f7f3d0605337d4b7dc42db3c",
+        "e696a4b4ee7a49e6230bad5eb230a3033a0b80084c7086d539c9cffbb9928d6e",
+        "f86d40fe7daf7b0339d88c4893d78a8a3406aebd100c00a11858612cee885a6b",
+        "4c10ddaefba726ab352c9ff3b538c9f2564644d399a24353f897b391cee5b7d4"
+      ],
+      "symbol": "BTCUSDT",
+      "valid_rows": 270
+    },
+    "uta_v3": {
+      "category": "USDT-FUTURES",
+      "documentation": "https://www.bitget.com/api-doc/uta/public/Get-History-Funding-Rate",
+      "endpoint": "uta_v3",
+      "error": null,
+      "foreign_symbol_rows": 0,
+      "last_page_empty": true,
+      "max_pages_requested": 100,
+      "newest_observed_timestamp_ms": 1787040000000,
+      "newest_observed_utc": "2026-08-18T08:00:00+00:00",
+      "observed_rows": 270,
+      "oldest_observed_timestamp_ms": 1779292800000,
+      "oldest_observed_utc": "2026-05-20T16:00:00+00:00",
+      "page_count": 4,
+      "page_limit": 100,
+      "page_row_counts": [
+        100,
+        100,
+        70,
+        0
+      ],
+      "path": "/api/v3/market/history-fund-rate",
+      "quality_for_requested_window": {
+        "actual_rows": 266,
+        "complete_between_observed_bounds": true,
+        "complete_requested_window": false,
+        "duplicate_rows": 0,
+        "expected_interval_hours": 8,
+        "expected_rows": 2332,
+        "first_timestamp_ms": 1779292800000,
+        "future_rows": 4,
+        "interval_gaps": 0,
+        "invalid_rows": 0,
+        "last_timestamp_ms": 1787040000000,
+        "missing_rows": 2066,
+        "outside_requested_range": 4,
+        "rows": 270,
+        "synthetic_rows": 0,
+        "unexpected_in_range_rows": 0,
+        "window_alignment_valid": true
+      },
+      "response_sha256": [
+        "345a057845d5089ae9f4c1ede25c26725eb7667103e2b856e0c32fff580fbbbb",
+        "cd0282ac051508f1228ae1346806ad3656c27d9c35154a031fa9a56a0a35a1d7",
+        "30fb234dafcd407668ee85ba9b5d55be2300230ef75e85c807ccd22ba3275a70",
+        "37a5b818e1f864dad2f8d4f9c4ecd5a8adea64a3da768d4538909eb19f8e6681"
+      ],
+      "symbol": "BTCUSDT",
+      "valid_rows": 270
+    }
+  },
+  "exchange": "bitget",
+  "notes": [
+    "This probe records observed public pages only.",
+    "No rows are synthesized, copied from another exchange, or inferred from the other endpoint.",
+    "A non-empty recent horizon does not satisfy the requested historical window."
+  ],
+  "read_only_external_operations": true,
+  "requested_window": {
+    "end_utc": "2026-08-17T00:00:00+00:00",
+    "interval_hours": 8,
+    "start_utc": "2024-07-01T00:00:00+00:00"
+  },
+  "schema_version": "bitget-funding-horizon-probe-v1",
+  "status": "blocked",
+  "symbol": "BTCUSDT",
+  "trading_operations_count": 0
+}

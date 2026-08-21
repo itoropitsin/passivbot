@@ -1,0 +1,162 @@
+{
+  "category": "USDT-FUTURES",
+  "collected_at_utc": "2026-08-17T03:06:10.295000+00:00",
+  "exchange": "bitget",
+  "funding": {
+    "current_rate": 7e-05,
+    "interval_hours": 8,
+    "next_settlement_at_ms": 1786953600000
+  },
+  "instrument": {
+    "base_coin": "ETH",
+    "contract_type": "perpetual",
+    "funding_interval_hours": 8,
+    "maker_fee_rate": 0.0002,
+    "max_leverage": 150.0,
+    "min_order_amount": 5.0,
+    "min_order_qty": 0.01,
+    "price_multiplier": 0.01,
+    "price_precision": 2,
+    "quantity_multiplier": 0.01,
+    "quantity_precision": 2,
+    "quote_coin": "USDT",
+    "status": "online",
+    "taker_fee_rate": 0.0006
+  },
+  "margin_tiers": [
+    {
+      "maintenance_margin_rate": 0.004,
+      "max_leverage": 150.0,
+      "max_notional": 200000.0,
+      "min_notional": 0.0,
+      "tier": "1"
+    },
+    {
+      "maintenance_margin_rate": 0.005,
+      "max_leverage": 100.0,
+      "max_notional": 1000000.0,
+      "min_notional": 200000.0,
+      "tier": "2"
+    },
+    {
+      "maintenance_margin_rate": 0.01,
+      "max_leverage": 75.0,
+      "max_notional": 3000000.0,
+      "min_notional": 1000000.0,
+      "tier": "3"
+    },
+    {
+      "maintenance_margin_rate": 0.015,
+      "max_leverage": 50.0,
+      "max_notional": 12000000.0,
+      "min_notional": 3000000.0,
+      "tier": "4"
+    },
+    {
+      "maintenance_margin_rate": 0.02,
+      "max_leverage": 25.0,
+      "max_notional": 40000000.0,
+      "min_notional": 12000000.0,
+      "tier": "5"
+    },
+    {
+      "maintenance_margin_rate": 0.03,
+      "max_leverage": 20.0,
+      "max_notional": 70000000.0,
+      "min_notional": 40000000.0,
+      "tier": "6"
+    },
+    {
+      "maintenance_margin_rate": 0.05,
+      "max_leverage": 10.0,
+      "max_notional": 100000000.0,
+      "min_notional": 70000000.0,
+      "tier": "7"
+    },
+    {
+      "maintenance_margin_rate": 0.07,
+      "max_leverage": 8.0,
+      "max_notional": 150000000.0,
+      "min_notional": 100000000.0,
+      "tier": "8"
+    },
+    {
+      "maintenance_margin_rate": 0.08,
+      "max_leverage": 7.0,
+      "max_notional": 200000000.0,
+      "min_notional": 150000000.0,
+      "tier": "9"
+    },
+    {
+      "maintenance_margin_rate": 0.09,
+      "max_leverage": 6.0,
+      "max_notional": 250000000.0,
+      "min_notional": 200000000.0,
+      "tier": "10"
+    },
+    {
+      "maintenance_margin_rate": 0.12,
+      "max_leverage": 5.0,
+      "max_notional": 300000000.0,
+      "min_notional": 250000000.0,
+      "tier": "11"
+    },
+    {
+      "maintenance_margin_rate": 0.15,
+      "max_leverage": 4.0,
+      "max_notional": 400000000.0,
+      "min_notional": 300000000.0,
+      "tier": "12"
+    },
+    {
+      "maintenance_margin_rate": 0.2,
+      "max_leverage": 3.0,
+      "max_notional": 500000000.0,
+      "min_notional": 400000000.0,
+      "tier": "13"
+    },
+    {
+      "maintenance_margin_rate": 0.3,
+      "max_leverage": 2.0,
+      "max_notional": 800000000.0,
+      "min_notional": 500000000.0,
+      "tier": "14"
+    },
+    {
+      "maintenance_margin_rate": 0.6,
+      "max_leverage": 1.0,
+      "max_notional": 1200000000.0,
+      "min_notional": 800000000.0,
+      "tier": "15"
+    }
+  ],
+  "mark_and_index": {
+    "ask_price": 1901.31,
+    "bid_price": 1901.3,
+    "index_price": 1902.5115,
+    "mark_price": 1901.42,
+    "observed_at_ms": 1786935970646
+  },
+  "plan_date": "2026-08-17",
+  "read_only_only": true,
+  "schema_version": "bitget-public-market-profile-v1",
+  "source_documentation": {
+    "funding_history": "https://www.bitget.com/api-doc/uta/public/Get-History-Funding-Rate",
+    "history_candles": "https://www.bitget.com/api-doc/uta/public/Get-History-Candle-Data",
+    "instruments": "https://www.bitget.com/api-doc/uta/public/Get-Instruments",
+    "position_tier": "https://www.bitget.com/api-doc/uta/public/Get-Position-Tier-Data"
+  },
+  "source_execution_inputs_schema": "bitget-public-execution-inputs-v1",
+  "source_execution_inputs_sha256": "967100b44f5c2939112dd0f1cf221ca56b29acfa541fdcd479c8074bf972e5f7",
+  "source_response_sha256": {
+    "current_funding": "69f04edd6dfbbedb276f1af2abe7f8ed39fdc712ab9bd3cf2c1ac6193e2b5884",
+    "funding_history": "7142d5df8627c1e6e633fcac73bf4053067c2f6250cf075e038668c8cf31122c",
+    "index_price_history": "a6c9ae17ce0e8479b59c8e21a881fb682cb53c12cd06b7085537648f01c269f5",
+    "instruments": "e9be643ad90cfd565285c02a8f0dccc2b2cd3f8cae282d023c8f28ff02873ee7",
+    "mark_price_history": "3ee7cd34da4b13ad027b93e4a71dd61e905edce33c2fbf4bd0abe4af8c455a30",
+    "position_tiers": "624fb76729604512e0592873f1e5215ca0498d200901173d09e58766262b7f89",
+    "tickers": "28bda0ccfa7292ee6ee4c1f3889c6089a0fb907e3993d2d2916ea9b188b55f6f"
+  },
+  "symbol": "ETHUSDT",
+  "trading_operations_count": 0
+}

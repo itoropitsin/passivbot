@@ -6,9 +6,11 @@ import json
 import logging
 import os
 import sys
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List
+from uuid import uuid4
 
 import numpy as np
 
@@ -26,12 +28,12 @@ from procedures import ensure_parent_directory
 
 def _build_output_dir(root: str | None, scenario: dict) -> Path:
     base = Path(root) if root else Path("artifacts") / "fake_live"
-    stamp = datetime.now(tz=timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    stamp = datetime.now(tz=timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
     scenario_name = str(
         scenario.get("name")
         or Path(str(scenario.get("_scenario_path", "scenario"))).stem
     )
-    return base / f"{stamp}_{scenario_name}"
+    return base / f"{stamp}_{os.getpid()}_{uuid4().hex[:8]}_{scenario_name}"
 
 
 def _dump_json(path: Path, data: Any) -> None:
@@ -742,6 +744,7 @@ async def _run_fake_case(
     user: str | None,
     max_steps: int | None,
     output_dir: Path,
+    runtime_root: Path,
     log_level: int,
     snapshot_each_step: bool,
     enforce_assertions: bool = True,
@@ -754,6 +757,10 @@ async def _run_fake_case(
     )
     config.setdefault("live", {})
     config["live"]["fake_scenario_path"] = scenario_path
+    runtime_root = runtime_root.expanduser().resolve()
+    runtime_root.mkdir(parents=True, exist_ok=True)
+    config["_runtime_root"] = str(runtime_root)
+    config.setdefault("monitor", {})["root_dir"] = str(runtime_root / "monitor")
 
     scenario = load_fake_scenario(scenario_path)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -773,7 +780,11 @@ async def _run_fake_case(
         if not isinstance(bot.cca, FakeCCXTClient):
             raise TypeError("Fake harness expected bot.cca to be FakeCCXTClient")
         candle_remote_fetches, restore_candle_trace = _install_candle_remote_fetch_trace(bot)
-        _prime_fake_fill_cache(bot, bot.cca)
+        _prime_fake_fill_cache(
+            bot,
+            bot.cca,
+            cache_root=runtime_root / "caches" / "fill_events",
+        )
         _prime_fake_candles(bot, bot.cca)
         _install_runtime_overrides(bot, scenario)
         await bot.start_bot()
@@ -812,6 +823,7 @@ async def _run_fake_case(
             output_dir / "run_metadata.json",
             {
                 "assertions_enforced": bool(enforce_assertions),
+                "runtime_root": str(runtime_root),
                 "user": str(config.get("live", {}).get("user") or ""),
                 "scenario_path": str(scenario_path),
             },
@@ -839,15 +851,34 @@ async def _async_main(args: argparse.Namespace) -> int:
     scenario = load_fake_scenario(args.scenario)
     output_dir = _build_output_dir(args.output_dir, scenario)
 
-    run_dir = await _run_fake_case(
-        config_path=args.config,
-        scenario_path=args.scenario,
-        user=args.user,
-        max_steps=args.max_steps,
-        output_dir=output_dir,
-        log_level=args.log_level,
-        snapshot_each_step=args.snapshot_each_step,
-    )
+    output_dir.parent.mkdir(parents=True, exist_ok=True)
+    requested_runtime_root = getattr(args, "_runtime_root", None)
+    if requested_runtime_root:
+        run_dir = await _run_fake_case(
+            config_path=args.config,
+            scenario_path=args.scenario,
+            user=args.user,
+            max_steps=args.max_steps,
+            output_dir=output_dir,
+            runtime_root=Path(requested_runtime_root),
+            log_level=args.log_level,
+            snapshot_each_step=args.snapshot_each_step,
+        )
+    else:
+        with tempfile.TemporaryDirectory(
+            prefix=".fake-live-runtime-",
+            dir=str(output_dir.parent),
+        ) as runtime_root:
+            run_dir = await _run_fake_case(
+                config_path=args.config,
+                scenario_path=args.scenario,
+                user=args.user,
+                max_steps=args.max_steps,
+                output_dir=output_dir,
+                runtime_root=Path(runtime_root),
+                log_level=args.log_level,
+                snapshot_each_step=args.snapshot_each_step,
+            )
     print(str(run_dir))
     return 0
 

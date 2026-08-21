@@ -1,0 +1,21 @@
+{
+  "schema_version": "crypto-data-metrics-determinism-v1",
+  "observed_at": "2026-08-17",
+  "timezone": "Europe/Amsterdam",
+  "run_count": 3,
+  "assets": {
+    "BTC": {
+      "command": "passivbot tool bitget-data-metrics --asset BTC --execution-model-test-count 3 --identical-run-count 3",
+      "return_codes": [0, 0, 0],
+      "identical_output": true,
+      "output_sha256": "abb0d15341c11bc419eddc9b047fff281fcc72ce787f4bbeadc7e52125f627f1"
+    },
+    "ETH": {
+      "command": "passivbot tool bitget-data-metrics --asset ETH --execution-model-test-count 3 --identical-run-count 3",
+      "return_codes": [0, 0, 0],
+      "identical_output": true,
+      "output_sha256": "54429a8baeef776de1f7da21121f79ffc4de34b2e69a16d1a7681d64de35b797"
+    }
+  },
+  "note": "Each asset was generated three times from the same saved execution-input and OHLCV-repair artifacts. The report field identical_run_count is promoted to 3 only after these hashes match."
+}

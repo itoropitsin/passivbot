@@ -1,0 +1,140 @@
+[
+  {
+    "name": "center_profit",
+    "config": "analysis_reports/sensitivity_2026-06-26_profit_center/configs/center_profit.json",
+    "changed_path": "",
+    "value": null
+  },
+  {
+    "name": "twe_0.55",
+    "config": "analysis_reports/sensitivity_2026-06-26_profit_center/configs/twe_0.55.json",
+    "changed_path": "bot.long.total_wallet_exposure_limit",
+    "value": 0.55
+  },
+  {
+    "name": "twe_0.62",
+    "config": "analysis_reports/sensitivity_2026-06-26_profit_center/configs/twe_0.62.json",
+    "changed_path": "bot.long.total_wallet_exposure_limit",
+    "value": 0.62
+  },
+  {
+    "name": "twe_0.68",
+    "config": "analysis_reports/sensitivity_2026-06-26_profit_center/configs/twe_0.68.json",
+    "changed_path": "bot.long.total_wallet_exposure_limit",
+    "value": 0.68
+  },
+  {
+    "name": "twe_0.80",
+    "config": "analysis_reports/sensitivity_2026-06-26_profit_center/configs/twe_0.80.json",
+    "changed_path": "bot.long.total_wallet_exposure_limit",
+    "value": 0.8
+  },
+  {
+    "name": "entry_qty_0.044",
+    "config": "analysis_reports/sensitivity_2026-06-26_profit_center/configs/entry_qty_0.044.json",
+    "changed_path": "bot.long.entry_initial_qty_pct",
+    "value": 0.044
+  },
+  {
+    "name": "entry_qty_0.052",
+    "config": "analysis_reports/sensitivity_2026-06-26_profit_center/configs/entry_qty_0.052.json",
+    "changed_path": "bot.long.entry_initial_qty_pct",
+    "value": 0.052
+  },
+  {
+    "name": "entry_qty_0.070",
+    "config": "analysis_reports/sensitivity_2026-06-26_profit_center/configs/entry_qty_0.070.json",
+    "changed_path": "bot.long.entry_initial_qty_pct",
+    "value": 0.07
+  },
+  {
+    "name": "entry_qty_0.080",
+    "config": "analysis_reports/sensitivity_2026-06-26_profit_center/configs/entry_qty_0.080.json",
+    "changed_path": "bot.long.entry_initial_qty_pct",
+    "value": 0.08
+  },
+  {
+    "name": "close_markup_end_0.0100",
+    "config": "analysis_reports/sensitivity_2026-06-26_profit_center/configs/close_markup_end_0.0100.json",
+    "changed_path": "bot.long.close_grid_markup_end",
+    "value": 0.01
+  },
+  {
+    "name": "close_markup_end_0.0120",
+    "config": "analysis_reports/sensitivity_2026-06-26_profit_center/configs/close_markup_end_0.0120.json",
+    "changed_path": "bot.long.close_grid_markup_end",
+    "value": 0.012
+  },
+  {
+    "name": "close_markup_end_0.0180",
+    "config": "analysis_reports/sensitivity_2026-06-26_profit_center/configs/close_markup_end_0.0180.json",
+    "changed_path": "bot.long.close_grid_markup_end",
+    "value": 0.018
+  },
+  {
+    "name": "close_markup_end_0.0200",
+    "config": "analysis_reports/sensitivity_2026-06-26_profit_center/configs/close_markup_end_0.0200.json",
+    "changed_path": "bot.long.close_grid_markup_end",
+    "value": 0.02
+  },
+  {
+    "name": "spacing_vol_w_17.1",
+    "config": "analysis_reports/sensitivity_2026-06-26_profit_center/configs/spacing_vol_w_17.1.json",
+    "changed_path": "bot.long.entry_grid_spacing_volatility_weight",
+    "value": 17.1
+  },
+  {
+    "name": "spacing_vol_w_22.0",
+    "config": "analysis_reports/sensitivity_2026-06-26_profit_center/configs/spacing_vol_w_22.0.json",
+    "changed_path": "bot.long.entry_grid_spacing_volatility_weight",
+    "value": 22.0
+  },
+  {
+    "name": "spacing_vol_w_34.0",
+    "config": "analysis_reports/sensitivity_2026-06-26_profit_center/configs/spacing_vol_w_34.0.json",
+    "changed_path": "bot.long.entry_grid_spacing_volatility_weight",
+    "value": 34.0
+  },
+  {
+    "name": "spacing_vol_w_40.0",
+    "config": "analysis_reports/sensitivity_2026-06-26_profit_center/configs/spacing_vol_w_40.0.json",
+    "changed_path": "bot.long.entry_grid_spacing_volatility_weight",
+    "value": 40.0
+  },
+  {
+    "name": "close_trail_ratio_m0p80",
+    "config": "analysis_reports/sensitivity_2026-06-26_profit_center/configs/close_trail_ratio_m0p80.json",
+    "changed_path": "bot.long.close_trailing_grid_ratio",
+    "value": -0.8
+  },
+  {
+    "name": "close_trail_ratio_0p00",
+    "config": "analysis_reports/sensitivity_2026-06-26_profit_center/configs/close_trail_ratio_0p00.json",
+    "changed_path": "bot.long.close_trailing_grid_ratio",
+    "value": 0.0
+  },
+  {
+    "name": "close_trail_ratio_0p65",
+    "config": "analysis_reports/sensitivity_2026-06-26_profit_center/configs/close_trail_ratio_0p65.json",
+    "changed_path": "bot.long.close_trailing_grid_ratio",
+    "value": 0.65
+  },
+  {
+    "name": "entry_trail_thresh_0.00800",
+    "config": "analysis_reports/sensitivity_2026-06-26_profit_center/configs/entry_trail_thresh_0.00800.json",
+    "changed_path": "bot.long.entry_trailing_threshold_pct",
+    "value": 0.008
+  },
+  {
+    "name": "entry_trail_thresh_0.01417",
+    "config": "analysis_reports/sensitivity_2026-06-26_profit_center/configs/entry_trail_thresh_0.01417.json",
+    "changed_path": "bot.long.entry_trailing_threshold_pct",
+    "value": 0.01417
+  },
+  {
+    "name": "entry_trail_thresh_0.00600",
+    "config": "analysis_reports/sensitivity_2026-06-26_profit_center/configs/entry_trail_thresh_0.00600.json",
+    "changed_path": "bot.long.entry_trailing_threshold_pct",
+    "value": 0.006
+  }
+]

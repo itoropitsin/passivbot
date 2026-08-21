@@ -1,0 +1,38 @@
+{
+  "code": {
+    "dirty_diff_sha256": "687ae9543ba5f61ef3bbdb762e97c2e0d3dbf71c06636f797c0fd8d4f1a53b01",
+    "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+    "git_dirty": true
+  },
+  "command": [
+    "passivbot",
+    "tool",
+    "research-gates",
+    "--run-id",
+    "profile-pending-2026-08-17",
+    "--stage",
+    "profile",
+    "--metrics",
+    "analysis_reports/crypto_bot_roadmap/profile_metrics_pending_2026-08-17.json",
+    "--config",
+    "configs/examples/default_trailing_grid_long_npos7.json",
+    "--dataset",
+    "analysis_reports/bitget_profit_1000_walkforward_2024train_dd25/validation/validation_results.json",
+    "--market-profile",
+    "analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile.pending.json",
+    "--output-dir",
+    "analysis_reports/crypto_bot_roadmap/runs",
+    "--overwrite"
+  ],
+  "created_at_utc": "2026-08-17T00:09:00+00:00",
+  "inputs": {
+    "config_sha256": "cfeaf3afa7b9f33cf034d5cbf7af855a88ef67611cdfb39f228349307d12d58e",
+    "dataset_sha256": "196aa1a052d71b23687e464effbea23d25241e8eccf0950987003a6bc560f50b",
+    "market_profile_sha256": "354b3e174a0d10b088e52a6f57df1951c5c22f43a71742760e856d187fcf2578"
+  },
+  "plan_date": "2026-08-17",
+  "random_seeds": [],
+  "run_id": "profile-pending-2026-08-17",
+  "schema_version": "crypto-grid-experiment-v1",
+  "stage": "profile"
+}

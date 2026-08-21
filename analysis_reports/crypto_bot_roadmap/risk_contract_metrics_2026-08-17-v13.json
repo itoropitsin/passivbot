@@ -1,0 +1,41 @@
+{
+  "risk_contract_implemented": true,
+  "risk_snapshot_contract_present": true,
+  "parity_harness_present": true,
+  "live_tester_decisions_identical": true,
+  "risk_limits_enforced_in_live_and_tester": true,
+  "risk_parity_reached": true,
+  "risk_contract_fails_closed_on_mismatch": true,
+  "risk_model_surface_validated": false,
+  "adapter_status": {
+    "fixture_boundary": "connected_regression_only",
+    "python_live_gate_exporter": "connected_after_actual_gate",
+    "rust_backtest_gate_trace": "connected_before_order_distribution",
+    "rust_risk_snapshot": "connected_before_pending_order_queue_clear",
+    "risk_trace_adapter": "connected_read_only",
+    "harness_actual_trace_mode": "connected_read_only_full_decision_set",
+    "rust_snapshot_failure_behavior": "new entries blocked; close orders retained",
+    "canonical_snapshot": "same_state_hash_match_in_actual_probe_with_public_surface",
+    "stable_order_id": "aligned_for_distinct_semantic_requests; duplicate_semantics_fail_closed",
+    "canonical_decisions": "actual_probe_v3_completed_with_6_of_6_matches",
+    "projected_liquidation_model": "shared Rust/Python formula with sequential projected state",
+    "bitget_public_surface_normalizer": "connected_read_only",
+    "bitget_public_surface_fields": "mark/index, maker/taker fee, quantity-step, funding interval and margin tiers",
+    "isolated_uta_account_surface": "not_validated; current key is Classic Account",
+    "crypto_account_setup_errors": "fail_closed for roadmap profile"
+  },
+  "actual_probe": {
+    "report_path": "actual_risk_parity_probe_2026-08-17-v3/report.json",
+    "snapshot_hash": "cb50c9a16fb808c0f77a28d862a0a04b786bdd3eb482725e4558d49b7d5b142f",
+    "market_surface_hash": "8ef7d644c41b489abf94148933961645fa278b7287a43066123ecf08e645e9b0",
+    "trace_records": 6,
+    "matching_decisions": 6,
+    "mismatching_decisions": 0,
+    "initial_entry": "match_allow",
+    "grid_entries": "all_grid_decisions_match",
+    "trading_operations_count": 0
+  },
+  "candidate_admission": false,
+  "trading_operations_count": 0,
+  "reason": "The read-only same-state probe consumes the captured public Bitget market surface for mark price, fees, quantity step and margin tiers; all 6 Python/Rust decisions match. The risk contract remains failed because the required isolated UTA account ledger and private account controls are not validated; the current key is Classic Account. Roadmap account-setup failures now fail closed. No external operation occurred."
+}

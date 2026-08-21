@@ -1,0 +1,15 @@
+{
+  "_paper_mode": true,
+  "live": {
+    "hedge_mode": true,
+    "leverage": 3.0,
+    "margin_mode_preference": "isolated",
+    "paper_initial_balance": 1000.0,
+    "paper_mode": true,
+    "paper_state_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/public-observer-smoke-2026-08-18-v2/ledger.json",
+    "paper_symbols": [
+      "BTC"
+    ]
+  },
+  "user": "paper-shadow"
+}

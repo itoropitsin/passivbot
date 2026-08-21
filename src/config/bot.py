@@ -398,6 +398,7 @@ def ensure_bot_defaults(
                 0.0,
                 "omitted wallet-exposure weighting disables feature",
             ),
+            ("entry_grid_max_levels", 500, "legacy grid-count compatibility default"),
             ("entry_trailing_grid_ratio", 0.0, "pre-trailing compatibility default"),
             ("entry_trailing_retracement_pct", 0.002, "pre-trailing compatibility placeholder"),
             (

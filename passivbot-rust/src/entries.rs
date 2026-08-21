@@ -972,7 +972,12 @@ pub fn calc_entries_long(
     let mut psize = position.size;
     let mut pprice = position.price;
     let mut bid = state_params.order_book.bid;
-    for _ in 0..500 {
+    let max_levels = if bot_params.entry_grid_max_levels == 0 {
+        500
+    } else {
+        bot_params.entry_grid_max_levels
+    };
+    for _ in 0..max_levels.max(1) {
         let position_mod = Position {
             size: psize,
             price: pprice,
@@ -1035,7 +1040,12 @@ pub fn calc_entries_short(
     let mut psize = position.size;
     let mut pprice = position.price;
     let mut ask = state_params.order_book.ask;
-    for _ in 0..500 {
+    let max_levels = if bot_params.entry_grid_max_levels == 0 {
+        500
+    } else {
+        bot_params.entry_grid_max_levels
+    };
+    for _ in 0..max_levels.max(1) {
         let position_mod = Position {
             size: psize,
             price: pprice,

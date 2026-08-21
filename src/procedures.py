@@ -147,7 +147,30 @@ def ensure_parent_directory(
         raise RuntimeError(f"Error processing filepath: {str(e)}") from e
 
 
-def load_user_info(user: str, api_keys_path="api-keys.json") -> dict:
+PAPER_SAFE_USER_FIELDS = frozenset(
+    {
+        "exchange",
+        "quote",
+        "paper",
+        "paper_mode",
+        "paper_symbols",
+        "paper_state_path",
+        "paper_state_dir",
+        "paper_execution_inputs_path",
+        "paper_execution_inputs_since_ms",
+        "paper_initial_balance",
+        "paper_leverage",
+        "fake_scenario_path",
+    }
+)
+
+
+def load_user_info(
+    user: str,
+    api_keys_path="api-keys.json",
+    *,
+    safe_only: bool = False,
+) -> dict:
     """Load user credentials from api-keys.json.
 
     Returns all fields from the user's entry, plus empty string defaults
@@ -174,8 +197,29 @@ def load_user_info(user: str, api_keys_path="api-keys.json") -> dict:
     ]
     result = {k: "" for k in legacy_fields}
 
-    # Overlay all fields from the user's entry (passthrough for CCXTBot)
-    result.update(api_keys[user])
+    # Paper mode only needs routing and local simulation settings. Keeping
+    # this allow-list separate prevents a public paper client from receiving
+    # API keys, secrets, passphrases or arbitrary nested credential material.
+    entry = api_keys[user]
+    if safe_only:
+        result.update(
+            {
+                key: value
+                for key, value in entry.items()
+                if key in PAPER_SAFE_USER_FIELDS
+            }
+        )
+        for credential_field in (
+            "key",
+            "secret",
+            "passphrase",
+            "wallet_address",
+            "private_key",
+        ):
+            result.pop(credential_field, None)
+    else:
+        # Overlay all fields from the user's entry (passthrough for CCXTBot)
+        result.update(entry)
 
     return result
 

@@ -1,0 +1,23 @@
+{
+  "after_missing_rows": 0,
+  "api_symbol": "BTCUSDT",
+  "before_missing_rows": 0,
+  "collected_at_utc": "2026-08-17T01:44:51+00:00",
+  "documentation": "https://www.bitget.com/api-doc/uta/public/Get-History-Candle-Data",
+  "exchange": "bitget",
+  "missing_ranges_after": [],
+  "missing_ranges_before": [],
+  "range": {
+    "end_utc": "2026-08-16T23:59:00+00:00",
+    "start_utc": "2024-07-01T00:00:00+00:00"
+  },
+  "read_only_external_operations": true,
+  "repaired_rows": 0,
+  "requests": [],
+  "schema_version": "bitget-public-ohlcv-repair-v1",
+  "status": "repaired",
+  "symbol": "BTC/USDT:USDT",
+  "timeframe": "1m",
+  "trading_operations_count": 0,
+  "unresolved_ranges": []
+}

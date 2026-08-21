@@ -1,0 +1,62 @@
+[
+  {
+    "name": "close_markup_end_0.0124",
+    "config": "analysis_reports/sensitivity_2026-06-26_markup_micro/configs/close_markup_end_0.0124.json",
+    "changed_path": "bot.long.close_grid_markup_end",
+    "value": 0.0124,
+    "returncode": 0,
+    "elapsed_sec": 4.123405933380127,
+    "backtest_dir": "backtests/binance/2026-06-26T21_26_30",
+    "output_tail": "Showing 3 of 210 metrics (set backtest.visible_metrics=[] to show all).\n{'adg_strategy_eq': 0.00015072652738457037,\n 'backtest_completion_ratio': 1.0,\n 'drawdown_worst_strategy_eq': 0.09504604575299329}\n"
+  },
+  {
+    "name": "close_markup_end_0.0127",
+    "config": "analysis_reports/sensitivity_2026-06-26_markup_micro/configs/close_markup_end_0.0127.json",
+    "changed_path": "bot.long.close_grid_markup_end",
+    "value": 0.0127,
+    "returncode": 0,
+    "elapsed_sec": 3.5997228622436523,
+    "backtest_dir": "backtests/binance/2026-06-26T21_26_34",
+    "output_tail": "Showing 3 of 210 metrics (set backtest.visible_metrics=[] to show all).\n{'adg_strategy_eq': 0.00015287153829257605,\n 'backtest_completion_ratio': 1.0,\n 'drawdown_worst_strategy_eq': 0.09502205983886929}\n"
+  },
+  {
+    "name": "close_markup_end_0.0130",
+    "config": "analysis_reports/sensitivity_2026-06-26_markup_micro/configs/close_markup_end_0.0130.json",
+    "changed_path": "bot.long.close_grid_markup_end",
+    "value": 0.013,
+    "returncode": 0,
+    "elapsed_sec": 3.486973285675049,
+    "backtest_dir": "backtests/binance/2026-06-26T21_26_37",
+    "output_tail": "Showing 3 of 210 metrics (set backtest.visible_metrics=[] to show all).\n{'adg_strategy_eq': 0.00015355851542575572,\n 'backtest_completion_ratio': 1.0,\n 'drawdown_worst_strategy_eq': 0.09499795732868699}\n"
+  },
+  {
+    "name": "close_markup_end_0.0133",
+    "config": "analysis_reports/sensitivity_2026-06-26_markup_micro/configs/close_markup_end_0.0133.json",
+    "changed_path": "bot.long.close_grid_markup_end",
+    "value": 0.0133,
+    "returncode": 0,
+    "elapsed_sec": 3.46285080909729,
+    "backtest_dir": "backtests/binance/2026-06-26T21_26_41",
+    "output_tail": "Showing 3 of 210 metrics (set backtest.visible_metrics=[] to show all).\n{'adg_strategy_eq': 0.0001558209142005218,\n 'backtest_completion_ratio': 1.0,\n 'drawdown_worst_strategy_eq': 0.0949740655420051}\n"
+  },
+  {
+    "name": "close_markup_end_0.0136",
+    "config": "analysis_reports/sensitivity_2026-06-26_markup_micro/configs/close_markup_end_0.0136.json",
+    "changed_path": "bot.long.close_grid_markup_end",
+    "value": 0.0136,
+    "returncode": 0,
+    "elapsed_sec": 3.5725512504577637,
+    "backtest_dir": "backtests/binance/2026-06-26T21_26_44",
+    "output_tail": "Showing 3 of 210 metrics (set backtest.visible_metrics=[] to show all).\n{'adg_strategy_eq': 0.00015807871087303305,\n 'backtest_completion_ratio': 1.0,\n 'drawdown_worst_strategy_eq': 0.094950002855043}\n"
+  },
+  {
+    "name": "close_markup_end_0.0140",
+    "config": "analysis_reports/sensitivity_2026-06-26_markup_micro/configs/close_markup_end_0.0140.json",
+    "changed_path": "bot.long.close_grid_markup_end",
+    "value": 0.014,
+    "returncode": 0,
+    "elapsed_sec": 3.530003786087036,
+    "backtest_dir": "backtests/binance/2026-06-26T21_26_48",
+    "output_tail": "Showing 3 of 210 metrics (set backtest.visible_metrics=[] to show all).\n{'adg_strategy_eq': 0.00015239247434606362,\n 'backtest_completion_ratio': 1.0,\n 'drawdown_worst_strategy_eq': 0.09511603839189832}\n"
+  }
+]

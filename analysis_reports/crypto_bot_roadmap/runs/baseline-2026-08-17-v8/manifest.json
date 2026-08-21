@@ -1,0 +1,40 @@
+{
+  "code": {
+    "dirty_diff_sha256": "f05c989361bec926710c51101171f2a02ca271d553344ee4ee94f1008d92a151",
+    "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+    "git_dirty": true
+  },
+  "command": [
+    "passivbot",
+    "tool",
+    "research-gates",
+    "--run-id",
+    "baseline-2026-08-17-v8",
+    "--stage",
+    "baseline",
+    "--metrics",
+    "analysis_reports/crypto_bot_roadmap/baseline_metrics_2026-08-17-v8.json",
+    "--config",
+    "configs/examples/default_trailing_grid_long_npos7.json",
+    "--dataset",
+    "caches/ohlcvs",
+    "--market-profile",
+    "analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_read_only.json",
+    "--output-dir",
+    "analysis_reports/crypto_bot_roadmap/runs",
+    "--repo-root",
+    "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka"
+  ],
+  "created_at_utc": "2026-08-17T07:38:13+00:00",
+  "inputs": {
+    "config_sha256": "935d643787691f12e553bf7d430537ea6c73407a0b78d066a732be9413910f03",
+    "dataset_sha256": "1dcb7151b579c0879c7ae59cabf1a56b1475e813d25de1a44e33442686ed364a",
+    "execution_inputs_sha256": null,
+    "market_profile_sha256": "7c36c253af60590f51a44116e616048d7e686e2b25e6aed8346f8ee6592b5424"
+  },
+  "plan_date": "2026-08-17",
+  "random_seeds": [],
+  "run_id": "baseline-2026-08-17-v8",
+  "schema_version": "crypto-grid-experiment-v1",
+  "stage": "baseline"
+}

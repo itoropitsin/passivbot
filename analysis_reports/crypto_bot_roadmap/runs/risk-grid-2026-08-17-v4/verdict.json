@@ -1,0 +1,135 @@
+{
+  "blocked_count": 1,
+  "failed_count": 2,
+  "gate_count": 13,
+  "gates": [
+    {
+      "actual": true,
+      "id": "market_profile.market_profile_input_present",
+      "limit": true,
+      "metric": "market_profile_input_present",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "market_profile.market_profile_public_api_only",
+      "limit": true,
+      "metric": "market_profile_public_api_only",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": false,
+      "id": "market_profile.market_profile_private_api_data_present",
+      "limit": false,
+      "metric": "market_profile_private_api_data_present",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": false,
+      "id": "risk_grid.roadmap_config_eligible",
+      "limit": true,
+      "metric": "roadmap_config_eligible",
+      "operator": "==",
+      "status": "failed"
+    },
+    {
+      "actual": false,
+      "id": "risk_grid.scenario_coverage_complete",
+      "limit": true,
+      "metric": "scenario_coverage_complete",
+      "operator": "==",
+      "status": "failed"
+    },
+    {
+      "actual": true,
+      "id": "risk_grid.no_liquidations",
+      "limit": true,
+      "metric": "no_liquidations",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_grid.no_duplicate_orders",
+      "limit": true,
+      "metric": "no_duplicate_orders",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_grid.limits_not_bypassed",
+      "limit": true,
+      "metric": "limits_not_bypassed",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_grid.state_recovery_consistent",
+      "limit": true,
+      "metric": "state_recovery_consistent",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_grid.api_outage_safe",
+      "limit": true,
+      "metric": "api_outage_safe",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_grid.manual_position_safe",
+      "limit": true,
+      "metric": "manual_position_safe",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_grid.ordinary_market_orders_blocked",
+      "limit": true,
+      "metric": "ordinary_market_orders_blocked",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "blockers": [
+        {
+          "stage": "baseline",
+          "status": "stale"
+        },
+        {
+          "stage": "market_profile",
+          "status": "not_started"
+        },
+        {
+          "stage": "data",
+          "status": "failed"
+        },
+        {
+          "stage": "risk_contract",
+          "status": "blocked"
+        }
+      ],
+      "id": "stage.prerequisites",
+      "required": [
+        "baseline",
+        "market_profile",
+        "data",
+        "risk_contract"
+      ],
+      "status": "blocked"
+    }
+  ],
+  "passed_count": 10,
+  "schema_version": "crypto-grid-experiment-v1",
+  "stage": "risk_grid",
+  "status": "failed"
+}

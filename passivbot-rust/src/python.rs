@@ -17,9 +17,10 @@ use crate::trailing::{
 };
 use crate::types::OrderType;
 use crate::types::{
-    BacktestParams, BotParams, BotParamsPair, CoinMeta, EMABands, EquityHardStopLossConfig,
-    EquityHardStopLossTierRatios, ExchangeParams, ForagerScoreWeights, HlcvsBundle, HlcvsMeta,
-    OrderBook, Position, StateParams, TrailingPriceBundle,
+    BacktestExecutionModel, BacktestParams, BacktestPortfolioRisk, BacktestPositionTier, BotParams,
+    BotParamsPair, CoinMeta, EMABands, EquityHardStopLossConfig, EquityHardStopLossTierRatios,
+    ExchangeParams, ForagerScoreWeights, FundingEvent, HlcvsBundle, HlcvsMeta, OrderBook, Position,
+    StateParams, TrailingPriceBundle,
 };
 use ndarray::Array2;
 use numpy::{IntoPyArray, PyArray1, PyArray3, PyArrayMethods, PyReadonlyArray1, PyReadonlyArray3};
@@ -1126,6 +1127,12 @@ fn run_backtest_core<'py>(
         // Create a dictionary to store analysis results using a more concise approach
         let py_analysis_usd = struct_to_py_dict(py, &analysis_usd)?;
         let py_analysis_btc = struct_to_py_dict(py, &analysis_btc)?;
+        py_analysis_usd
+            .bind(py)
+            .set_item("funding_paid", backtest.funding_paid_total())?;
+        py_analysis_btc
+            .bind(py)
+            .set_item("funding_paid", backtest.funding_paid_total())?;
         if metrics_only {
             let equities_timestamps_array =
                 Array2::from_shape_fn((equities.timestamps_ms.len(), 1), |(i, _)| {
@@ -1133,12 +1140,22 @@ fn run_backtest_core<'py>(
                 })
                 .into_pyarray_bound(py)
                 .unbind();
+            let py_auxiliary = if backtest.crypto_portfolio_risk_enabled() {
+                let auxiliary = PyDict::new_bound(py);
+                auxiliary.set_item(
+                    "risk_gate_trace",
+                    risk_gate_trace_to_py(py, backtest.crypto_risk_gate_trace())?,
+                )?;
+                auxiliary.into_py(py)
+            } else {
+                py.None().into_py(py)
+            };
             return Ok((
                 py.None().into_py(py),
                 equities_timestamps_array.into_py(py),
                 py_analysis_usd,
                 py_analysis_btc,
-                py.None().into_py(py),
+                py_auxiliary,
             ));
         }
         let hard_stop_plot_data = backtest.hard_stop_plot_data();
@@ -1186,6 +1203,12 @@ fn run_backtest_core<'py>(
             hard_stop_plot_data.drawdown_score_short,
         )?;
         py_hard_stop_plot.set_item("events_short", py_events_short)?;
+        if backtest.crypto_portfolio_risk_enabled() {
+            py_hard_stop_plot.set_item(
+                "risk_gate_trace",
+                risk_gate_trace_to_py(py, backtest.crypto_risk_gate_trace())?,
+            )?;
+        }
         let mut py_fills = Array2::from_elem((fills.len(), 19), py.None());
         for (i, fill) in fills.iter().enumerate() {
             py_fills[(i, 0)] = fill.index.into_py(py);
@@ -1234,6 +1257,20 @@ fn run_backtest_core<'py>(
     })
 }
 
+fn risk_gate_trace_to_py(
+    py: Python<'_>,
+    trace: &[crate::backtest::RiskGateTraceRecord],
+) -> PyResult<PyObject> {
+    let json_str = serde_json::to_string(trace).map_err(|e| {
+        PyErr::new::<pyo3::exceptions::PyValueError, _>(format!(
+            "risk gate trace serialization error: {}",
+            e
+        ))
+    })?;
+    let json = py.import_bound("json")?;
+    Ok(json.call_method1("loads", (json_str,))?.unbind())
+}
+
 fn struct_to_py_dict<T: Serialize + ?Sized>(py: Python<'_>, obj: &T) -> PyResult<Py<PyDict>> {
     // Convert struct to JSON string
     let json_str = serde_json::to_string(obj).map_err(|e| {
@@ -1250,6 +1287,296 @@ fn struct_to_py_dict<T: Serialize + ?Sized>(py: Python<'_>, obj: &T) -> PyResult
         PyErr::new::<pyo3::exceptions::PyTypeError, _>("Failed to convert to Python dict")
     })?;
     Ok(py_dict_bound.clone().unbind())
+}
+
+fn execution_model_from_dict(
+    dict: &PyDict,
+    candle_interval_minutes: u64,
+) -> PyResult<BacktestExecutionModel> {
+    let Some(item) = dict.get_item("execution_model")? else {
+        return Ok(BacktestExecutionModel::default());
+    };
+    let model = item
+        .downcast::<PyDict>()
+        .map_err(|_| PyValueError::new_err("execution_model must be a dict"))?;
+    let get_bool = |key: &str, default: bool| -> PyResult<bool> {
+        model
+            .get_item(key)?
+            .map(|value| value.extract::<bool>())
+            .transpose()
+            .map(|value| value.unwrap_or(default))
+    };
+    let get_f64 = |key: &str, default: f64| -> PyResult<f64> {
+        model
+            .get_item(key)?
+            .map(|value| value.extract::<f64>())
+            .transpose()
+            .map(|value| value.unwrap_or(default))
+    };
+    let get_string = |key: &str, default: &str| -> PyResult<String> {
+        model
+            .get_item(key)?
+            .map(|value| value.extract::<String>())
+            .transpose()
+            .map(|value| value.unwrap_or_else(|| default.to_string()))
+    };
+    let funding_missing_data = match get_string("funding_missing_data", "blocked")?.as_str() {
+        "blocked" => 0,
+        "fail" => 1,
+        "zero" => 2,
+        value => {
+            return Err(PyValueError::new_err(format!(
+                "execution_model.funding_missing_data has invalid value {value:?}"
+            )))
+        }
+    };
+    let mark_price_basis = match get_string("mark_price_basis", "last")?.as_str() {
+        "last" => 0,
+        "mark" => 1,
+        "index" => 2,
+        value => {
+            return Err(PyValueError::new_err(format!(
+                "execution_model.mark_price_basis has invalid value {value:?}"
+            )))
+        }
+    };
+    let adverse_same_candle_ordering =
+        match get_string("adverse_same_candle_ordering", "worst_case")?.as_str() {
+            "worst_case" => 0,
+            "best_case" => 1,
+            "ohlc" | "deterministic" => 2,
+            value => {
+                return Err(PyValueError::new_err(format!(
+                    "execution_model.adverse_same_candle_ordering has invalid value {value:?}"
+                )))
+            }
+        };
+    let latency_ms = get_f64("latency_ms", 0.0)?;
+    if !latency_ms.is_finite() || latency_ms < 0.0 {
+        return Err(PyValueError::new_err(
+            "execution_model.latency_ms must be finite and >= 0",
+        ));
+    }
+    let interval_ms = (candle_interval_minutes.max(1) as f64) * 60_000.0;
+    let latency_steps = (latency_ms / interval_ms).ceil() as usize;
+    let partial_fill_ratios = match model.get_item("partial_fill_ratios")? {
+        Some(value) => value.extract::<Vec<f64>>()?,
+        None => vec![1.0],
+    };
+    if partial_fill_ratios.is_empty()
+        || partial_fill_ratios
+            .iter()
+            .any(|value| !value.is_finite() || *value <= 0.0 || *value > 1.0)
+    {
+        return Err(PyValueError::new_err(
+            "execution_model.partial_fill_ratios must contain values in (0, 1]",
+        ));
+    }
+    let funding_events = match model.get_item("funding_events")? {
+        Some(value) => {
+            let rows = value.downcast::<PyList>().map_err(|_| {
+                PyValueError::new_err("execution_model.funding_events must be a list")
+            })?;
+            let mut events = Vec::with_capacity(rows.len());
+            for row in rows.iter() {
+                let row = row
+                    .downcast::<PyDict>()
+                    .map_err(|_| PyValueError::new_err("funding event must be a dict"))?;
+                events.push(FundingEvent {
+                    timestamp_ms: row
+                        .get_item("timestamp_ms")?
+                        .ok_or_else(|| PyValueError::new_err("funding event missing timestamp_ms"))?
+                        .extract::<u64>()?,
+                    rate: row
+                        .get_item("rate")?
+                        .ok_or_else(|| PyValueError::new_err("funding event missing rate"))?
+                        .extract::<f64>()?,
+                });
+            }
+            events
+        }
+        None => Vec::new(),
+    };
+    let mark_prices = model
+        .get_item("mark_prices")?
+        .map(|value| value.extract::<Vec<f64>>())
+        .transpose()?
+        .unwrap_or_default();
+    let index_prices = model
+        .get_item("index_prices")?
+        .map(|value| value.extract::<Vec<f64>>())
+        .transpose()?
+        .unwrap_or_default();
+    let position_tiers = match model.get_item("position_tiers")? {
+        Some(value) if !value.is_none() => {
+            let sets = value.downcast::<PyList>().map_err(|_| {
+                PyValueError::new_err("execution_model.position_tiers must be a list")
+            })?;
+            let mut parsed_sets = Vec::with_capacity(sets.len());
+            for (coin_idx, item) in sets.iter().enumerate() {
+                let rows = item.downcast::<PyList>().map_err(|_| {
+                    PyValueError::new_err(format!(
+                        "execution_model.position_tiers[{coin_idx}] must be a list"
+                    ))
+                })?;
+                let mut parsed_rows = Vec::with_capacity(rows.len());
+                for (tier_idx, tier_item) in rows.iter().enumerate() {
+                    let tier = tier_item.downcast::<PyDict>().map_err(|_| {
+                        PyValueError::new_err(format!(
+                            "execution_model.position_tiers[{coin_idx}][{tier_idx}] must be a dict"
+                        ))
+                    })?;
+                    let read_f64 = |key: &str| -> PyResult<f64> {
+                        tier.get_item(key)?
+                            .ok_or_else(|| {
+                                PyValueError::new_err(format!("position tier missing {key}"))
+                            })?
+                            .extract::<f64>()
+                    };
+                    let min_notional = read_f64("min_notional")?;
+                    let max_notional = read_f64("max_notional")?;
+                    let maintenance_margin_rate = read_f64("maintenance_margin_rate")?;
+                    if !min_notional.is_finite()
+                        || !max_notional.is_finite()
+                        || !maintenance_margin_rate.is_finite()
+                        || min_notional < 0.0
+                        || max_notional <= min_notional
+                        || maintenance_margin_rate < 0.0
+                        || maintenance_margin_rate >= 1.0
+                    {
+                        return Err(PyValueError::new_err(format!(
+                            "invalid execution_model.position_tiers[{coin_idx}][{tier_idx}]"
+                        )));
+                    }
+                    parsed_rows.push(BacktestPositionTier {
+                        min_notional,
+                        max_notional,
+                        maintenance_margin_rate,
+                    });
+                }
+                parsed_sets.push(parsed_rows);
+            }
+            parsed_sets
+        }
+        _ => Vec::new(),
+    };
+
+    let portfolio_risk = match model.get_item("portfolio_risk")? {
+        Some(value) if !value.is_none() => {
+            let risk = value.downcast::<PyDict>().map_err(|_| {
+                PyValueError::new_err("execution_model.portfolio_risk must be a dict")
+            })?;
+            let risk_bool = |key: &str, default: bool| -> PyResult<bool> {
+                risk.get_item(key)?
+                    .map(|item| item.extract::<bool>())
+                    .transpose()
+                    .map(|value| value.unwrap_or(default))
+            };
+            let risk_f64 = |key: &str, default: f64| -> PyResult<f64> {
+                risk.get_item(key)?
+                    .map(|item| item.extract::<f64>())
+                    .transpose()
+                    .map(|value| value.unwrap_or(default))
+            };
+            let sizing_balance_cap = risk_f64("sizing_balance_cap", 1_000.0)?;
+            let max_initial_entry_sizing_balance_pct = risk_f64(
+                "max_initial_entry_sizing_balance_pct",
+                BacktestPortfolioRisk::DEFAULT_MAX_INITIAL_ENTRY_SIZING_BALANCE_PCT,
+            )?;
+            let max_total_exposure = risk_f64("max_total_exposure", 0.80)?;
+            let max_used_margin = risk_f64("max_used_margin", 0.35)?;
+            let max_symbol_exposure = risk_f64("max_symbol_exposure", 0.50)?;
+            let max_active_grids = risk
+                .get_item("max_active_grids")?
+                .map(|item| item.extract::<usize>())
+                .transpose()?
+                .unwrap_or(2);
+            let leverage = risk_f64("leverage", 3.0)?;
+            let new_entry_min_liquidation_distance =
+                risk_f64("new_entry_min_liquidation_distance", 0.30)?;
+            let reduce_only_min_liquidation_distance =
+                risk_f64("reduce_only_min_liquidation_distance", 0.20)?;
+            let emergency_liquidation_distance = risk_f64("emergency_liquidation_distance", 0.15)?;
+            for (name, value) in [
+                ("sizing_balance_cap", sizing_balance_cap),
+                ("max_total_exposure", max_total_exposure),
+                ("max_used_margin", max_used_margin),
+                ("max_symbol_exposure", max_symbol_exposure),
+                ("leverage", leverage),
+                (
+                    "new_entry_min_liquidation_distance",
+                    new_entry_min_liquidation_distance,
+                ),
+                (
+                    "reduce_only_min_liquidation_distance",
+                    reduce_only_min_liquidation_distance,
+                ),
+                (
+                    "emergency_liquidation_distance",
+                    emergency_liquidation_distance,
+                ),
+            ] {
+                if !value.is_finite() || value <= 0.0 {
+                    return Err(PyValueError::new_err(format!(
+                        "execution_model.portfolio_risk.{name} must be finite and > 0"
+                    )));
+                }
+            }
+            if !max_initial_entry_sizing_balance_pct.is_finite()
+                || max_initial_entry_sizing_balance_pct <= 0.0
+                || max_initial_entry_sizing_balance_pct
+                    > BacktestPortfolioRisk::DEFAULT_MAX_INITIAL_ENTRY_SIZING_BALANCE_PCT
+            {
+                return Err(PyValueError::new_err(
+                    "execution_model.portfolio_risk.max_initial_entry_sizing_balance_pct must be finite and in (0, 0.03]",
+                ));
+            }
+            if emergency_liquidation_distance > reduce_only_min_liquidation_distance
+                || reduce_only_min_liquidation_distance > new_entry_min_liquidation_distance
+                || new_entry_min_liquidation_distance >= 1.0
+            {
+                return Err(PyValueError::new_err(
+                    "execution_model.portfolio_risk liquidation distances must satisfy 0 < emergency <= reduce_only <= new_entry < 1",
+                ));
+            }
+            if max_active_grids == 0 {
+                return Err(PyValueError::new_err(
+                    "execution_model.portfolio_risk.max_active_grids must be >= 1",
+                ));
+            }
+            BacktestPortfolioRisk {
+                enabled: risk_bool("enabled", false)?,
+                sizing_balance_cap,
+                max_initial_entry_sizing_balance_pct,
+                max_total_exposure,
+                max_used_margin,
+                max_symbol_exposure,
+                max_active_grids,
+                leverage,
+                new_entry_min_liquidation_distance,
+                reduce_only_min_liquidation_distance,
+                emergency_liquidation_distance,
+            }
+        }
+        _ => BacktestPortfolioRisk::default(),
+    };
+
+    Ok(BacktestExecutionModel {
+        enabled: get_bool("enabled", false)?,
+        funding_enabled: get_bool("funding_enabled", false)?,
+        funding_missing_data,
+        mark_price_basis,
+        latency_steps,
+        partial_fill_ratios,
+        adverse_same_candle_ordering,
+        gap_stress_pct: get_f64("gap_stress_pct", 0.0)?,
+        emergency_close_slippage_pct: get_f64("emergency_close_slippage_pct", 0.0)?,
+        funding_events,
+        mark_prices,
+        index_prices,
+        position_tiers,
+        portfolio_risk,
+    })
 }
 
 fn backtest_params_from_dict(dict: &PyDict) -> PyResult<BacktestParams> {
@@ -1293,6 +1620,12 @@ fn backtest_params_from_dict(dict: &PyDict) -> PyResult<BacktestParams> {
         })
     };
     let hard_stop_cfg = parse_hsl_cfg(dict, "equity_hard_stop_loss")?;
+
+    let candle_interval_minutes = dict
+        .get_item("candle_interval_minutes")?
+        .map(|item| item.extract::<u64>())
+        .transpose()?
+        .unwrap_or(1);
 
     Ok(BacktestParams {
         starting_balance: extract_value(dict, "starting_balance")?,
@@ -1363,11 +1696,8 @@ fn backtest_params_from_dict(dict: &PyDict) -> PyResult<BacktestParams> {
             .map(|item| item.extract::<f64>())
             .transpose()?
             .unwrap_or(0.02),
-        candle_interval_minutes: dict
-            .get_item("candle_interval_minutes")?
-            .map(|item| item.extract::<u64>())
-            .transpose()?
-            .unwrap_or(1), // default to 1m candles
+        candle_interval_minutes, // default to 1m candles
+        execution_model: execution_model_from_dict(dict, candle_interval_minutes)?,
     })
 }
 
@@ -1406,6 +1736,17 @@ fn bot_params_from_dict(dict: &PyDict) -> PyResult<BotParams> {
     let wallet_exposure_limit_raw: f64 = extract_value(dict, "wallet_exposure_limit")?;
     let n_positions_float: f64 = extract_value(dict, "n_positions")?;
     let n_positions = n_positions_float.round() as usize;
+    let entry_grid_max_levels = dict
+        .get_item("entry_grid_max_levels")?
+        .map(|value| value.extract::<f64>())
+        .transpose()?
+        .unwrap_or(500.0);
+    if !entry_grid_max_levels.is_finite() || entry_grid_max_levels < 1.0 {
+        return Err(PyValueError::new_err(
+            "entry_grid_max_levels must be finite and >= 1",
+        ));
+    }
+    let entry_grid_max_levels = entry_grid_max_levels.round() as usize;
     let hsl_enabled: bool = extract_value(dict, "hsl_enabled")?;
     let hsl_red_threshold: f64 = extract_value(dict, "hsl_red_threshold")?;
     let hsl_ema_span_minutes: f64 = extract_value(dict, "hsl_ema_span_minutes")?;
@@ -1435,6 +1776,7 @@ fn bot_params_from_dict(dict: &PyDict) -> PyResult<BotParams> {
         close_trailing_qty_pct: extract_value(dict, "close_trailing_qty_pct")?,
         close_trailing_threshold_pct: extract_value(dict, "close_trailing_threshold_pct")?,
         entry_grid_double_down_factor: extract_value(dict, "entry_grid_double_down_factor")?,
+        entry_grid_max_levels,
         entry_grid_spacing_volatility_weight: extract_value(
             dict,
             "entry_grid_spacing_volatility_weight",
@@ -2481,4 +2823,17 @@ pub fn compute_ideal_orders_json(input_json: &str) -> PyResult<String> {
             e
         ))
     })
+}
+
+/// Read-only adapter for comparing the Rust tester risk decision with the
+/// Python live risk policy.  It accepts one JSON payload and never touches an
+/// exchange or mutates backtest state.
+#[pyfunction]
+pub fn evaluate_crypto_risk_decision_json(input_json: &str) -> PyResult<String> {
+    let payload: serde_json::Value = serde_json::from_str(input_json)
+        .map_err(|e| PyValueError::new_err(format!("failed to parse risk parity payload: {e}")))?;
+    let result =
+        crate::risk::evaluate_crypto_risk_payload(&payload).map_err(PyValueError::new_err)?;
+    serde_json::to_string(&result)
+        .map_err(|e| PyValueError::new_err(format!("failed to serialize risk decision: {e}")))
 }

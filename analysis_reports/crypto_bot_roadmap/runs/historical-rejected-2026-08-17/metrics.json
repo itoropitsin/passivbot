@@ -1,0 +1,11 @@
+{
+  "candidate_count": 6,
+  "events_present": false,
+  "failure_evidence": "All six selected train Pareto candidates had negative validation ADG; no candidate is eligible for paper or live promotion.",
+  "negative_validation_candidate_count": 6,
+  "positive_validation_windows": 0,
+  "source_report": "analysis_reports/bitget_profit_1000_walkforward_2024train_dd25/README.md",
+  "validation_window_end": "2026-06-26",
+  "validation_window_start": "2025-06-26",
+  "validation_windows": 1
+}

@@ -1,0 +1,108 @@
+{
+  "code_files": {
+    "src/research/strategy_shadow.py": "89de9f2bc481861ef733f748fac7e284fbc19b8f4be3d48957a6edcc69d129e3",
+    "src/research/strategy_shadow_process.py": "5e780e00995271081aada488acea986f9b905516341b1ec53588d5a79a70b371",
+    "src/research/strategy_shadow_stream.py": "e97eb7536ed84714f33d83729322f216fb7b347890963c6b3ec87a81e040b6f3",
+    "src/research/strategy_shadow_stream_process.py": "af87dbbbdb1a2b88aac0737270507acf8be983b38cb4ebe27b25e15a5d8ef3c9",
+    "src/tools/strategy_shadow.py": "1cf263700942e738d542f9fbddb81c83b9691d1f9f9d0a8278dcff207b5a0880",
+    "src/tools/strategy_shadow_process.py": "0654ad612f68787eaa945833773fba5c96c2caa8bde0a30038c0115ef7d0d88f",
+    "src/tools/strategy_shadow_stream.py": "7911eebd3872313daf09317fcaba4a4348713f41ac7f3f32227742cbd965f0f4",
+    "src/tools/strategy_shadow_stream_process.py": "29b61f80b05ce931ba98ebce37f06bcbd5a7f3a8d9f9d6dc53b000e171afb076"
+  },
+  "code_hash": "046c7d27cd698ff851abb9971831389aca4c0ea77a0bb022f3e9e8634473409b",
+  "config_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/strategy_shadow_stream_config_v1.json",
+  "config_sha256": "13d19c9a971f728adeaf4b1e38a460c968e6956337ab11095ce6695ac59b9b03",
+  "duplicate_state_count": 0,
+  "ended_at_utc": "2026-08-18T07:33:59.087829+00:00",
+  "errors": [],
+  "fixture_mode": false,
+  "market_snapshot_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/market_snapshots.jsonl",
+  "market_snapshot_sha256": "eb88f27e056cd5ae2416aee851c14844007a9467833aab541803a726fbbe6051",
+  "observed_restart_count": 2,
+  "policy_config": {
+    "entry_bps": 5.0,
+    "order_amount": 0.001,
+    "take_profit_bps": 5.0
+  },
+  "policy_config_hash": "ca73707e5a51a62f1cb4d676bb78e3591bfd29f4cdd3d32915a74f30d40f1013",
+  "processes": [
+    {
+      "command_sha256": "c28efafa7da6d831e34142bb2ef5ad254fb6a9d434e4c732abc005dc613f78ec",
+      "elapsed_seconds": 2.176100730895996,
+      "ended_at_utc": "2026-08-18T07:33:54.570994+00:00",
+      "pid": 97669,
+      "result_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/segments/segment-001-result.json",
+      "result_sha256": "2841da5d23cadf981aab99d117af1b32fe5246eb9332f5809a2fb5ae741bcd6a",
+      "return_code": 0,
+      "segment": 1,
+      "started_at_utc": "2026-08-18T07:33:52.394893+00:00",
+      "state_files_present": true,
+      "state_hash_after": "abb7a9ca6ace8cd6492c97f32eea9a9f398cdc934ab6f7e6456e6d2b641b04c6",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "1b3ed4c0e7c52a7a5c15518383efa5119cc10976ae618970df6b9801a24fbeae"
+    },
+    {
+      "command_sha256": "c28efafa7da6d831e34142bb2ef5ad254fb6a9d434e4c732abc005dc613f78ec",
+      "elapsed_seconds": 2.2299787998199463,
+      "ended_at_utc": "2026-08-18T07:33:56.802364+00:00",
+      "pid": 97679,
+      "result_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/segments/segment-002-result.json",
+      "result_sha256": "60898af93e51cb9b05d7b82401fd5baa26737bf8385a7c79c0575f4d2c131430",
+      "return_code": 0,
+      "segment": 2,
+      "started_at_utc": "2026-08-18T07:33:54.572385+00:00",
+      "state_files_present": true,
+      "state_hash_after": "ea46dddcddf9caaaf6e4afc39714836fb3f71ebbdf674815765d26574d534aa5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "bb70ad1843046b496e1b5ca450aec2e3e88c2b37f132c71870233b1a696b1c5c"
+    },
+    {
+      "command_sha256": "c28efafa7da6d831e34142bb2ef5ad254fb6a9d434e4c732abc005dc613f78ec",
+      "elapsed_seconds": 2.222806215286255,
+      "ended_at_utc": "2026-08-18T07:33:59.026365+00:00",
+      "pid": 97692,
+      "result_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/segments/segment-003-result.json",
+      "result_sha256": "62d3f14c5ee8e6619d93e3f760e570644c95918bccb02f51367ea56ee78346b8",
+      "return_code": 0,
+      "segment": 3,
+      "started_at_utc": "2026-08-18T07:33:56.803559+00:00",
+      "state_files_present": true,
+      "state_hash_after": "8e9dedcd4d2afa2d5da066c879c5537dcff96ea5c9b0903d664b7edd48be6ad0",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "7503ef9115083deb49b60d47e785b777a05c744f460c917309c8d05c5725089a"
+    }
+  ],
+  "requested_restart_count": 2,
+  "restart_operations": [
+    {
+      "new_pid": 97679,
+      "new_return_code": 0,
+      "old_pid": 97669,
+      "old_return_code": 0,
+      "recovery_seconds": 0.0013911724090576172,
+      "restart_id": 1,
+      "started_at_utc": "2026-08-18T07:33:54.572385+00:00",
+      "state_files_present": true,
+      "state_hash_after": "ea46dddcddf9caaaf6e4afc39714836fb3f71ebbdf674815765d26574d534aa5",
+      "state_hash_before": "abb7a9ca6ace8cd6492c97f32eea9a9f398cdc934ab6f7e6456e6d2b641b04c6",
+      "stopped_at_utc": "2026-08-18T07:33:54.570994+00:00"
+    },
+    {
+      "new_pid": 97692,
+      "new_return_code": 0,
+      "old_pid": 97679,
+      "old_return_code": 0,
+      "recovery_seconds": 0.0011949539184570312,
+      "restart_id": 2,
+      "started_at_utc": "2026-08-18T07:33:56.803559+00:00",
+      "state_files_present": true,
+      "state_hash_after": "8e9dedcd4d2afa2d5da066c879c5537dcff96ea5c9b0903d664b7edd48be6ad0",
+      "state_hash_before": "ea46dddcddf9caaaf6e4afc39714836fb3f71ebbdf674815765d26574d534aa5",
+      "stopped_at_utc": "2026-08-18T07:33:56.802364+00:00"
+    }
+  ],
+  "schema_version": "crypto-strategy-shadow-stream-process-v1",
+  "started_at_utc": "2026-08-18T07:33:52.394888+00:00",
+  "status": "passed",
+  "wall_clock_duration_seconds": 6.692894416162744
+}

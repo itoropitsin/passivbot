@@ -1,0 +1,60 @@
+{
+  "checks": {
+    "bounded_deadline_or_test_limit": true,
+    "events_present": true,
+    "local_ledger_present": true,
+    "no_order_creates": true,
+    "no_runtime_error": true,
+    "no_transfers": true,
+    "public_only_request_log": true,
+    "source_hashed_observations": true
+  },
+  "counts": {
+    "events": 2,
+    "fills": 0,
+    "funding_events": 0,
+    "observations": 1
+  },
+  "error": null,
+  "mode": "exploratory_shadow",
+  "model_status": {
+    "depth": {
+      "note": "no order-book depth or queue position is modeled",
+      "status": "not_implemented"
+    },
+    "funding": {
+      "note": "automatic historical/live funding is not applied; callers may use apply_funding_settlement with an explicit local settlement",
+      "status": "explicit_settlement_only"
+    },
+    "ledger": {
+      "idempotency": "event_order_fill_and_funding_ids",
+      "state_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/public-observer-smoke-2026-08-18-v2/ledger.json",
+      "status": "persistent_atomic",
+      "typed_fill_journal": "write_ahead",
+      "wal_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/public-observer-smoke-2026-08-18-v2/ledger.wal.ndjson"
+    },
+    "liquidation": {
+      "note": "the reported price is not Bitget's live liquidation calculation",
+      "status": "stress_assumption_only"
+    },
+    "partial_fills": {
+      "note": "an order may be filled by several explicit amounts; the paper model does not infer exchange queue position or depth",
+      "status": "explicit_amounts_supported"
+    },
+    "public_execution_feed": {
+      "path": null,
+      "seen_settlements": 0,
+      "since_ms": null,
+      "source_hash": null,
+      "status": "not_configured"
+    },
+    "status": "limited"
+  },
+  "note": "no_trade_observed is not a successful paper period; the run must be repeated with enough strategy events before any calendar gate can start",
+  "private_boundary": {
+    "private_calls": [],
+    "public_client_only": true
+  },
+  "schema_version": "crypto-paper-shadow-verdict-v1",
+  "status": "no_trade_observed"
+}

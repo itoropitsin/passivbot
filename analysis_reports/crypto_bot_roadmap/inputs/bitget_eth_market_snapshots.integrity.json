@@ -1,0 +1,30 @@
+{
+  "capture_gap_count": 0,
+  "error_count": 0,
+  "errors": [],
+  "first_timestamp_ms": 1786943615752,
+  "funding_continuity_status": "passed",
+  "funding_interval_gaps": 0,
+  "funding_interval_hours": [
+    8.0
+  ],
+  "funding_missing_rows_between_observed_bounds": 0,
+  "funding_settlement_timestamps": [
+    1786924800000
+  ],
+  "last_timestamp_ms": 1786946450881,
+  "max_capture_gap_seconds": 2671.516,
+  "max_gap_limit_seconds": 86400.0,
+  "observed_categories": [
+    "USDT-FUTURES"
+  ],
+  "observed_symbols": [
+    "ETHUSDT"
+  ],
+  "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_eth_market_snapshots.jsonl",
+  "row_count": 5,
+  "schema_version": "bitget-market-log-audit-v2",
+  "sha256": "b443a2fb500beae2eb24e4a6bc590ef9d2a33c050b2e77e2a0b538b33842a889",
+  "status": "passed",
+  "verified_at_utc": "2026-08-17T07:32:04.549090+00:00"
+}

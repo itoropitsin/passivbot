@@ -1,0 +1,64 @@
+{
+  "code": {
+    "dirty_diff_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+    "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+    "git_dirty": true,
+    "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+    "implementation_fingerprint_version": "implementation-fingerprint-v2"
+  },
+  "command": [
+    "passivbot",
+    "tool",
+    "research-gates",
+    "--run-id",
+    "risk-engine-2026-08-21-v31",
+    "--stage",
+    "risk_engine",
+    "--metrics",
+    "analysis_reports/crypto_bot_roadmap/risk_engine_metrics_2026-08-21-v31.json",
+    "--config",
+    "analysis_reports/crypto_bot_roadmap/production-risk-evidence-2026-08-21-v1/config.json",
+    "--dataset",
+    "analysis_reports/crypto_bot_roadmap/inputs",
+    "--market-profile",
+    "analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_read_only.json",
+    "--risk-evidence-manifest",
+    "analysis_reports/crypto_bot_roadmap/production-risk-evidence-2026-08-21-v1/manifest.json",
+    "--output-dir",
+    "analysis_reports/crypto_bot_roadmap/runs",
+    "--repo-root",
+    "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka"
+  ],
+  "created_at_utc": "2026-08-20T23:24:46+00:00",
+  "environment": {
+    "cargo": "cargo 1.96.0 (30a34c682 2026-05-25) (Homebrew)",
+    "ccxt": "4.5.48",
+    "numpy": "2.2.6",
+    "pandas": "2.2.2",
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "python": "3.12.13",
+    "python_executable": "/opt/homebrew/Cellar/python@3.12/3.12.13_4/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+    "python_implementation": "CPython",
+    "rust_extension_sha256": "a29b13ee4b6a1918e2933b919a21b795152bbc66c51616bf2a0bc39601e79f01",
+    "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25) (Homebrew)",
+    "scipy": "1.17.1"
+  },
+  "inputs": {
+    "account_profile_sha256": null,
+    "config_sha256": "5112f9201e0514054a35eb116367d71370bf07618736ac59ad60e52f5dac1247",
+    "dataset_sha256": "ff42b19aaed0f7bd3f99e1c20b8069454a136b83bdc07992ba35fef790c9542a",
+    "execution_inputs_sha256": null,
+    "market_profile_sha256": "7c36c253af60590f51a44116e616048d7e686e2b25e6aed8346f8ee6592b5424",
+    "plan_sha256": "a74161bf7bfe0a707aa8deb9871b6dc8dc175dc6065a59dfc427f5b4f0356fdc"
+  },
+  "plan_date": "2026-08-17",
+  "random_seeds": [],
+  "risk_evidence": {
+    "manifest_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/production-risk-evidence-2026-08-21-v1/manifest.json",
+    "manifest_sha256": "d050a9a53a81ac40d8d41f1b8564f343e40b3cf43b41201368173bbff3eac7f5",
+    "schema_version": "risk-parity-production-evidence-v1"
+  },
+  "run_id": "risk-engine-2026-08-21-v31",
+  "schema_version": "crypto-grid-experiment-v1",
+  "stage": "risk_engine"
+}

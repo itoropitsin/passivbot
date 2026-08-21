@@ -1,0 +1,36 @@
+{
+  "config_hash": "0fec0dd903f588e84ac021729ae144fabc362f1789e15df040cca14ac370a0ac",
+  "event_count": 32,
+  "events_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/runs/strategy-shadow-smoke-2026-08-18-v2/events.ndjson",
+  "ledger_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/runs/strategy-shadow-smoke-2026-08-18-v2/paper_ledger.json",
+  "next_seq": 32,
+  "processed_snapshot_ids": [
+    "fixture-1",
+    "fixture-2",
+    "fixture-3"
+  ],
+  "replay_operations": [],
+  "restart_operations": [],
+  "schema_version": "crypto-strategy-shadow-v1",
+  "snapshot_provenance": [
+    {
+      "snapshot_id": "fixture-1",
+      "source_hash": "5897177e121d93a447a5329d26fd85fcb1a1c6b6696dfd68e5e50cefcc462b4d",
+      "timestamp": 1787059200000
+    },
+    {
+      "snapshot_id": "fixture-2",
+      "source_hash": "0fc2b2f7e56740dbd43e1b729e216d7a94c9286f8c549f38e13a59695f2753ce",
+      "timestamp": 1787059260000
+    },
+    {
+      "snapshot_id": "fixture-3",
+      "source_hash": "e1ea63d3938772994d7a9658c3b0c21d3ec125db24a7448e884b898045441414",
+      "timestamp": 1787059320000
+    }
+  ],
+  "strategy_id": "crypto-grid-shadow-v1",
+  "symbols": [
+    "BTC/USDT:USDT"
+  ]
+}

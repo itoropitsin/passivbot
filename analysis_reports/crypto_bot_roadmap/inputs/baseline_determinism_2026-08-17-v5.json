@@ -1,0 +1,9 @@
+{
+  "command": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/pytest -q --disable-warnings",
+  "identical_output": true,
+  "output_sha256": "890ae6c60d676f437a693145355964299464e8ddf877b9688b373d681d6427ff",
+  "return_codes": [0, 0, 0],
+  "run_count": 3,
+  "observed_at": "2026-08-17",
+  "timezone": "Europe/Amsterdam"
+}

@@ -4,9 +4,300 @@ use crate::types::{ExchangeParams, Order, OrderType};
 use crate::utils::{
     calc_new_psize_pprice, calc_pnl_long, calc_pnl_short, calc_pprice_diff_int,
     calc_pside_price_diff_int, calc_wallet_exposure, cost_to_qty, quantize_price, quantize_qty,
-    round_dn, round_up, RoundingMode,
+    round_, round_dn, round_up, RoundingMode,
 };
+use serde_json::{json, Value};
 use std::collections::HashMap;
+
+fn risk_json_object<'a>(
+    value: &'a Value,
+    field: &str,
+) -> Result<&'a serde_json::Map<String, Value>, String> {
+    value
+        .as_object()
+        .ok_or_else(|| format!("{field} must be an object"))
+}
+
+fn risk_json_required<'a>(
+    value: &'a serde_json::Map<String, Value>,
+    field: &str,
+) -> Result<&'a Value, String> {
+    value
+        .get(field)
+        .ok_or_else(|| format!("missing required field: {field}"))
+}
+
+fn risk_json_decimal(value: &Value, field: &str) -> Result<f64, String> {
+    let raw = value
+        .as_str()
+        .or_else(|| value.as_f64().map(|_| ""))
+        .ok_or_else(|| format!("{field} must be a decimal string"))?;
+    let number = if raw.is_empty() {
+        value
+            .as_f64()
+            .ok_or_else(|| format!("{field} must be a finite number"))?
+    } else {
+        raw.parse::<f64>()
+            .map_err(|_| format!("{field} must be a decimal number"))?
+    };
+    if !number.is_finite() {
+        return Err(format!("{field} must be finite"));
+    }
+    Ok(number)
+}
+
+fn risk_json_bool(value: &Value, field: &str) -> Result<bool, String> {
+    value
+        .as_bool()
+        .ok_or_else(|| format!("{field} must be boolean"))
+}
+
+fn risk_json_string<'a>(value: &'a Value, field: &str) -> Result<&'a str, String> {
+    value
+        .as_str()
+        .ok_or_else(|| format!("{field} must be a string"))
+}
+
+fn risk_json_position_notional(
+    position: &serde_json::Map<String, Value>,
+    mark_prices: &serde_json::Map<String, Value>,
+) -> Result<f64, String> {
+    if let Some(value) = position.get("notional") {
+        return Ok(risk_json_decimal(value, "position.notional")?.abs());
+    }
+    let qty = risk_json_decimal(risk_json_required(position, "qty")?, "position.qty")?.abs();
+    let symbol = risk_json_string(risk_json_required(position, "symbol")?, "position.symbol")?;
+    let mark = position
+        .get("mark_price")
+        .or_else(|| mark_prices.get(symbol))
+        .ok_or_else(|| format!("missing mark price for position {symbol}"))?;
+    Ok(qty * risk_json_decimal(mark, "position.mark_price")?)
+}
+
+fn risk_json_position_buffer(
+    position: &serde_json::Map<String, Value>,
+    mark_prices: &serde_json::Map<String, Value>,
+    side: &str,
+) -> Result<f64, String> {
+    if let Some(value) = position.get("liquidation_buffer") {
+        return risk_json_decimal(value, "position.liquidation_buffer");
+    }
+    let symbol = risk_json_string(risk_json_required(position, "symbol")?, "position.symbol")?;
+    let mark = position
+        .get("mark_price")
+        .or_else(|| mark_prices.get(symbol))
+        .ok_or_else(|| format!("missing mark price for position {symbol}"))?;
+    let liquidation = risk_json_required(position, "liquidation_price")?;
+    let mark = risk_json_decimal(mark, "position.mark_price")?;
+    let liquidation = risk_json_decimal(liquidation, "position.liquidation_price")?;
+    if mark <= 0.0 {
+        return Err("position.mark_price must be greater than zero".to_string());
+    }
+    Ok(if side == "long" {
+        (mark - liquidation) / mark
+    } else {
+        (liquidation - mark) / mark
+    })
+}
+
+fn risk_json_decision(
+    decision: &str,
+    reason: &str,
+    side: &str,
+    identity: &serde_json::Map<String, Value>,
+    metrics: &serde_json::Map<String, Value>,
+    snapshot_hash: &str,
+) -> Value {
+    json!({
+        "schema_version": "risk-decision-v1",
+        "decision": decision,
+        "reason": reason,
+        "side": side,
+        "order_identity": identity,
+        "risk_metrics": metrics,
+        "snapshot_hash": snapshot_hash,
+        "engine": "rust-tester"
+    })
+}
+
+/// Evaluate the same narrow, fixed crypto portfolio policy used by the Python
+/// live adapter.  This is the tester-side adapter for the parity boundary;
+/// it is deliberately separate from the full candle backtest state machine.
+/// The caller supplies the Python-canonical snapshot digest and this function
+/// binds the returned decision to that digest.
+pub fn evaluate_crypto_risk_payload(payload: &Value) -> Result<Value, String> {
+    let payload = risk_json_object(payload, "payload")?;
+    let snapshot = risk_json_object(risk_json_required(payload, "snapshot")?, "snapshot")?;
+    let request = risk_json_object(risk_json_required(payload, "request")?, "request")?;
+    let digest = risk_json_string(
+        risk_json_required(payload, "snapshot_hash")?,
+        "snapshot_hash",
+    )?;
+    if digest.len() != 64
+        || !digest
+            .bytes()
+            .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase())
+    {
+        return Err("snapshot_hash must be lowercase SHA-256 hex".to_string());
+    }
+    let identity = risk_json_object(
+        risk_json_required(request, "order_identity")?,
+        "order_identity",
+    )?;
+    let side = risk_json_string(
+        risk_json_required(identity, "position_side")?,
+        "order_identity.position_side",
+    )?;
+    if side != "long" && side != "short" {
+        return Err("order_identity.position_side must be long or short".to_string());
+    }
+    let symbol = risk_json_string(
+        risk_json_required(identity, "symbol")?,
+        "order_identity.symbol",
+    )?;
+    let order_type = risk_json_string(risk_json_required(request, "order_type")?, "order_type")?;
+    if order_type != "limit" && order_type != "market" {
+        return Err("order_type must be limit or market".to_string());
+    }
+    let reduce_only = risk_json_bool(risk_json_required(request, "reduce_only")?, "reduce_only")?;
+    let panic_close = risk_json_bool(risk_json_required(request, "panic_close")?, "panic_close")?;
+    let balance = risk_json_object(risk_json_required(snapshot, "balance")?, "balance")?;
+    let equity = risk_json_decimal(risk_json_required(balance, "equity")?, "balance.equity")?;
+    if equity <= 0.0 {
+        return Err("balance.equity must be greater than zero".to_string());
+    }
+    let leverage_value = risk_json_object(risk_json_required(snapshot, "leverage")?, "leverage")?;
+    let leverage = risk_json_decimal(risk_json_required(leverage_value, side)?, "leverage.side")?;
+    let mark_prices =
+        risk_json_object(risk_json_required(snapshot, "mark_prices")?, "mark_prices")?;
+    let positions_value =
+        risk_json_object(risk_json_required(snapshot, "positions")?, "positions")?;
+    let side_positions = risk_json_required(positions_value, side)?
+        .as_array()
+        .ok_or_else(|| format!("positions.{side} must be an array"))?;
+    let long_positions = risk_json_required(positions_value, "long")?
+        .as_array()
+        .ok_or_else(|| "positions.long must be an array".to_string())?;
+    let short_positions = risk_json_required(positions_value, "short")?
+        .as_array()
+        .ok_or_else(|| "positions.short must be an array".to_string())?;
+    let mut all_positions = Vec::with_capacity(long_positions.len() + short_positions.len());
+    all_positions.extend(long_positions.iter());
+    all_positions.extend(short_positions.iter());
+    let mut current_total = 0.0;
+    let mut minimum_buffer: f64 = 1.0;
+    let mut matching_position = false;
+    for position_value in &all_positions {
+        let position = risk_json_object(position_value, "position")?;
+        current_total += risk_json_position_notional(position, mark_prices)?;
+        minimum_buffer = minimum_buffer.min(risk_json_position_buffer(
+            position,
+            mark_prices,
+            risk_json_string(
+                risk_json_required(position, "position_side")?,
+                "position.position_side",
+            )?,
+        )?);
+    }
+    for position_value in side_positions {
+        let position = risk_json_object(position_value, "position")?;
+        if risk_json_string(risk_json_required(position, "symbol")?, "position.symbol")? == symbol {
+            matching_position = true;
+            break;
+        }
+    }
+    let requested_notional = if let Some(value) = request.get("notional") {
+        risk_json_decimal(value, "order.notional")?.abs()
+    } else if panic_close && reduce_only && request.get("qty").is_none() {
+        0.0
+    } else {
+        let qty = risk_json_decimal(risk_json_required(request, "qty")?, "order.qty")?.abs();
+        let price = risk_json_decimal(risk_json_required(request, "price")?, "order.price")?;
+        qty * price
+    };
+    let projected_total = current_total + requested_notional;
+    let projected_exposure = projected_total / equity;
+    let projected_margin = projected_total / (equity * leverage);
+    let daily_loss = risk_json_object(risk_json_required(snapshot, "daily_loss")?, "daily_loss")?;
+    let daily_loss =
+        risk_json_decimal(risk_json_required(daily_loss, "ratio")?, "daily_loss.ratio")?;
+    let hsl = risk_json_object(risk_json_required(snapshot, "hsl")?, "hsl")?;
+    let hsl_value = risk_json_object(risk_json_required(hsl, side)?, "hsl.side")?;
+    let hsl_state = risk_json_string(risk_json_required(hsl_value, "state")?, "hsl.state")?;
+    let metrics = json!({
+        "current_total_notional": format_decimal(current_total),
+        "requested_notional": format_decimal(requested_notional),
+        "projected_total_notional": format_decimal(projected_total),
+        "projected_exposure_ratio": format_decimal(projected_exposure),
+        "projected_used_margin_ratio": format_decimal(projected_margin),
+        "min_liquidation_buffer": format_decimal(minimum_buffer),
+        "daily_loss_ratio": format_decimal(daily_loss),
+        "hsl_state": hsl_state,
+    });
+    let metrics = metrics
+        .as_object()
+        .ok_or_else(|| "internal risk metrics are not an object".to_string())?;
+    let result = |decision: &str, reason: &str| {
+        risk_json_decision(decision, reason, side, identity, metrics, digest)
+    };
+    if leverage > 3.0 {
+        return Ok(result("deny", "leverage_above_roadmap_max"));
+    }
+    if reduce_only && !matching_position {
+        return Ok(result("deny", "unknown_position"));
+    }
+    if order_type == "market" {
+        if reduce_only && panic_close && matching_position {
+            return Ok(result("allow", "panic_close_allowed"));
+        }
+        return Ok(result("deny", "ordinary_market_order_not_allowed"));
+    }
+    if reduce_only {
+        if minimum_buffer < 0.20 {
+            return Ok(result(
+                "deny",
+                "liquidation_buffer_below_reduce_only_minimum",
+            ));
+        }
+        return Ok(result("allow", "reduce_only_within_risk_limits"));
+    }
+    if daily_loss >= 0.02 {
+        return Ok(result("deny", "daily_loss_stop_reached"));
+    }
+    if matches!(
+        hsl_state,
+        "orange" | "red" | "close_only" | "emergency_close" | "terminal_stop_no_restart"
+    ) {
+        return Ok(result("deny", "hsl_blocks_new_entry"));
+    }
+    if minimum_buffer < 0.30 {
+        return Ok(result("deny", "liquidation_buffer_below_entry_minimum"));
+    }
+    if projected_exposure > 0.80 {
+        return Ok(result("deny", "max_total_exposure_exceeded"));
+    }
+    if projected_margin > 0.35 {
+        return Ok(result("deny", "max_used_margin_exceeded"));
+    }
+    if current_total == 0.0 && projected_exposure > 0.03 {
+        return Ok(result("deny", "initial_entry_exceeds_limit"));
+    }
+    Ok(result("allow", "entry_within_risk_limits"))
+}
+
+fn format_decimal(value: f64) -> String {
+    if value == 0.0 {
+        return "0".to_string();
+    }
+    let mut text = format!("{value:.15}");
+    while text.ends_with('0') {
+        text.pop();
+    }
+    if text.ends_with('.') {
+        text.pop();
+    }
+    text
+}
 
 fn exposure_to_psize(exposure: f64, balance: f64, price: f64, c_mult: f64) -> f64 {
     if exposure <= 0.0 || balance <= 0.0 || price <= 0.0 || c_mult <= 0.0 {
@@ -812,6 +1103,58 @@ pub fn calc_twel_enforcer_actions(
         total_exposure -= actual_reduce;
     }
 
+    // A quantity step can make the per-position floor and the portfolio target
+    // mutually unreachable.  The portfolio limit is the stronger safety rule:
+    // if the first pass cannot reach it, use the smallest additional exchange
+    // quantity needed to reach the global target, even if that puts one position
+    // slightly below its nominal floor.
+    while total_exposure > limit + exposure_tolerance {
+        let best_candidate = candidates
+            .iter()
+            .enumerate()
+            .filter(|(_, cand)| cand.abs_psize > qty_tolerance)
+            .map(|(idx, cand)| (idx, cand.price_diff))
+            .min_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal));
+        let Some((candidate_idx, _)) = best_candidate else {
+            break;
+        };
+
+        let candidate = &mut candidates[candidate_idx];
+        let needed_exposure = (total_exposure - limit).max(0.0);
+        let mut close_qty = exposure_to_psize(
+            needed_exposure,
+            balance,
+            candidate.position_price,
+            candidate.c_mult,
+        )
+        .max(candidate.qty_step);
+        close_qty = round_up(close_qty, candidate.qty_step);
+        if close_qty < candidate.min_qty {
+            close_qty = round_up(candidate.min_qty, candidate.qty_step);
+        }
+        close_qty = close_qty.min(candidate.abs_psize);
+        if close_qty <= qty_tolerance {
+            candidate.abs_psize = 0.0;
+            continue;
+        }
+        let new_abs_psize = (candidate.abs_psize - close_qty).max(0.0);
+        let new_exposure = calc_wallet_exposure(
+            candidate.c_mult,
+            balance,
+            new_abs_psize,
+            candidate.position_price,
+        );
+        let actual_reduce = (candidate.exposure - new_exposure).max(0.0);
+        if actual_reduce <= exposure_tolerance {
+            candidate.abs_psize = 0.0;
+            continue;
+        }
+        candidate.abs_psize = new_abs_psize;
+        candidate.exposure = new_exposure;
+        candidate.psize_to_close += close_qty;
+        total_exposure -= actual_reduce;
+    }
+
     if total_exposure > limit + exposure_tolerance {
         log::warn!(
             "TWEL enforcer unable to reduce exposure to target: remaining {:.6} > {:.6}",
@@ -837,7 +1180,10 @@ pub fn calc_twel_enforcer_actions(
                 qty_to_close = candidate.min_qty;
             }
         }
-        qty_to_close = round_dn(qty_to_close, candidate.qty_step);
+        // The accumulated reduction is already exchange-step aligned.  Nearest
+        // rounding avoids losing a whole step to binary floating-point noise
+        // (for example 0.2 / 0.1 becoming 1.999999...).
+        qty_to_close = round_(qty_to_close, candidate.qty_step).min(available_qty);
         if qty_to_close <= qty_tolerance {
             continue;
         }
@@ -1230,5 +1576,110 @@ mod tests {
         assert_eq!(gated.len(), 1);
         assert!((gated[0].qty - 4.0).abs() < 1e-12);
         assert!((gated[0].price - 100.0).abs() < 1e-12);
+    }
+}
+
+#[cfg(test)]
+mod crypto_risk_json_tests {
+    use super::evaluate_crypto_risk_payload;
+    use serde_json::{json, Value};
+
+    fn snapshot() -> Value {
+        json!({
+            "schema_version": "risk-snapshot-v1",
+            "as_of_ms": "1756000000000",
+            "balance": {"available": "1000", "equity": "1000"},
+            "positions": {"long": [], "short": []},
+            "pending_orders": [],
+            "mark_prices": {"BTC/USDT:USDT": "100"},
+            "margin_tiers": [{
+                "symbol": "BTC/USDT:USDT",
+                "tier": "1",
+                "max_notional": "100000",
+                "maintenance_margin_rate": "0.005"
+            }],
+            "leverage": {"long": "3", "short": "3"},
+            "daily_loss": {"ratio": "0.005"},
+            "hsl": {
+                "long": {"state": "normal"},
+                "short": {"state": "normal"}
+            }
+        })
+    }
+
+    fn request(order_type: &str, reduce_only: bool, panic_close: bool) -> Value {
+        json!({
+            "order_identity": {
+                "order_id": "risk-json-001",
+                "symbol": "BTC/USDT:USDT",
+                "position_side": "long",
+                "order_side": if reduce_only { "sell" } else { "buy" }
+            },
+            "order_type": order_type,
+            "qty": "0.2",
+            "price": "100",
+            "reduce_only": reduce_only,
+            "panic_close": panic_close
+        })
+    }
+
+    fn payload(snapshot: Value, request: Value) -> Value {
+        json!({
+            "snapshot": snapshot,
+            "request": request,
+            "snapshot_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        })
+    }
+
+    #[test]
+    fn crypto_risk_json_allows_small_initial_entry() {
+        let result =
+            evaluate_crypto_risk_payload(&payload(snapshot(), request("limit", false, false)))
+                .expect("risk payload should parse");
+        assert_eq!(result["decision"], "allow");
+        assert_eq!(result["reason"], "entry_within_risk_limits");
+    }
+
+    #[test]
+    fn crypto_risk_json_denies_max_total_exposure() {
+        let mut state = snapshot();
+        state["positions"]["long"] = json!([{
+            "symbol": "BTC/USDT:USDT",
+            "position_side": "long",
+            "qty": "7.9",
+            "notional": "790",
+            "mark_price": "100",
+            "liquidation_price": "50"
+        }]);
+        let result = evaluate_crypto_risk_payload(&payload(state, request("limit", false, false)))
+            .expect("risk payload should parse");
+        assert_eq!(result["decision"], "deny");
+        assert_eq!(result["reason"], "max_total_exposure_exceeded");
+    }
+
+    #[test]
+    fn crypto_risk_json_allows_panic_close() {
+        let mut state = snapshot();
+        state["positions"]["long"] = json!([{
+            "symbol": "BTC/USDT:USDT",
+            "position_side": "long",
+            "qty": "1",
+            "notional": "100",
+            "mark_price": "100",
+            "liquidation_price": "85"
+        }]);
+        let result = evaluate_crypto_risk_payload(&payload(state, request("market", true, true)))
+            .expect("risk payload should parse");
+        assert_eq!(result["decision"], "allow");
+        assert_eq!(result["reason"], "panic_close_allowed");
+    }
+
+    #[test]
+    fn crypto_risk_json_denies_unknown_position() {
+        let result =
+            evaluate_crypto_risk_payload(&payload(snapshot(), request("limit", true, false)))
+                .expect("risk payload should parse");
+        assert_eq!(result["decision"], "deny");
+        assert_eq!(result["reason"], "unknown_position");
     }
 }

@@ -1,0 +1,19 @@
+{
+  "anchor_price": 64190.649999999994,
+  "config_hash": "78807100d6ea95cdd9bf951946c0dedae5df4b7020ba704a6c15161dc2e6065d",
+  "entry_price": null,
+  "last_snapshot_id": "5ca397638471241dd9af86f74ce58b0a9046e62d9126f37dac55db8c0d39ad04",
+  "last_source_event_id": "5ca397638471241dd9af86f74ce58b0a9046e62d9126f37dac55db8c0d39ad04",
+  "last_timestamp_ms": 1787041611031,
+  "open": false,
+  "policy": {
+    "entry_bps": 5.0,
+    "order_amount": 0.001,
+    "policy_name": "deterministic_grid_probe",
+    "side": "long",
+    "take_profit_bps": 5.0
+  },
+  "processed_samples": 3,
+  "schema_version": "crypto-strategy-shadow-grid-policy-v1",
+  "strategy_id": "crypto-grid-shadow-stream-engineering-v1"
+}

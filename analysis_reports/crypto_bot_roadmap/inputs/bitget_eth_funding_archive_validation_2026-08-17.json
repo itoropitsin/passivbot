@@ -1,0 +1,38 @@
+{
+  "eligible_for_historical_selection": false,
+  "exchange": "bitget",
+  "notes": [
+    "No rows were synthesized, interpolated, or copied from another exchange.",
+    "A complete observed subrange is not sufficient; the requested window must be complete."
+  ],
+  "quality": {
+    "actual_rows": 270,
+    "complete_between_observed_bounds": true,
+    "complete_requested_window": false,
+    "duplicate_rows": 0,
+    "expected_interval_hours": 8,
+    "expected_rows": 2332,
+    "first_timestamp_ms": 1779177600000,
+    "future_rows": 0,
+    "interval_gaps": 0,
+    "invalid_rows": 0,
+    "last_timestamp_ms": 1786924800000,
+    "missing_rows": 2062,
+    "outside_requested_range": 0,
+    "rows": 270,
+    "unexpected_in_range_rows": 0
+  },
+  "requested_end_utc": "2026-08-17T00:00:00+00:00",
+  "requested_start_utc": "2024-07-01T00:00:00+00:00",
+  "schema_version": "bitget-funding-archive-validation-v1",
+  "source": {
+    "input_format": "json",
+    "kind": "bitget-public-v3",
+    "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_eth_public_execution_inputs_2024-07-01_to_2026-08-17.json",
+    "raw_rows": 270,
+    "sha256": "8dee9f7252663355e43c672a838b34314470a69ee62d67462755c4e75f43e75f",
+    "url": "https://www.bitget.com/api-doc/uta/public/Get-History-Funding-Rate"
+  },
+  "status": "blocked",
+  "symbol": "ETHUSDT"
+}

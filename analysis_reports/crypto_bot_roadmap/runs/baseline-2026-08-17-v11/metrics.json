@@ -1,0 +1,37 @@
+{
+  "baseline_scope": "repository baseline after Bitget public-data paper adapter; no trading authorization",
+  "determinism_note": "three full pytest runs returned 0 and matched byte-for-byte",
+  "determinism_status": "passed",
+  "editable_install_note": "the virtual environment points to this repository source tree",
+  "editable_install_status": "passed",
+  "environment": {
+    "cargo": "1.96.0",
+    "editable_direct_url": "file:///Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka",
+    "entrypoints_checked": [
+      ".venv/bin/python",
+      ".venv/bin/pytest",
+      ".venv/bin/pip",
+      ".venv/bin/passivbot"
+    ],
+    "passivbot": "7.12.0",
+    "pytest": "8.4.2",
+    "python": "3.12.13",
+    "rustc": "1.96.0",
+    "setuptools_rust": "1.13.0"
+  },
+  "fake_live_test_command": ".venv/bin/python -m pytest -q --disable-warnings tests/test_run_fake_live.py",
+  "fake_live_tests_status": "passed",
+  "observed_at": "2026-08-17",
+  "paper_adapter_test_command": ".venv/bin/python -m pytest -q --disable-warnings tests/test_paper_bitget.py tests/test_crypto_live_authorization.py",
+  "paper_adapter_tests_status": "passed",
+  "python_test_command": ".venv/bin/python -m pytest -q --disable-warnings",
+  "python_tests_collected": 2299,
+  "python_tests_status": "passed",
+  "rust_extension_source_stamp_note": "the loaded site-packages extension fingerprint equals the current passivbot-rust source fingerprint",
+  "rust_extension_source_stamp_status": "passed",
+  "rust_fmt_status": "passed",
+  "rust_test_command": "PYO3_PYTHON=/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/.venv/bin/python ./passivbot-rust/cargotest.sh --lib",
+  "rust_tests_note": "138 Rust unit tests passed after rebuilding the editable extension; the test helper links the exact PYO3_PYTHON interpreter",
+  "rust_tests_status": "passed",
+  "timezone": "Europe/Amsterdam"
+}

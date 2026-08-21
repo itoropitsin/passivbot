@@ -1,0 +1,35 @@
+{
+  "files": {
+    "account_profile.json": {
+      "sha256": "7c36c253af60590f51a44116e616048d7e686e2b25e6aed8346f8ee6592b5424",
+      "size_bytes": 7511
+    },
+    "config.json": {
+      "sha256": "7eb752600e60e12600870178806ecac123a8ae1566b0997f00aec662505f29c8",
+      "size_bytes": 31319
+    },
+    "events.jsonl.gz": {
+      "sha256": "57aaf966d87bd931b9920be7634055807f08e7a9e4479631afb5b763735d04e2",
+      "size_bytes": 33
+    },
+    "manifest.json": {
+      "sha256": "65ca9b00bfa7cb4658b7b6713919e5b0babe42ca0db203c9790f8072bdd812c6",
+      "size_bytes": 2108
+    },
+    "metrics.json": {
+      "sha256": "4e2913fe72faa043235b17b4a6de108a5cd9965620ec961cf5241c1ca23f4879",
+      "size_bytes": 886
+    },
+    "report.md": {
+      "sha256": "9d7d1df81c7e1c6249589acb1c35c4bf2e385cac7aaff6d407c972d3be2a45fc",
+      "size_bytes": 1313
+    },
+    "verdict.json": {
+      "sha256": "bac8560be8e30bdd639ae1fb435ad734db234c07a9adcbc241936414115b7683",
+      "size_bytes": 3140
+    }
+  },
+  "run_id": "profile-classic-account-2026-08-18-v29",
+  "schema_version": "crypto-grid-run-checksums-v1",
+  "stage": "account_profile"
+}

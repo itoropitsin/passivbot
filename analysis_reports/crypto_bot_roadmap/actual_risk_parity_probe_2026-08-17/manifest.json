@@ -1,0 +1,18 @@
+{
+  "account_changes_count": 0,
+  "engine": "Rust Backtest + Passivbot Python live gate",
+  "files": {
+    "comparison": "comparison.json",
+    "live_export": "live_export.json",
+    "rust_trace": "rust_trace.json",
+    "snapshot": "snapshot.json"
+  },
+  "read_only": true,
+  "schema_version": "risk-parity-actual-probe-v1",
+  "snapshot_hash": "c66bc9db3de9362d054d703bc67eccf158f0ad93e1fa9513e185073f249f6002",
+  "source_mode": "actual_engine_trace_set",
+  "trace_record_count": 6,
+  "trace_step": 3,
+  "trading_operations_count": 0,
+  "transfers_count": 0
+}

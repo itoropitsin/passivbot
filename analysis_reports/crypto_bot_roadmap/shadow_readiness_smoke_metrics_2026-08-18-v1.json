@@ -1,0 +1,16 @@
+{
+  "shadow_duration_hours": 0.2,
+  "shadow_planned_orders": 4,
+  "shadow_restart_count": 0,
+  "shadow_max_restart_recovery_seconds": 0,
+  "shadow_duplicate_orders": 0,
+  "shadow_unknown_positions": 0,
+  "shadow_private_calls": 0,
+  "shadow_order_creates": 0,
+  "shadow_transfers": 0,
+  "shadow_events_present": true,
+  "shadow_determinism_runs": 2,
+  "shadow_result_status": "local_smoke_only",
+  "shadow_event_log": "analysis_reports/crypto_bot_roadmap/runs/strategy-shadow-smoke-2026-08-18-v1/events.ndjson",
+  "shadow_result": "analysis_reports/crypto_bot_roadmap/runs/strategy-shadow-smoke-2026-08-18-v1/result.json"
+}

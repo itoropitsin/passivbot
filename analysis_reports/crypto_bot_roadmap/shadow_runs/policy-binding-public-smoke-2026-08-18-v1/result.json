@@ -1,0 +1,640 @@
+{
+  "boundary_violations": [],
+  "candidate_admission": false,
+  "checkpoint_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/checkpoint.json",
+  "client_call_facts": [
+    {
+      "external_network": false,
+      "method": "load_markets",
+      "paper_local": true,
+      "trading_operation": false,
+      "transport": "local",
+      "write_call": false
+    },
+    {
+      "external_network": false,
+      "method": "fetch_ticker",
+      "paper_local": true,
+      "trading_operation": false,
+      "transport": "local",
+      "write_call": false
+    }
+  ],
+  "config_hash": "ae7663c79d837422f7330afeb9c6be667c5726a8a5a15fab1b50788ee3e2e68e",
+  "coverage": {
+    "covered_duration_hours": 0.0012305555555555555,
+    "covered_duration_ms": 4430,
+    "covered_duration_seconds": 4.43,
+    "duration_formula": "max(normalized_snapshot_timestamps_ms) - min(normalized_snapshot_timestamps_ms)",
+    "first_timestamp_ms": 1787038433656,
+    "last_timestamp_ms": 1787038438086,
+    "normalized_snapshot_provenance_hash": "ce7c874383baf3a6c7bdae7e81d53914a100c281f76707959e085b20b13edf16",
+    "normalized_snapshot_timestamp_hash": "743f349aa1b762e5c95ab4d6b3a44bc80ded7166d460c043d927f7b405acc7ee",
+    "timestamp_count": 3,
+    "timestamp_unit": "milliseconds",
+    "unique_timestamp_count": 3
+  },
+  "covered_duration_hours": 0.0012305555555555555,
+  "covered_duration_ms": 4430,
+  "covered_duration_seconds": 4.43,
+  "covered_end_timestamp_ms": 1787038438086,
+  "covered_start_timestamp_ms": 1787038433656,
+  "deterministic_replay": {
+    "all_hashes_equal": true,
+    "comparison_hash": "2b28895e13246df4c30db7235fc44f5aafe0446f62d2b0139acdd267c59c7cae",
+    "completed_runs": 3,
+    "requested_runs": 3,
+    "runs": [
+      {
+        "artifact_sha256": {
+          "checkpoint": "82667238ed8fb82ca42ed615c6b914982f03d8338977010e5a86726b765d365d",
+          "events": "6aa71a2859a5b74a5ccfefe75a37f7b133a6e6b8c340c02cad4cf4614ed5caf9",
+          "ledger": "39785cb85f1621e54729b2cef686575436128d7bb8a913c936b597745eedf26d"
+        },
+        "covered_duration_ms": 4430,
+        "deterministic_replay_hash": "ab6ac757fd141963b613f3be789edbf58eb7a0f2ca763bdc5dc31e169ea0f4c1",
+        "event_log_hash": "ccb291257eaf21e2d79af4241b47d989c52f0f4dedad3a9e218ef0e629409a7d",
+        "mode": "fresh_local_driver",
+        "normalized_snapshot_hash": "18db4d6118dd6173467c265eb20a76dcd8ed4f5d8e24d6bfc06a17c4c5f5434f",
+        "output_dir": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/deterministic_full_replay",
+        "paper_fill_count": 0,
+        "planned_order_count": 0,
+        "run_index": 1,
+        "status": "passed"
+      },
+      {
+        "artifact_sha256": {
+          "checkpoint": "52d2d5b26048699ecada2a352a13fab99bc8031ec9ef713a368bb8289ccec7ca",
+          "events": "6aa71a2859a5b74a5ccfefe75a37f7b133a6e6b8c340c02cad4cf4614ed5caf9",
+          "ledger": "39785cb85f1621e54729b2cef686575436128d7bb8a913c936b597745eedf26d"
+        },
+        "covered_duration_ms": 4430,
+        "deterministic_replay_hash": "ab6ac757fd141963b613f3be789edbf58eb7a0f2ca763bdc5dc31e169ea0f4c1",
+        "event_log_hash": "ccb291257eaf21e2d79af4241b47d989c52f0f4dedad3a9e218ef0e629409a7d",
+        "mode": "fresh_local_driver",
+        "normalized_snapshot_hash": "18db4d6118dd6173467c265eb20a76dcd8ed4f5d8e24d6bfc06a17c4c5f5434f",
+        "output_dir": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/deterministic_full_replay/deterministic_replays/run-002-2gz8idg6",
+        "paper_fill_count": 0,
+        "planned_order_count": 0,
+        "run_index": 2,
+        "status": "passed"
+      },
+      {
+        "artifact_sha256": {
+          "checkpoint": "672fc79f476493f3df023f2890e30aca1f74281cebda2bfef39a3e53a2c6d832",
+          "events": "6aa71a2859a5b74a5ccfefe75a37f7b133a6e6b8c340c02cad4cf4614ed5caf9",
+          "ledger": "39785cb85f1621e54729b2cef686575436128d7bb8a913c936b597745eedf26d"
+        },
+        "covered_duration_ms": 4430,
+        "deterministic_replay_hash": "ab6ac757fd141963b613f3be789edbf58eb7a0f2ca763bdc5dc31e169ea0f4c1",
+        "event_log_hash": "ccb291257eaf21e2d79af4241b47d989c52f0f4dedad3a9e218ef0e629409a7d",
+        "mode": "fresh_local_driver",
+        "normalized_snapshot_hash": "18db4d6118dd6173467c265eb20a76dcd8ed4f5d8e24d6bfc06a17c4c5f5434f",
+        "output_dir": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/deterministic_full_replay/deterministic_replays/run-003-slhsxgzz",
+        "paper_fill_count": 0,
+        "planned_order_count": 0,
+        "run_index": 3,
+        "status": "passed"
+      }
+    ],
+    "status": "passed"
+  },
+  "deterministic_replay_hash": "ab6ac757fd141963b613f3be789edbf58eb7a0f2ca763bdc5dc31e169ea0f4c1",
+  "deterministic_replay_runs": 3,
+  "duplicate_snapshot_count": 0,
+  "event_count": 24,
+  "event_log_hash": "c1b7c1276c7b9907d7f2e4201fa0ff930dc3a36e65c17561124bb38f26a1c7d6",
+  "events_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/events.ndjson",
+  "evidence_hash": "4f45c8f74f961bc9fb30d07843900b9a41c462293a410c360ba67cbb44274715",
+  "evidence_schema_version": "crypto-strategy-shadow-evidence-v1",
+  "external_network_calls": 0,
+  "input_snapshot_count": 1,
+  "ledger_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/paper_ledger.json",
+  "max_restart_recovery_seconds": 1.460584,
+  "normalized_snapshot_count": 1,
+  "normalized_snapshot_hash": "cd7892e02d48c5a0cb570dde56225491d1bc23ee48c9cd7fd3dcfcb7b87afe27",
+  "operation_facts": [
+    {
+      "channel": "public",
+      "external_network": false,
+      "fact_id": "public:0",
+      "method": "load_markets",
+      "paper_local": false,
+      "private_request": false,
+      "reasons": [],
+      "recognized": true,
+      "trading_operation": false,
+      "transport": "local",
+      "write_call": false
+    },
+    {
+      "channel": "public",
+      "external_network": false,
+      "fact_id": "public:1",
+      "method": "fetch_ticker",
+      "paper_local": false,
+      "private_request": false,
+      "reasons": [],
+      "recognized": true,
+      "trading_operation": false,
+      "transport": "local",
+      "write_call": false
+    },
+    {
+      "channel": "client",
+      "external_network": false,
+      "fact_id": "client:2",
+      "method": "load_markets",
+      "paper_local": true,
+      "private_request": false,
+      "reasons": [],
+      "recognized": true,
+      "trading_operation": false,
+      "transport": "local",
+      "write_call": false
+    },
+    {
+      "channel": "client",
+      "external_network": false,
+      "fact_id": "client:3",
+      "method": "fetch_ticker",
+      "paper_local": true,
+      "private_request": false,
+      "reasons": [],
+      "recognized": true,
+      "trading_operation": false,
+      "transport": "local",
+      "write_call": false
+    }
+  ],
+  "paper_fill_count": 0,
+  "paper_order_count": 0,
+  "planned_order_count": 0,
+  "positions": [],
+  "private_requests": 0,
+  "process_supervisor": {
+    "code_files": {
+      "src/research/strategy_shadow.py": "89de9f2bc481861ef733f748fac7e284fbc19b8f4be3d48957a6edcc69d129e3",
+      "src/research/strategy_shadow_process.py": "5e780e00995271081aada488acea986f9b905516341b1ec53588d5a79a70b371",
+      "src/research/strategy_shadow_stream.py": "e97eb7536ed84714f33d83729322f216fb7b347890963c6b3ec87a81e040b6f3",
+      "src/research/strategy_shadow_stream_process.py": "af87dbbbdb1a2b88aac0737270507acf8be983b38cb4ebe27b25e15a5d8ef3c9",
+      "src/tools/strategy_shadow.py": "1cf263700942e738d542f9fbddb81c83b9691d1f9f9d0a8278dcff207b5a0880",
+      "src/tools/strategy_shadow_process.py": "0654ad612f68787eaa945833773fba5c96c2caa8bde0a30038c0115ef7d0d88f",
+      "src/tools/strategy_shadow_stream.py": "7911eebd3872313daf09317fcaba4a4348713f41ac7f3f32227742cbd965f0f4",
+      "src/tools/strategy_shadow_stream_process.py": "29b61f80b05ce931ba98ebce37f06bcbd5a7f3a8d9f9d6dc53b000e171afb076"
+    },
+    "code_hash": "046c7d27cd698ff851abb9971831389aca4c0ea77a0bb022f3e9e8634473409b",
+    "config_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/strategy_shadow_stream_config_v1.json",
+    "config_sha256": "13d19c9a971f728adeaf4b1e38a460c968e6956337ab11095ce6695ac59b9b03",
+    "duplicate_state_count": 0,
+    "ended_at_utc": "2026-08-18T07:33:59.087829+00:00",
+    "errors": [],
+    "fixture_mode": false,
+    "market_snapshot_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/market_snapshots.jsonl",
+    "market_snapshot_sha256": "eb88f27e056cd5ae2416aee851c14844007a9467833aab541803a726fbbe6051",
+    "observed_restart_count": 2,
+    "policy_config": {
+      "entry_bps": 5.0,
+      "order_amount": 0.001,
+      "take_profit_bps": 5.0
+    },
+    "policy_config_hash": "ca73707e5a51a62f1cb4d676bb78e3591bfd29f4cdd3d32915a74f30d40f1013",
+    "processes": [
+      {
+        "command_sha256": "c28efafa7da6d831e34142bb2ef5ad254fb6a9d434e4c732abc005dc613f78ec",
+        "elapsed_seconds": 2.176100730895996,
+        "ended_at_utc": "2026-08-18T07:33:54.570994+00:00",
+        "pid": 97669,
+        "result_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/segments/segment-001-result.json",
+        "result_sha256": "2841da5d23cadf981aab99d117af1b32fe5246eb9332f5809a2fb5ae741bcd6a",
+        "return_code": 0,
+        "segment": 1,
+        "started_at_utc": "2026-08-18T07:33:52.394893+00:00",
+        "state_files_present": true,
+        "state_hash_after": "abb7a9ca6ace8cd6492c97f32eea9a9f398cdc934ab6f7e6456e6d2b641b04c6",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "1b3ed4c0e7c52a7a5c15518383efa5119cc10976ae618970df6b9801a24fbeae"
+      },
+      {
+        "command_sha256": "c28efafa7da6d831e34142bb2ef5ad254fb6a9d434e4c732abc005dc613f78ec",
+        "elapsed_seconds": 2.2299787998199463,
+        "ended_at_utc": "2026-08-18T07:33:56.802364+00:00",
+        "pid": 97679,
+        "result_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/segments/segment-002-result.json",
+        "result_sha256": "60898af93e51cb9b05d7b82401fd5baa26737bf8385a7c79c0575f4d2c131430",
+        "return_code": 0,
+        "segment": 2,
+        "started_at_utc": "2026-08-18T07:33:54.572385+00:00",
+        "state_files_present": true,
+        "state_hash_after": "ea46dddcddf9caaaf6e4afc39714836fb3f71ebbdf674815765d26574d534aa5",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "bb70ad1843046b496e1b5ca450aec2e3e88c2b37f132c71870233b1a696b1c5c"
+      },
+      {
+        "command_sha256": "c28efafa7da6d831e34142bb2ef5ad254fb6a9d434e4c732abc005dc613f78ec",
+        "elapsed_seconds": 2.222806215286255,
+        "ended_at_utc": "2026-08-18T07:33:59.026365+00:00",
+        "pid": 97692,
+        "result_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/segments/segment-003-result.json",
+        "result_sha256": "62d3f14c5ee8e6619d93e3f760e570644c95918bccb02f51367ea56ee78346b8",
+        "return_code": 0,
+        "segment": 3,
+        "started_at_utc": "2026-08-18T07:33:56.803559+00:00",
+        "state_files_present": true,
+        "state_hash_after": "8e9dedcd4d2afa2d5da066c879c5537dcff96ea5c9b0903d664b7edd48be6ad0",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "7503ef9115083deb49b60d47e785b777a05c744f460c917309c8d05c5725089a"
+      }
+    ],
+    "requested_restart_count": 2,
+    "restart_operations": [
+      {
+        "new_pid": 97679,
+        "new_return_code": 0,
+        "old_pid": 97669,
+        "old_return_code": 0,
+        "recovery_seconds": 0.0013911724090576172,
+        "restart_id": 1,
+        "started_at_utc": "2026-08-18T07:33:54.572385+00:00",
+        "state_files_present": true,
+        "state_hash_after": "ea46dddcddf9caaaf6e4afc39714836fb3f71ebbdf674815765d26574d534aa5",
+        "state_hash_before": "abb7a9ca6ace8cd6492c97f32eea9a9f398cdc934ab6f7e6456e6d2b641b04c6",
+        "stopped_at_utc": "2026-08-18T07:33:54.570994+00:00"
+      },
+      {
+        "new_pid": 97692,
+        "new_return_code": 0,
+        "old_pid": 97679,
+        "old_return_code": 0,
+        "recovery_seconds": 0.0011949539184570312,
+        "restart_id": 2,
+        "started_at_utc": "2026-08-18T07:33:56.803559+00:00",
+        "state_files_present": true,
+        "state_hash_after": "8e9dedcd4d2afa2d5da066c879c5537dcff96ea5c9b0903d664b7edd48be6ad0",
+        "state_hash_before": "ea46dddcddf9caaaf6e4afc39714836fb3f71ebbdf674815765d26574d534aa5",
+        "stopped_at_utc": "2026-08-18T07:33:56.802364+00:00"
+      }
+    ],
+    "schema_version": "crypto-strategy-shadow-stream-process-v1",
+    "started_at_utc": "2026-08-18T07:33:52.394888+00:00",
+    "status": "passed",
+    "wall_clock_duration_seconds": 6.692894416162744
+  },
+  "processed_snapshot_count": 3,
+  "provenance": {
+    "artifacts": {
+      "checkpoint": {
+        "exists": true,
+        "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/checkpoint.json",
+        "sha256": "25e72d949d554c809533d82bf25002ed48f487769197bc80e1a6824e5a59c0eb"
+      },
+      "events": {
+        "exists": true,
+        "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/events.ndjson",
+        "sha256": "e720bd6f6a58d9e1e233c7f2392ff01c50d2d05016e6166851a525051efee802"
+      },
+      "ledger": {
+        "exists": true,
+        "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/paper_ledger.json",
+        "sha256": "ee1ebdbe7d2f964a4c248ffbb51af123e6fd27c6f1d8f52d42c769886fc0e0d2"
+      },
+      "process_supervisor": {
+        "exists": true,
+        "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/process_supervisor.json",
+        "sha256": "a68b12d878eef56fe712093d2991e956c125d415ed85ef721878737a39f95fab"
+      }
+    },
+    "config": {
+      "config_sha256": "ae7663c79d837422f7330afeb9c6be667c5726a8a5a15fab1b50788ee3e2e68e"
+    },
+    "driver": {
+      "module": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/src/research/strategy_shadow.py",
+      "module_sha256": "89de9f2bc481861ef733f748fac7e284fbc19b8f4be3d48957a6edcc69d129e3",
+      "normalizer": "research.strategy_shadow.normalize_snapshot",
+      "shadow_schema_version": "crypto-strategy-shadow-v1"
+    },
+    "event_log": {
+      "canonical_hash": "c1b7c1276c7b9907d7f2e4201fa0ff930dc3a36e65c17561124bb38f26a1c7d6",
+      "file_sha256": "e720bd6f6a58d9e1e233c7f2392ff01c50d2d05016e6166851a525051efee802"
+    },
+    "evidence_schema_version": "crypto-strategy-shadow-evidence-v1",
+    "input": {
+      "format": "jsonl",
+      "normalized_snapshot_count": 1,
+      "normalized_snapshot_hash": "cd7892e02d48c5a0cb570dde56225491d1bc23ee48c9cd7fd3dcfcb7b87afe27",
+      "normalized_snapshot_provenance_hash": "ce7c874383baf3a6c7bdae7e81d53914a100c281f76707959e085b20b13edf16",
+      "normalized_snapshot_timestamp_hash": "743f349aa1b762e5c95ab4d6b3a44bc80ded7166d460c043d927f7b405acc7ee",
+      "source_kind": "local_public_market_stream",
+      "source_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/market_snapshots.jsonl",
+      "source_sha256": "eb88f27e056cd5ae2416aee851c14844007a9467833aab541803a726fbbe6051"
+    },
+    "local_only": {
+      "credentials_allowed": false,
+      "execution_mode": "local_only",
+      "external_network_calls": 0,
+      "private_requests": 0,
+      "public_source": "saved_public_snapshot",
+      "trading_operations_count": 0
+    },
+    "normalization": {
+      "coverage_source": "normalized_snapshot_timestamps",
+      "source_hash_algorithm": "sha256",
+      "timestamp_unit": "milliseconds"
+    },
+    "operations": {
+      "replay_operations_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "restart_operations_hash": "1ef7200a5ad526d33c6c47a79e4e4dd77c69f199f311c8f1ca634a6328963b7a"
+    },
+    "stream": {
+      "policy_config_hash": "78807100d6ea95cdd9bf951946c0dedae5df4b7020ba704a6c15161dc2e6065d",
+      "policy_events_sha256": "bccc6e94e724990b3b6f6a67a1ae3355b9cf3c5e1e86ddedb81bddb0bad41d2b",
+      "policy_state_sha256": "cf0788faed81bc044dedba7ee9f909337183405f896d0e8ef3a14d7fc26e9018",
+      "schema_version": "crypto-strategy-shadow-stream-v1",
+      "snapshot_sha256": "eb88f27e056cd5ae2416aee851c14844007a9467833aab541803a726fbbe6051",
+      "strategy_input_sha256": "eb9d7cd46081e77cf3079ba8b460f37d8a315674c9c1811ddd55b84bde4eefd0",
+      "stream_state_sha256": "4da3d86cf4ff80a6863e5897a812a7e79b55f6765075a2a3eb4e8fa10d160493"
+    },
+    "stream_process_supervisor": {
+      "code_hash": "046c7d27cd698ff851abb9971831389aca4c0ea77a0bb022f3e9e8634473409b",
+      "config_sha256": "13d19c9a971f728adeaf4b1e38a460c968e6956337ab11095ce6695ac59b9b03",
+      "fixture_mode": false,
+      "input_sha256": "eb88f27e056cd5ae2416aee851c14844007a9467833aab541803a726fbbe6051"
+    }
+  },
+  "public_call_log": [
+    [
+      "load_markets",
+      "local"
+    ],
+    [
+      "fetch_ticker",
+      "BTCUSDT/USDT:USDT"
+    ]
+  ],
+  "public_snapshot_client": true,
+  "public_write_calls": 0,
+  "read_only": true,
+  "readiness_metrics": {
+    "shadow_boundary_violations": 0,
+    "shadow_determinism_runs": 3,
+    "shadow_duplicate_orders": 0,
+    "shadow_duration_hours": 0.0012305555555555555,
+    "shadow_events_present": true,
+    "shadow_external_network_calls": 0,
+    "shadow_max_restart_recovery_seconds": 0.0013911724090576172,
+    "shadow_order_creates": 0,
+    "shadow_planned_orders": 0,
+    "shadow_private_calls": 0,
+    "shadow_process_code_hash": "046c7d27cd698ff851abb9971831389aca4c0ea77a0bb022f3e9e8634473409b",
+    "shadow_process_config_hash": "13d19c9a971f728adeaf4b1e38a460c968e6956337ab11095ce6695ac59b9b03",
+    "shadow_process_duplicate_state_count": 0,
+    "shadow_process_input_hash": "eb88f27e056cd5ae2416aee851c14844007a9467833aab541803a726fbbe6051",
+    "shadow_process_max_recovery_seconds": 0.0013911724090576172,
+    "shadow_process_policy_config_hash": "ca73707e5a51a62f1cb4d676bb78e3591bfd29f4cdd3d32915a74f30d40f1013",
+    "shadow_process_restart_count": 2,
+    "shadow_process_restart_status": "passed",
+    "shadow_replay_count": 0,
+    "shadow_restart_count": 2,
+    "shadow_restart_observed": true,
+    "shadow_stream_attempts": 1,
+    "shadow_stream_errors": 0,
+    "shadow_stream_fixture_mode": false,
+    "shadow_stream_heartbeats": 0,
+    "shadow_stream_input_hash": "eb88f27e056cd5ae2416aee851c14844007a9467833aab541803a726fbbe6051",
+    "shadow_stream_market_events": 3,
+    "shadow_stream_max_source_gap_seconds": 2.238,
+    "shadow_stream_network_writes": 0,
+    "shadow_stream_policy_config_hash": "78807100d6ea95cdd9bf951946c0dedae5df4b7020ba704a6c15161dc2e6065d",
+    "shadow_stream_public_only": true,
+    "shadow_stream_samples": 1,
+    "shadow_stream_snapshot_log_status": "passed",
+    "shadow_stream_strategy_input_hash": "eb9d7cd46081e77cf3079ba8b460f37d8a315674c9c1811ddd55b84bde4eefd0",
+    "shadow_stream_trading_operations_count": 0,
+    "shadow_stream_wall_clock_duration_seconds": 1.4589247920084745,
+    "shadow_transfers": 0,
+    "shadow_unknown_positions": 0,
+    "shadow_wall_clock_duration_seconds": 6.692894416162744
+  },
+  "replay_count": 0,
+  "replay_evidence": {
+    "count": 0,
+    "operations": [],
+    "reason": "no already-processed snapshot identity was submitted",
+    "status": "not_observed"
+  },
+  "replay_operations": [],
+  "restart_count": 2,
+  "restart_evidence": {
+    "count": 2,
+    "initial_artifacts": {
+      "checkpoint": {
+        "exists": true,
+        "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/checkpoint.json",
+        "sha256": "85afc4db65bb1661cb50dafd3003949d2e26c8970affa471dc9c3d4183acacc9"
+      },
+      "events": {
+        "exists": true,
+        "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/events.ndjson",
+        "sha256": "7c654f15b785e8b2fec903db94003f03c2f5181e9dca94b5acb96ec5e8247271"
+      },
+      "ledger": {
+        "exists": true,
+        "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/paper_ledger.json",
+        "sha256": "ee1ebdbe7d2f964a4c248ffbb51af123e6fd27c6f1d8f52d42c769886fc0e0d2"
+      }
+    },
+    "operations": [
+      {
+        "event_count_before": 8,
+        "evidence_source": "pre-existing_local_shadow_artifacts",
+        "operation": "restart",
+        "operation_id": "restart-0001",
+        "preexisting_artifacts": {
+          "checkpoint": {
+            "exists": true,
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/checkpoint.json",
+            "sha256": "d0b143dec816be69a7aa33c1713c39eeb18fc0be2ef148b72f338959dc220fff"
+          },
+          "events": {
+            "exists": true,
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/events.ndjson",
+            "sha256": "047c0b837d65fe1e89cfeda68163f5967887cf5ccf729a3032eca0a5e195d322"
+          },
+          "ledger": {
+            "exists": true,
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/paper_ledger.json",
+            "sha256": "39785cb85f1621e54729b2cef686575436128d7bb8a913c936b597745eedf26d"
+          }
+        },
+        "processed_snapshot_count_before": 1,
+        "recovered_at_snapshot_id": "0b11f49062c0936c5994a038f833eed2b1ad2af574cc27c15bb5a11b2eac17db",
+        "recovered_event_count": 8,
+        "recovered_processed_snapshot_count": 1,
+        "recovery_completed": true,
+        "recovery_duration_ms": 1460.584,
+        "recovery_duration_seconds": 1.460584,
+        "status": "completed"
+      },
+      {
+        "event_count_before": 16,
+        "evidence_source": "pre-existing_local_shadow_artifacts",
+        "operation": "restart",
+        "operation_id": "restart-0002",
+        "preexisting_artifacts": {
+          "checkpoint": {
+            "exists": true,
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/checkpoint.json",
+            "sha256": "85afc4db65bb1661cb50dafd3003949d2e26c8970affa471dc9c3d4183acacc9"
+          },
+          "events": {
+            "exists": true,
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/events.ndjson",
+            "sha256": "7c654f15b785e8b2fec903db94003f03c2f5181e9dca94b5acb96ec5e8247271"
+          },
+          "ledger": {
+            "exists": true,
+            "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/paper_ledger.json",
+            "sha256": "ee1ebdbe7d2f964a4c248ffbb51af123e6fd27c6f1d8f52d42c769886fc0e0d2"
+          }
+        },
+        "processed_snapshot_count_before": 2,
+        "recovered_at_snapshot_id": "a4458494cb9e6fbeb8647713c6a98b6055a5ea047eb3cd2178a8b0462ed1e2e0",
+        "recovered_event_count": 16,
+        "recovered_processed_snapshot_count": 2,
+        "recovery_completed": true,
+        "recovery_duration_ms": 1445.529,
+        "recovery_duration_seconds": 1.445529,
+        "status": "completed"
+      }
+    ],
+    "status": "observed"
+  },
+  "restart_observed": true,
+  "restart_operations": [
+    {
+      "event_count_before": 8,
+      "evidence_source": "pre-existing_local_shadow_artifacts",
+      "operation": "restart",
+      "operation_id": "restart-0001",
+      "preexisting_artifacts": {
+        "checkpoint": {
+          "exists": true,
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/checkpoint.json",
+          "sha256": "d0b143dec816be69a7aa33c1713c39eeb18fc0be2ef148b72f338959dc220fff"
+        },
+        "events": {
+          "exists": true,
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/events.ndjson",
+          "sha256": "047c0b837d65fe1e89cfeda68163f5967887cf5ccf729a3032eca0a5e195d322"
+        },
+        "ledger": {
+          "exists": true,
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/paper_ledger.json",
+          "sha256": "39785cb85f1621e54729b2cef686575436128d7bb8a913c936b597745eedf26d"
+        }
+      },
+      "processed_snapshot_count_before": 1,
+      "recovered_at_snapshot_id": "0b11f49062c0936c5994a038f833eed2b1ad2af574cc27c15bb5a11b2eac17db",
+      "recovered_event_count": 8,
+      "recovered_processed_snapshot_count": 1,
+      "recovery_completed": true,
+      "recovery_duration_ms": 1460.584,
+      "recovery_duration_seconds": 1.460584,
+      "status": "completed"
+    },
+    {
+      "event_count_before": 16,
+      "evidence_source": "pre-existing_local_shadow_artifacts",
+      "operation": "restart",
+      "operation_id": "restart-0002",
+      "preexisting_artifacts": {
+        "checkpoint": {
+          "exists": true,
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/checkpoint.json",
+          "sha256": "85afc4db65bb1661cb50dafd3003949d2e26c8970affa471dc9c3d4183acacc9"
+        },
+        "events": {
+          "exists": true,
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/events.ndjson",
+          "sha256": "7c654f15b785e8b2fec903db94003f03c2f5181e9dca94b5acb96ec5e8247271"
+        },
+        "ledger": {
+          "exists": true,
+          "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/paper_ledger.json",
+          "sha256": "ee1ebdbe7d2f964a4c248ffbb51af123e6fd27c6f1d8f52d42c769886fc0e0d2"
+        }
+      },
+      "processed_snapshot_count_before": 2,
+      "recovered_at_snapshot_id": "a4458494cb9e6fbeb8647713c6a98b6055a5ea047eb3cd2178a8b0462ed1e2e0",
+      "recovered_event_count": 16,
+      "recovered_processed_snapshot_count": 2,
+      "recovery_completed": true,
+      "recovery_duration_ms": 1445.529,
+      "recovery_duration_seconds": 1.445529,
+      "status": "completed"
+    }
+  ],
+  "schema_version": "crypto-strategy-shadow-stream-v1",
+  "status": "passed",
+  "strategy_id": "crypto-grid-shadow-stream-engineering-v1",
+  "stream": {
+    "attempts": 1,
+    "ended_at_utc": "2026-08-18T07:33:58.932024+00:00",
+    "errors": [],
+    "fixture_mode": false,
+    "heartbeats": 0,
+    "market_events": 1,
+    "market_log_audit": {
+      "capture_gap_count": 0,
+      "error_count": 0,
+      "errors": [],
+      "first_timestamp_ms": 1787038433057,
+      "funding_continuity_status": "passed",
+      "funding_interval_gaps": 0,
+      "funding_interval_hours": [
+        8.0
+      ],
+      "funding_missing_rows_between_observed_bounds": 0,
+      "funding_settlement_timestamps": [
+        1787011200000
+      ],
+      "last_timestamp_ms": 1787038437473,
+      "max_capture_gap_seconds": 2.238,
+      "max_gap_limit_seconds": null,
+      "observed_categories": [
+        "USDT-FUTURES"
+      ],
+      "observed_symbols": [
+        "BTCUSDT"
+      ],
+      "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/market_snapshots.jsonl",
+      "row_count": 3,
+      "schema_version": "bitget-market-log-audit-v2",
+      "sha256": "eb88f27e056cd5ae2416aee851c14844007a9467833aab541803a726fbbe6051",
+      "status": "passed",
+      "verified_at_utc": "2026-08-18T07:33:58.932578+00:00"
+    },
+    "network_writes": 0,
+    "policy_config": {
+      "entry_bps": 5.0,
+      "order_amount": 0.001,
+      "policy_name": "deterministic_grid_probe",
+      "side": "long",
+      "take_profit_bps": 5.0
+    },
+    "policy_config_hash": "78807100d6ea95cdd9bf951946c0dedae5df4b7020ba704a6c15161dc2e6065d",
+    "policy_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/policy_state.json",
+    "public_only": true,
+    "samples": 1,
+    "snapshot_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/market_snapshots.jsonl",
+    "snapshot_sha256": "eb88f27e056cd5ae2416aee851c14844007a9467833aab541803a726fbbe6051",
+    "started_at_utc": "2026-08-18T07:33:57.473094+00:00",
+    "strategy_input_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/strategy_inputs.ndjson",
+    "strategy_input_sha256": "eb9d7cd46081e77cf3079ba8b460f37d8a315674c9c1811ddd55b84bde4eefd0",
+    "stream_state_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/policy-binding-public-smoke-2026-08-18-v1/stream_state.json",
+    "stream_state_sha256": "4da3d86cf4ff80a6863e5897a812a7e79b55f6765075a2a3eb4e8fa10d160493",
+    "trading_operations_count": 0,
+    "wall_clock_duration_seconds": 1.4589247920084745
+  },
+  "trading_operations_count": 0
+}

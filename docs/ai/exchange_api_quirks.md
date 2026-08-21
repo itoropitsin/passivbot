@@ -86,6 +86,49 @@ Handling:
 1. Overlap boundaries by 1 candle.
 2. Back up initial `since` by one candle on pagination start.
 
+### Funding history has a short public API horizon
+
+Problem:
+
+1. The current UTA funding-history endpoint exposes `cursor` pages but the
+   live BTCUSDT and ETHUSDT queries stop after 270 eight-hour records.  The
+   saved page counts are `100, 100, 70, 0`; the fourth page is empty, so older
+   cursors return no rows.
+2. The classic v2 funding-history endpoint currently has the same effective
+   horizon, so switching endpoint versions does not recover the missing years.
+
+Handling in Passivbot:
+
+1. Treat the missing historical range as a failed data gate, never as zero
+   funding or silently forward-filled funding.  Rebuild the quality report
+   with `passivbot tool bitget-data-metrics` after every new public snapshot.
+2. Record public funding, mark/index prices, bid/ask, and order-book depth
+   locally from the first day with `passivbot tool bitget-market-recorder`.
+3. Verify the JSONL log with `--verify` and retain the generated integrity
+   report beside it.
+4. Do not run historical promotion until a complete, independently checked
+   funding archive is available.
+
+## OKX
+
+### Public daily OHLCV archives
+
+Problem:
+
+1. OKX public candle archives are daily all-swap ZIP files, not per-symbol files.
+2. Archive `vol` is contract count; Passivbot OHLCV volume should use OKX `vol_ccy`.
+3. OKX archive filenames follow UTC+8 calendar days, while Passivbot cache shards
+   are UTC days.
+
+Handling:
+
+1. Build daily URLs directly from `static.okx.com` instead of the rate-limited
+   historical-data download-link API.
+2. Filter exact archive instrument ids such as `BTC-USDT-SWAP` after download.
+3. Combine the same named OKX archive plus the next OKX archive to materialize
+   one complete UTC day.
+4. Map `open_time` to timestamp and `vol_ccy` to volume before writing candles.
+
 ## Gate.io Futures
 
 ### Contract order text must start with `t-`

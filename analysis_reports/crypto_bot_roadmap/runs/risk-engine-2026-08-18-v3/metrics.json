@@ -1,0 +1,18 @@
+{
+  "candidate_admission": false,
+  "live_tester_decisions_identical": true,
+  "parity_harness_present": true,
+  "read_only": true,
+  "risk_engine_fails_closed_on_mismatch": true,
+  "risk_engine_implemented": true,
+  "risk_engine_surface_validated": true,
+  "risk_grid_scenario_coverage": "14_of_14",
+  "risk_limits_enforced_in_live_and_tester": true,
+  "risk_parity_reached": true,
+  "risk_snapshot_contract_present": true,
+  "surface_probe_path": "inputs/risk_engine_surface_probe_2026-08-18.json",
+  "surface_probe_status": "passed",
+  "surface_scenario_count": 14,
+  "surface_scenario_passed_count": 14,
+  "trading_operations_count": 0
+}

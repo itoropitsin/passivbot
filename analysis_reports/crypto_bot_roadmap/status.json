@@ -1,0 +1,343 @@
+{
+  "plan_date": "2026-08-17",
+  "schema_version": "crypto-grid-roadmap-status-v3",
+  "stages": {
+    "account_profile": {
+      "check_status": "failed",
+      "freshness": "stale",
+      "freshness_checked_against": {
+        "dirty_diff_sha256": "1802da058477a5036a9190efc17e124634068735c54c5ac7246687706256e32a",
+        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+        "git_dirty": true
+      },
+      "outcome": "failed",
+      "run_id": "profile-classic-account-2026-08-18-v31",
+      "source": {
+        "dirty_diff_sha256": "1802da058477a5036a9190efc17e124634068735c54c5ac7246687706256e32a",
+        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+        "git_dirty": true
+      },
+      "source_hash": "1802da058477a5036a9190efc17e124634068735c54c5ac7246687706256e32a",
+      "stage_admission_status": "failed",
+      "stale_checked_against": {
+        "dirty_diff_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+        "git_dirty": true,
+        "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "implementation_fingerprint_version": "implementation-fingerprint-v2"
+      },
+      "stale_reasons": [
+        "implementation_fingerprint_missing",
+        "dirty_tree_hash_changed"
+      ],
+      "status": "stale",
+      "verdict_path": "runs/profile-classic-account-2026-08-18-v31/verdict.json"
+    },
+    "account_risk_surface": {
+      "check_status": "not_started",
+      "freshness": "not_applicable",
+      "outcome": "not_started",
+      "stage_admission_status": "not_started",
+      "status": "not_started"
+    },
+    "baseline": {
+      "check_status": "passed",
+      "freshness": "fresh",
+      "freshness_checked_against": {
+        "dirty_diff_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+        "git_dirty": true,
+        "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "implementation_fingerprint_version": "implementation-fingerprint-v2"
+      },
+      "outcome": "passed",
+      "run_id": "baseline-2026-08-20-v85",
+      "source": {
+        "dirty_diff_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+        "git_dirty": true,
+        "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "implementation_fingerprint_version": "implementation-fingerprint-v2"
+      },
+      "source_hash": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+      "stage_admission_status": "passed",
+      "status": "passed",
+      "verdict_path": "runs/baseline-2026-08-20-v85/verdict.json"
+    },
+    "controlled_live": {
+      "admission_blockers": [
+        "account_risk_surface",
+        "data",
+        "risk_grid",
+        "historical",
+        "paper_runtime",
+        "technical_live"
+      ],
+      "check_status": "not_started",
+      "freshness": "not_applicable",
+      "outcome": "blocked",
+      "stage_admission_status": "blocked",
+      "status": "blocked"
+    },
+    "data": {
+      "check_status": "failed",
+      "freshness": "stale",
+      "freshness_checked_against": {
+        "dirty_diff_sha256": "bbd19e7dd86d05d23c303dbd9b281601748020dd57bf65c165e4be062d53baed",
+        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+        "git_dirty": true,
+        "implementation_fingerprint_sha256": "bbd19e7dd86d05d23c303dbd9b281601748020dd57bf65c165e4be062d53baed",
+        "implementation_fingerprint_version": "implementation-fingerprint-v2"
+      },
+      "outcome": "failed",
+      "run_id": "data-public-snapshot-2026-08-18-v47",
+      "source": {
+        "dirty_diff_sha256": "bbd19e7dd86d05d23c303dbd9b281601748020dd57bf65c165e4be062d53baed",
+        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+        "git_dirty": true,
+        "implementation_fingerprint_sha256": "bbd19e7dd86d05d23c303dbd9b281601748020dd57bf65c165e4be062d53baed",
+        "implementation_fingerprint_version": "implementation-fingerprint-v2"
+      },
+      "source_hash": "bbd19e7dd86d05d23c303dbd9b281601748020dd57bf65c165e4be062d53baed",
+      "stage_admission_status": "failed",
+      "stale_checked_against": {
+        "dirty_diff_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+        "git_dirty": true,
+        "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "implementation_fingerprint_version": "implementation-fingerprint-v2"
+      },
+      "stale_reasons": [
+        "dirty_tree_hash_changed"
+      ],
+      "status": "stale",
+      "verdict_path": "runs/data-public-snapshot-2026-08-18-v47/verdict.json"
+    },
+    "historical": {
+      "admission_blockers": [
+        "data",
+        "risk_grid"
+      ],
+      "check_status": "failed",
+      "freshness": "stale",
+      "freshness_checked_against": {
+        "dirty_diff_sha256": "bbd19e7dd86d05d23c303dbd9b281601748020dd57bf65c165e4be062d53baed",
+        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+        "git_dirty": true,
+        "implementation_fingerprint_sha256": "bbd19e7dd86d05d23c303dbd9b281601748020dd57bf65c165e4be062d53baed",
+        "implementation_fingerprint_version": "implementation-fingerprint-v2"
+      },
+      "outcome": "blocked",
+      "run_id": "historical-rejected-2026-08-18-v34",
+      "source": {
+        "dirty_diff_sha256": "bbd19e7dd86d05d23c303dbd9b281601748020dd57bf65c165e4be062d53baed",
+        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+        "git_dirty": true,
+        "implementation_fingerprint_sha256": "bbd19e7dd86d05d23c303dbd9b281601748020dd57bf65c165e4be062d53baed",
+        "implementation_fingerprint_version": "implementation-fingerprint-v2"
+      },
+      "source_hash": "bbd19e7dd86d05d23c303dbd9b281601748020dd57bf65c165e4be062d53baed",
+      "stage_admission_status": "blocked",
+      "stale_checked_against": {
+        "dirty_diff_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+        "git_dirty": true,
+        "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "implementation_fingerprint_version": "implementation-fingerprint-v2"
+      },
+      "stale_reasons": [
+        "dirty_tree_hash_changed"
+      ],
+      "status": "blocked",
+      "verdict_path": "runs/historical-rejected-2026-08-18-v34/verdict.json"
+    },
+    "market_profile": {
+      "check_status": "passed",
+      "freshness": "fresh",
+      "freshness_checked_against": {
+        "dirty_diff_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+        "git_dirty": true,
+        "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "implementation_fingerprint_version": "implementation-fingerprint-v2"
+      },
+      "outcome": "passed",
+      "run_id": "market-profile-2026-08-20-v49",
+      "source": {
+        "dirty_diff_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+        "git_dirty": true,
+        "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "implementation_fingerprint_version": "implementation-fingerprint-v2"
+      },
+      "source_hash": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+      "stage_admission_status": "passed",
+      "status": "passed",
+      "verdict_path": "runs/market-profile-2026-08-20-v49/verdict.json"
+    },
+    "paper_runtime": {
+      "admission_blockers": [
+        "historical",
+        "shadow_readiness"
+      ],
+      "check_status": "not_started",
+      "freshness": "not_applicable",
+      "outcome": "blocked",
+      "stage_admission_status": "blocked",
+      "status": "blocked"
+    },
+    "portfolio_historical": {
+      "admission_blockers": [
+        "data",
+        "risk_grid",
+        "historical"
+      ],
+      "check_status": "not_started",
+      "freshness": "not_applicable",
+      "outcome": "blocked",
+      "stage_admission_status": "blocked",
+      "status": "blocked"
+    },
+    "portfolio_paper": {
+      "admission_blockers": [
+        "portfolio_historical",
+        "paper_runtime"
+      ],
+      "check_status": "not_started",
+      "freshness": "not_applicable",
+      "outcome": "blocked",
+      "stage_admission_status": "blocked",
+      "status": "blocked"
+    },
+    "risk_contract": {
+      "check_status": "failed",
+      "freshness": "stale",
+      "freshness_checked_against": {
+        "dirty_diff_sha256": "bbd19e7dd86d05d23c303dbd9b281601748020dd57bf65c165e4be062d53baed",
+        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+        "git_dirty": true,
+        "implementation_fingerprint_sha256": "bbd19e7dd86d05d23c303dbd9b281601748020dd57bf65c165e4be062d53baed",
+        "implementation_fingerprint_version": "implementation-fingerprint-v2"
+      },
+      "outcome": "failed",
+      "run_id": "risk-contract-2026-08-18-v55",
+      "source": {
+        "dirty_diff_sha256": "bbd19e7dd86d05d23c303dbd9b281601748020dd57bf65c165e4be062d53baed",
+        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+        "git_dirty": true,
+        "implementation_fingerprint_sha256": "bbd19e7dd86d05d23c303dbd9b281601748020dd57bf65c165e4be062d53baed",
+        "implementation_fingerprint_version": "implementation-fingerprint-v2"
+      },
+      "source_hash": "bbd19e7dd86d05d23c303dbd9b281601748020dd57bf65c165e4be062d53baed",
+      "stage_admission_status": "failed",
+      "stale_checked_against": {
+        "dirty_diff_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+        "git_dirty": true,
+        "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "implementation_fingerprint_version": "implementation-fingerprint-v2"
+      },
+      "stale_reasons": [
+        "dirty_tree_hash_changed"
+      ],
+      "status": "stale",
+      "verdict_path": "runs/risk-contract-2026-08-18-v55/verdict.json"
+    },
+    "risk_engine": {
+      "check_status": "passed",
+      "freshness": "fresh",
+      "freshness_checked_against": {
+        "dirty_diff_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+        "git_dirty": true,
+        "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "implementation_fingerprint_version": "implementation-fingerprint-v2"
+      },
+      "outcome": "passed",
+      "run_id": "risk-engine-2026-08-21-v31",
+      "source": {
+        "dirty_diff_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+        "git_dirty": true,
+        "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "implementation_fingerprint_version": "implementation-fingerprint-v2"
+      },
+      "source_hash": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+      "stage_admission_status": "passed",
+      "status": "passed",
+      "verdict_path": "runs/risk-engine-2026-08-21-v31/verdict.json"
+    },
+    "risk_grid": {
+      "check_status": "passed",
+      "freshness": "stale",
+      "freshness_checked_against": {
+        "dirty_diff_sha256": "bbd19e7dd86d05d23c303dbd9b281601748020dd57bf65c165e4be062d53baed",
+        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+        "git_dirty": true,
+        "implementation_fingerprint_sha256": "bbd19e7dd86d05d23c303dbd9b281601748020dd57bf65c165e4be062d53baed",
+        "implementation_fingerprint_version": "implementation-fingerprint-v2"
+      },
+      "outcome": "passed",
+      "run_id": "risk-grid-2026-08-18-v49",
+      "source": {
+        "dirty_diff_sha256": "bbd19e7dd86d05d23c303dbd9b281601748020dd57bf65c165e4be062d53baed",
+        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+        "git_dirty": true,
+        "implementation_fingerprint_sha256": "bbd19e7dd86d05d23c303dbd9b281601748020dd57bf65c165e4be062d53baed",
+        "implementation_fingerprint_version": "implementation-fingerprint-v2"
+      },
+      "source_hash": "bbd19e7dd86d05d23c303dbd9b281601748020dd57bf65c165e4be062d53baed",
+      "stage_admission_status": "passed",
+      "stale_checked_against": {
+        "dirty_diff_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+        "git_dirty": true,
+        "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "implementation_fingerprint_version": "implementation-fingerprint-v2"
+      },
+      "stale_reasons": [
+        "dirty_tree_hash_changed"
+      ],
+      "status": "stale",
+      "verdict_path": "runs/risk-grid-2026-08-18-v49/verdict.json"
+    },
+    "shadow_readiness": {
+      "check_status": "passed",
+      "freshness": "fresh",
+      "outcome": "passed",
+      "run_id": "shadow-readiness-2026-08-21-v25",
+      "source": {
+        "dirty_diff_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+        "git_dirty": true,
+        "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "implementation_fingerprint_version": "implementation-fingerprint-v2"
+      },
+      "source_hash": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+      "stage_admission_status": "passed",
+      "status": "passed",
+      "verdict_path": "runs/shadow-readiness-2026-08-21-v25/verdict.json"
+    },
+    "technical_live": {
+      "admission_blockers": [
+        "account_risk_surface",
+        "data",
+        "risk_grid",
+        "historical",
+        "paper_runtime"
+      ],
+      "check_status": "not_started",
+      "freshness": "not_applicable",
+      "outcome": "blocked",
+      "stage_admission_status": "blocked",
+      "status": "blocked"
+    }
+  },
+  "status_semantics": {
+    "check_status": "result of the local checks in this run",
+    "freshness": "whether the run source matches the current tree",
+    "outcome": "stage_admission_status at the latest refresh",
+    "stage_admission_status": "promotion result after current prerequisites"
+  },
+  "updated_at_utc": "2026-08-20T23:26:05+00:00"
+}

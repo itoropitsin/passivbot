@@ -1,0 +1,20 @@
+{
+  "account_changes_count": 0,
+  "engine": "Rust Backtest + Passivbot Python live gate",
+  "files": {
+    "comparison": "comparison.json",
+    "live_export": "live_export.json",
+    "rust_trace": "rust_trace.json",
+    "snapshot": "snapshot.json"
+  },
+  "market_profile_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_read_only.json",
+  "market_surface_hash": "8ef7d644c41b489abf94148933961645fa278b7287a43066123ecf08e645e9b0",
+  "read_only": true,
+  "schema_version": "risk-parity-actual-probe-v1",
+  "snapshot_hash": "cb50c9a16fb808c0f77a28d862a0a04b786bdd3eb482725e4558d49b7d5b142f",
+  "source_mode": "actual_engine_trace_set",
+  "trace_record_count": 6,
+  "trace_step": 3,
+  "trading_operations_count": 0,
+  "transfers_count": 0
+}

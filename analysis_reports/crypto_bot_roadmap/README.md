@@ -1,0 +1,158 @@
+# Состояние реализации криптовалютного плана
+
+Дата фиксации: **21 августа 2026 года**, Europe/Amsterdam.
+
+Основной план: [crypto_grid_bot_development_plan_2026-08-17.md](../../docs/plans/crypto_grid_bot_development_plan_2026-08-17.md).
+
+Последний подробный снимок: [intermediate_checkpoint_2026-08-18.md](inputs/intermediate_checkpoint_2026-08-18.md).
+
+Актуальная интерпретация статуса — редакция **1.71** канонического плана: live NAS `public-stream-process-24h-2026-08-21-v7` запущен (`passivbot-shadow-v7`, образ v6, `SHADOW_RESUME=0`). Сбор snapshots подтверждён. Exam `passivbot-shadow` не стартовать. v6 не перезаписывать. `shadow-readiness` для v7 не биндить до финала. Последний bound machine-срез — v85/v49/v31/v25 на `d46be477…`. Восемь `CODE_PATHS` не менять до финала v7. ETH sidecar не перезапускать. Queue/depth не стартовать. `status.json` не писать вручную. Funding 270/2332 закрывает data/historical/paper/live.
+
+Последняя независимая проверка funding `2026-08-18T14:08–14:10Z` подтвердила:
+официальный Bitget funding API отдаёт только `270` строк (`100+100+70+0`),
+а открытые sample/collector-источники не заменяют полный settlement-архив.
+Data gate остаётся закрытым.
+
+## Актуальная цепочка: v7 пишет public snapshots; bound gates без изменений
+
+`status.json` имеет схему `crypto-grid-roadmap-status-v3` и обновлён штатной командой в `2026-08-20T23:26:05Z`. Fingerprint: `d46be477…`. Baseline v85 passed/fresh. `market_profile v49` passed/fresh. `risk_engine v31` passed/fresh с bound production-path evidence; v30 historical. `shadow-readiness v25` passed/fresh на NAS v6 (40/40); v24 не перезаписан. Funding 266/2 332; data gate закрыт. v83 не существовал.
+
+Machine stage `shadow_readiness` = `shadow-readiness-2026-08-21-v25`: 40/40 gates, `freshness=fresh` на `d46be477…`. Evidence NAS v6; пакет v24 не перезаписывать. Live 24h v7 запущен отдельно и ещё не bound. Mac v5 и v21/v22/v23 — historical. Полное test evidence текущего дерева — v85. P0-E добавил `src/research/data_passport.py`; frozen feed остаётся `qualifying=false`.
+
+Главная причина повторной работы устранена в P0: implementation fingerprint больше не включает runtime/generated outputs, а fake-live использует отдельные временные roots. Пересборка public data metrics добавила фактический `execution_inputs_sha256`; preflight v10 теперь блокируется только неполным funding. Это не удаляет старые файлы и не делает старые run-пакеты свежими автоматически.
+
+Схема статуса v3 разделяет `check_status`, `stage_admission_status`, `outcome` и `freshness`. Например, `historical v34` имеет `check_status=failed`, но admission=`blocked` из-за data prerequisite; это не считается пройденным этапом.
+
+## Что уже добавлено
+
+Это список имеющихся частей, а не список завершённых стадий. Checkpoint выше имеет приоритет над прежними более сильными формулировками о готовности paper или полного риска.
+
+- В конфигурацию добавлены ограничитель расчётного баланса, портфельные пределы, предел восьми уровней и явный контракт модели исполнения.
+- Включение криптовалютного профиля проверяет isolated, hedge, USDT, запрет заимствований, плечо не выше 3×, HSL 10/15/20/25%, лимиты сетки и запрет обычных рыночных заявок.
+- Размер позиции в opt-in профиле считается от `min(фактический баланс, 1000 USDT)`; при убытке он уменьшается.
+- Общая граница планирования блокирует новые входы при неизвестном дневном убытке или запасе до ликвидации, а заявки на закрытие оставляет доступными.
+- Bitget UTA-заявки теперь передают `marginMode`; isolated hedge mode настраивает плечо Long и Short отдельно. Проверка формата заявок выполняется без отправки заявки.
+- Добавлен read-only сборщик публичных данных Bitget: funding, mark/index-свечи, уровни поддерживаемой маржи, параметры инструмента и тикер. Ответы и их хэши сохраняются в отдельном артефакте.
+- Добавлен ремонтёр пропусков минутного Bitget OHLCV через публичные market candles. Он не подставляет синтетику, пишет только отсутствующие строки, обновляет контрольную сумму чанка и очищает только подтверждённые интервалы каталога.
+- Для больших архивов ремонтёр использует ограниченный параллелизм публичных запросов, переиспользует HTTPS-соединения и сортирует страницы до расчёта хэша; это ускоряет восстановление, но не меняет проверяемость результата.
+- Исправлена ошибка материализации частичного окна BTC: фактическое начало источника теперь используется как начало набора, поэтому длина BTC-бенчмарка совпадает с минутной шкалой и неполное покрытие не маскируется.
+- Мониторинговые события получают `strategy_id`, `cycle_id`, `config_hash`, плановый уровень и фактическую цену исполнения, если она известна.
+- Добавлен паспорт эксперимента с хэшами кода, конфигурации, данных и профиля рынка, а также машинная проверка gates.
+- Добавлен общий funding data passport (`crypto-data-passport-v1`) для historical preflight и qualifying paper: неполное окно, mark-gap и exploratory остаются `qualifying=false`; reconciliation не повышает один settlement до полного окна.
+- Добавлен production-path risk evidence (`risk-parity-production-evidence-v1`): `risk_engine`/`risk_contract` больше не принимают research-matrix как `risk_limits_enforced_in_live_and_tester`. Нужен bound вызов `Passivbot._apply_crypto_portfolio_risk_limits` и Rust `Backtest`.
+- Public Bitget market-surface timestamps должны быть точными целыми: `_integer()` отклоняет float `1.9` вместо усечения.
+- Паспорт эксперимента теперь включает снимок среды: версии Python/Rust/CCXT-зависимостей и хэш загруженного Rust-расширения.
+- Добавлен безопасный публичный recorder Bitget: он сохраняет тикер, bid/ask, глубину стакана, текущую funding-ставку, интервал, следующее время и последнюю наблюдаемую рассчитанную funding-ставку в JSONL для последующей калибровки исполнения; исходные ответы и хэши сохраняются, ключи, аккаунт, заявки и переводы в его коде отсутствуют.
+- Проверка recorder теперь умеет требовать максимальный перерыв между снимками и непрерывность settlement funding между наблюдёнными границами; при разрыве она завершается с `failed` и ничего не заполняет.
+- Уровни поддерживаемой маржи из публичного Bitget-профиля теперь материализуются в execution model и передаются в Rust. При включённом криптопрофиле тестер консервативно оценивает isolated-запас до ликвидации, блокирует вход без уровней или при нарушении запаса и всегда оставляет закрытия доступными.
+- Добавлен генератор отчёта качества из сохранённых публичных входов: он отдельно считает покрытие минутных данных и funding и не создаёт синтетические строки.
+- Добавлен строгий импортёр внешнего funding-архива: JSON/JSONL/CSV/TSV, хэш исходника и проверка каждой точки заданного окна; неполный архив получает `blocked` и не меняет входные данные.
+- Импортёр funding-архива теперь также блокирует строки, явно помеченные другим символом, и сохраняет число таких строк в отчёте.
+- Funding-импортёр теперь требует фактические строки, явный single-symbol scope, `applied_settlement`, точное UTC-окно, 8-часовой cadence, источник и хэши raw/normalized payload; declared counters не открывают data gate, ISO-время нормализуется явно.
+- Дополнительный fail-closed контроль funding блокирует строки с `synthetic`-маркерами и окна, не выровненные по cadence; в отчёте сохраняются `synthetic_rows` и `window_alignment_valid`.
+- Добавлен проверяющий журнал runtime-событий: интервал между первой и последней отметкой, заявки, исполнения, повторы и закрытые торговые циклы считаются из событий. Непрерывное суточное покрытие, uptime и остальные финансовые показатели ещё требуют независимого пересчёта.
+- Добавлен отдельный запускатель риск-проверок: он выполняет семь целевых Rust/Python-тестов для отдельных границ и сохраняет хэш их вывода. Полный набор стресс-сценариев канонического плана ещё не реализован.
+- Общая live-граница теперь принимает как сырые кортежи планировщика, так и реальные словари заявок адаптера; обычное рыночное закрытие блокируется, а рыночное закрытие сохраняется только для аварийного типа. Первый вход без цены ликвидации разрешён только в пределах 3% расчётного капитала.
+- Для включённого криптопрофиля добавлен отдельный барьер реальной торговли: несимуляционный `live`-процесс останавливается без явного флага `--authorize-crypto-live`; наличие API-ключа или корректного файла конфигурации само по себе не считается разрешением.
+- Добавлен отдельный Bitget paper-адаптер: публичные тикеры и свечи читаются без ключа; opt-in persistence сохраняет и восстанавливает баланс, позиции, заявки, исполнения, комиссии, funding settlement и идентификаторы. Явные частичные исполнения теперь можно применять несколькими частями: остаток заявки сохраняется, `part_sequence`, fee/slippage и WAL проверяются. Позиции требуют named mark/index и bound maintenance tiers; ticker `last` не подменяет mark. Глубина стакана и позиция в очереди в `create_order` не моделируются; `qualifying=false`. Обязательный execution-evidence writer пишет `crypto-paper-execution-evidence-v1`.
+- Добавлен [`bitget_paper_shadow.py`](../../src/tools/bitget_paper_shadow.py) — bounded runner с очищенным BTC-профилем и только public Bitget client. Он не вызывает стандартный `live` entrypoint, не читает credential storage, не создаёт заявки и не перезапускается после ошибки; пишет manifest, source-hashed events, local ledger и checksums. `no_trade_observed` не считается успешным периодом.
+- Добавлен [`strategy_shadow_process.py`](../../src/research/strategy_shadow_process.py) и CLI `strategy-shadow-process`: отдельные дочерние процессы, PID/state/recovery evidence, монотонная длительность и привязка к хэшам кода, config и dataset. Supervisor теперь запускает child в отдельной process group и очищает её при SIGINT/SIGTERM. v2 остановлен после аудита хэшей и cumulative counters, v3 остановлен после обнаружения orphan child; его partial evidence не принят.
+- В public stream введён config-bound `max_source_gap_seconds=300`: gap считается по exchange source timestamp, отдельно от capture gap; status `gap_check` попадает в machine evidence и является обязательным условием readiness.
+- Общий market-log verifier теперь требует top-level `source_timestamp_ms` и проверяет миллисекундную единицу, когда включён source-time режим; вложенные orderbook/ticker timestamps больше не могут незаметно заменить обязательное поле.
+- Source-time verifier также блокирует обратный порядок exchange timestamps; funding parser отклоняет ISO-время без явной UTC-зоны.
+- Paper fill теперь сначала записывается в типизированный write-ahead WAL, а затем применяется к локальному ledger; атомарный snapshot восстанавливается после остановки сразу после WAL и сразу после изменения памяти. Явный funding settlement проходит через локальный ledger и monitor writer только после арифметической проверки. Reconciliation сравнивает balance, комиссии, explicit funding и известные позиции, требует source/hash и подключена к paper snapshot hook. При отсутствии funding cost-event не пишется, поэтому последующая полная сверка не блокируется старой неполной записью. Тесты paper fill/funding/reconciliation → `FillEvent`/`funding.settled`/`costs.reconciled` → monitor writer → `summarize_runtime_events` проходят; общий runtime verdict остаётся `blocked` без полного исторического funding source и непрерывных runtime events.
+- Проверка переходов между этапами стала обязательной: paper, технический и реальный запуск не могут получить `passed`, пока предыдущие gates не имеют `passed` в `status.json`.
+- Для run-паспорта добавлен явный вход `--events`; исторический, paper и live-вердикт теперь требует непустого доказательного журнала событий, а не только автоматически созданного пустого `events.jsonl.gz`.
+- Добавлен запускаемый исторический протокол: он фиксирует четыре окна, BTC/ETH, отдельные Long/Short, три группы по восемь параметров, пять seed, проверку соседей, holdout и синхронный BTC+ETH-контур; до прохождения read-only preflight оптимизатор не стартует.
+- Добавлен отдельный проверяющий отбор исторических результатов: неполные данные блокируются, отрицательный/нестабильный кандидат отклоняется, а holdout не участвует в выборе до заморозки центра.
+- Доказательные run-пакеты теперь получают `checksums.json` со всеми обязательными файлами; повторный `run_id` отклоняется, а перезапись разрешена только для явно помеченного `scratch`.
+- Runtime evidence теперь требует покрытие календарных дней и heartbeat, ограничивает максимальный перерыв, считает уникальные заявки и циклы и не принимает uptime, recovery, PnL, просадку или reconciliation из одного `metrics.json`.
+- Risk-grid получил read-only roadmap-preflight: учебный `test`-режим не является допуском, а roadmap-режим проверяет риск, isolated/hedge, плечо до 3×, максимум 8 уровней и запрет обычных market orders.
+- При следующем запуске проверяющей команды старые `passed`-пакеты автоматически станут `stale`, если их контрольные суммы отсутствуют или паспорт больше не соответствует текущему дереву.
+- Старые имена статусов мигрируются в `account_profile` и `paper_runtime`; `status.json` имеет схему `crypto-grid-roadmap-status-v3`, атомарную запись и файловую блокировку.
+- Добавлены `risk-snapshot-v1`, `risk-decision-v1` и read-only parity-harness. При отсутствии любого engine adapter он возвращает `blocked`/`deny`; fixture-сравнение не даёт допуска.
+- Python live exporter сохраняет фактический результат настоящего live gate после фильтрации, а Rust `Backtest` записывает `risk_gate_trace` для каждой исходной заявки, включая `deny`; Rust snapshot снимается до очистки очереди и при ошибке оставляет только закрытия. Это evidence, а full risk gate всё ещё ждёт подтверждения production Bitget surfaces.
+- Python и Rust теперь используют одну формулу projected liquidation distance и последовательно обновляют projected position после каждого принятого grid-уровня; отсутствие tier, комиссии или другого обязательного surface блокирует новый вход.
+- Python и Rust используют общий формат `risk-order-v1` с position side, order side, `reduce_only`, аварийным закрытием, количеством, ценой и occurrence. Для разных семантических заявок occurrence выровнен; дублирующие заявки блокируют full parity до окончательной канонизации.
+- [Actual parity probe](actual_risk_parity_probe_2026-08-17-v3/report.md) — read-only запуск настоящего Python live-фильтра и Rust `Backtest`: snapshot-хэш совпал, все 6 решений совпали; probe использует захваченный public Bitget surface и не закрывает `risk_model_surface_validated`.
+- `risk_trace.py` преобразует фактический Rust trace в `risk-decision-v1`; режим harness `--live-export` + `--rust-trace` проверяет внешний snapshot и при неполном evidence возвращает `blocked`/`deny`.
+- Live exporter умеет читать production HSL runtime и дневной убыток; без фактических Bitget margin tiers он остаётся `blocked`.
+- Rust-тестер ограничивает первый вход параметром `max_initial_entry_sizing_balance_pct` в диапазоне `(0, 0.03]`; закрытия сохраняются.
+- `risk_grid`-runner (`risk_grid_scenarios_2026-08-17-v8.json`) содержит 14 названных сценариев: все 14 покрыты engine-тестами и прошли в локальном roadmap-run. Machine stage остаётся `blocked` только из-за data gate; risk engine уже прошёл свой gate.
+- `risk_engine_surface.py` и `risk_engine_surface_probe.py` прогоняют 14 именованных случаев через фактические Python live и Rust tester adapters: daily loss, HSL, leverage, exposure, margin, liquidation buffer, market-order boundary, Long/Short, panic close и missing tiers. Все 14 совпали по решению и причине; probe read-only и не допускает кандидата.
+
+## Машинное состояние
+
+- [status.json](status.json) — состояние всех gates.
+- [baseline-2026-08-20-v84](runs/baseline-2026-08-20-v84/report.md) — текущий plan-binding паспорт; полное test evidence переиспользовано из v78, fingerprint `dcae540a…`.
+- [market-profile-2026-08-20-v48](runs/market-profile-2026-08-20-v48/report.md) — перепривязка того же public BTC market profile; `passed/fresh`.
+- [profile-classic-account-2026-08-18-v31](runs/profile-classic-account-2026-08-18-v31/report.md) — сохранённый read-only профиль показывает Classic Account (`40084`); настройки не менялись.
+- [data-public-snapshot-2026-08-18-v47](runs/data-public-snapshot-2026-08-18-v47/report.md) — 14/16 checks проходят; OHLCV и mark/index проходят, funding frozen dataset покрывает 270 из 2 332 расчётов, gate `failed/stale`.
+- [funding_horizon_rerun_2026-08-18.md](inputs/funding_horizon_rerun_2026-08-18.md) — последний public-only BTC/ETH horizon rerun: 266 из 2 332 в точном окне; blocked, архив не принят.
+- [risk-engine-2026-08-20-v30](runs/risk-engine-2026-08-20-v30/report.md) — historical local run: surface 14/14; после P0-D его метрика production-parity больше не является admission. Не перезапускать в этом окне.
+- [p0d_local/production-risk-evidence-2026-08-18](p0d_local/production-risk-evidence-2026-08-18/report.md) — исторический isolated bundle schema `risk-parity-production-evidence-v1`; не кормить в shared `status.json`.
+- [risk-contract-2026-08-18-v55](runs/risk-contract-2026-08-18-v55/report.md) — локальная parity не открывает общий risk-contract; run `failed/fresh` из-за отсутствующего private UTA/account evidence.
+- [risk-grid-2026-08-18-v49](runs/risk-grid-2026-08-18-v49/report.md) — локальные сценарии прошли, `stage_admission_status=passed`; этот public safety gate не зависит от неполного funding.
+- [historical-rejected-2026-08-18-v34](runs/historical-rejected-2026-08-18-v34/report.md) — новый отбор не запускался; `check_status=failed`, admission `blocked` из-за preflight/data с неполным funding.
+- [public-stream-process-24h-2026-08-19-v6](shadow_runs/public-stream-process-24h-2026-08-19-v6/result.json) — зачётный NAS Docker public-only shadow: supervisor `2026-08-18T22:53:58Z`–`2026-08-20T00:37:57Z`, exit 0, nested `process_supervisor`, `status=passed`, 1803 market events, 65 planned, 0 stream errors after cutover, 3 deterministic replays. Mac v5 — historical cutover source, не readiness-run.
+- `eth-public-market-24h-2026-08-18-v1` — exploratory ETH sidecar завершён: 4,017 ч, integrity `failed`; не 24h evidence и не portfolio gate.
+- [shadow-readiness-2026-08-20-v24](runs/shadow-readiness-2026-08-20-v24/report.md) — 40/40 shadow-gates passed; admission passed; freshness fresh. Evidence NAS v6.
+- [shadow-readiness-2026-08-19-v23](runs/shadow-readiness-2026-08-19-v23/report.md) — historical; 40/40 shadow-gates passed; admission blocked: `baseline=stale`, `market_profile=stale`, `risk_engine=stale`.
+- [shadow-readiness-2026-08-18-v21](runs/shadow-readiness-2026-08-18-v21/report.md) — historical; safety/hash/policy/source-gap checks прошли, но duration, 0 из 20 заявок и 2 из 5 рестартов не достигли readiness limits.
+- [historical_preflight_2026-08-18-v10.json](preflight/historical_preflight_2026-08-18-v10.json) — актуальный BTC preflight: hash execution inputs совпадает, public-only/cache/mark/index checks проходят, но funding `0.11578044596912522` и data stage закрывают historical.
+- [policy-binding-public-smoke-2026-08-18-v4](shadow_runs/policy-binding-public-smoke-2026-08-18-v4/result.json) — исторический safety smoke: 3 deterministic replay, 2 process restarts, 0 private/network/trading operations, `max_source_gap_seconds=300` и `gap_check=passed`; это не текущий shadow и не readiness.
+- [funding_archive_next_audit_2026-08-18.md](inputs/funding_archive_next_audit_2026-08-18.md) — 22 raw-файла, официальные страницы `100, 100, 70, 0`, 267 строк в точном окне из 2 332; полного источника не найдено.
+- [funding_archive_current_audit_2026-08-18-v1.md](inputs/funding_archive_current_audit_2026-08-18-v1.md) — текущий BTC read-only audit: оба официальных endpoint совпали, `270` строк всего и `266` в frozen window; полное покрытие не найдено.
+- [funding_archive_official_download_audit_2026-08-18.md](inputs/funding_archive_official_download_audit_2026-08-18.md) — официальный data-download проверен: futures-файлы включают свечи, сделки и стакан, но не funding; UTA `startTime/endTime` не расширяет публичный горизонт.
+- [funding_archive_thesis_mirror_audit_2026-08-18.md](inputs/funding_archive_thesis_mirror_audit_2026-08-18.md) — публичный thesis appendix не содержит raw funding, а его frozen mirror 18 августа вернул HTTP 530; источник не принят.
+- [funding_horizon_rerun_2026-08-18.md](inputs/funding_horizon_rerun_2026-08-18.md) — свежий public-only снимок BTC и ETH: 266 строк в точном окне из 2 332, оба endpoint по-прежнему `blocked`.
+- `risk_contract` остаётся `failed`, а schema v3 отделяет локальный risk engine от private account surface.
+- [bitget_btc_market_profile_read_only.json](inputs/bitget_btc_market_profile_read_only.json) — фактический read-only снимок без заявок и переводов.
+- [bitget_btc_market_profile_public_only_2026-08-17.json](inputs/bitget_btc_market_profile_public_only_2026-08-17.json) — очищенный публичный профиль, используемый в `market-profile-2026-08-18-v32`; содержит только рыночные surfaces и хэши публичных ответов.
+- [bitget_eth_market_profile_read_only.json](inputs/bitget_eth_market_profile_read_only.json) — отдельный ETH read-only снимок; он также отклонён как Classic Account.
+- [bitget_btc_public_execution_inputs_2026-08-16_to_2026-08-17.json](inputs/bitget_btc_public_execution_inputs_2026-08-16_to_2026-08-17.json) — funding, mark/index и публичные параметры инструмента с хэшами.
+- [bitget_btc_public_execution_inputs_2024-07-01_to_2026-08-17-repaired-pagination-v2.json](inputs/bitget_btc_public_execution_inputs_2024-07-01_to_2026-08-17-repaired-pagination-v2.json) — полный публичный 1H mark/index-снимок рабочего периода; funding ограничен доступными последними 270 расчётами, пагинация `100, 100, 70, 0`. В новых manifest-пакетах зафиксировано фактическое имя файла с подчёркиванием между датами.
+- [bitget_eth_public_execution_inputs_2024-07-01_to_2026-08-17.json](inputs/bitget_eth_public_execution_inputs_2024-07-01_to_2026-08-17.json) — отдельный ETH 1H mark/index-снимок; funding также ограничен последними 270 расчётами, пагинация `100, 100, 70, 0`.
+- [data_metrics_public_snapshot_2026-08-17.json](data_metrics_public_snapshot_2026-08-17.json) и [eth_data_metrics_public_snapshot_2026-08-17.json](eth_data_metrics_public_snapshot_2026-08-17.json) — машинные отчёты покрытия без скрытой подстановки пропусков.
+- [bitget_btc_ohlcv_quality_2024-07-01_to_2026-08-17-v1.json](inputs/bitget_btc_ohlcv_quality_2024-07-01_to_2026-08-17-v1.json) и [bitget_eth_ohlcv_quality_2024-07-01_to_2026-08-17-v1.json](inputs/bitget_eth_ohlcv_quality_2024-07-01_to_2026-08-17-v1.json) — read-only проверка фактического HLCV-кэша: покрытие, значения, порядок цен, будущее и chunk-хэши; оба отчёта `passed`.
+- [data_metrics_determinism_2026-08-17.json](inputs/data_metrics_determinism_2026-08-17.json) — три одинаковых запуска отчёта качества отдельно для BTC и ETH с совпавшими хэшами.
+- [funding_archive_probe_2026-08-17.json](inputs/funding_archive_probe_2026-08-17.json) — аудит официального API и внешних источников: полного проверяемого funding-архива для окна плана не найдено, синтетика не добавлялась.
+- [bitget_btc_funding_archive_research_2026-08-17-v1.md](inputs/bitget_btc_funding_archive_research_2026-08-17-v1.md) — отдельная проверка UTA v3, Classic v2, отключённого V1 API и официальной страницы загрузок; безопасного полного источника не найдено.
+- [funding_archive_source_audit_2026-08-17.md](inputs/funding_archive_source_audit_2026-08-17.md) — независимый аудит источников: полный архив за окно плана не найден; Amberdata/Laevitas требуют доступа, Tardis покрывает только часть окна.
+- [funding_archive_followup_2026-08-17.md](inputs/funding_archive_followup_2026-08-17.md) — историческая проверка Luna Max: строгий verdict `rejected`, 268 из 2 332 точек точного окна; свежий аудит 18 августа зафиксирован отдельно в `funding_archive_next_audit_2026-08-18.md`.
+- [bitget_btc_funding_horizon_2026-08-17.json](inputs/bitget_btc_funding_horizon_2026-08-17.json) и [bitget_eth_funding_horizon_2026-08-17.json](inputs/bitget_eth_funding_horizon_2026-08-17.json) — повторяемая проверка UTA v3 и Classic v2: оба endpoint дали `100, 100, 70, 0`, то есть 270 расчётов до 19 мая 2026 года; ни один endpoint не покрыл окно плана.
+- [bitget_btc_funding_archive_validation_2026-08-17-v2.json](inputs/bitget_btc_funding_archive_validation_2026-08-17-v2.json) и [bitget_eth_funding_archive_validation_2026-08-17-v2.json](inputs/bitget_eth_funding_archive_validation_2026-08-17-v2.json) — строгая проверка фактических строк публичного Bitget усиленным валидатором; оба архива `blocked`, публичный ответ содержит 270 строк, но точное окно не заполнено.
+- [bitget_btc_ohlcv_repair_2024-07-01_to_2026-08-17-v4.json](inputs/bitget_btc_ohlcv_repair_2024-07-01_to_2026-08-17-v4.json) — отчёт ремонта минутного кеша: выровненное рабочее окно BTC теперь без пропусков.
+- [bitget_eth_ohlcv_repair_2024-07-01_to_2026-08-17-v2.json](inputs/bitget_eth_ohlcv_repair_2024-07-01_to_2026-08-17-v2.json) — отчёт ETH-ремонта: добавлено 1 108 881 публичных строк, пропусков осталось 0.
+- [bitget_market_snapshots.jsonl](inputs/bitget_market_snapshots.jsonl) — первые локальные публичные записи bid/ask, стакана и funding; записи созданы без торговых операций.
+- [bitget_market_snapshots.integrity.json](inputs/bitget_market_snapshots.integrity.json) — проверка целостности BTC-журнала: ошибок 0, торговых операций 0, максимальный перерыв проверен, непрерывность funding между наблюдёнными settlement подтверждена.
+- [bitget_eth_market_snapshots.jsonl](inputs/bitget_eth_market_snapshots.jsonl) и [bitget_eth_market_snapshots.integrity.json](inputs/bitget_eth_market_snapshots.integrity.json) — отдельный ETH-журнал; ошибок 0, торговых операций 0, непрерывность funding между наблюдёнными settlement подтверждена.
+- [paper_runtime_wal_review_2026-08-17.md](inputs/paper_runtime_wal_review_2026-08-17.md) — проверка write-ahead paper WAL: две точки crash/replay, идемпотентность и распознавание typed fee/slippage; общий paper verdict остаётся `blocked`.
+- [paper_runtime_monitor_integration_2026-08-17.md](inputs/paper_runtime_monitor_integration_2026-08-17.md) — текущая end-to-end проверка paper fill → `FillEvent` → monitor writer → `summarize_runtime_events`; общий verdict остаётся `blocked` до добавления остальных финансовых поверхностей.
+- [paper_runtime_reconciliation_2026-08-17.md](inputs/paper_runtime_reconciliation_2026-08-17.md) — 44 целевых теста проверяют source/hash, balance/fee/funding reconciliation, полный typed accounting fixture, отсутствие неполного `costs.reconciled` и paper-only snapshot hook.
+- [paper_public_execution_feed_2026-08-17.md](inputs/paper_public_execution_feed_2026-08-17.md) — 106-тестовый целевой прогон проверяет read-only public feed, SHA-256 источника, выбор mark до settlement, идемпотентность, сохранение обработанных settlement ID и отказ для нескольких символов.
+- `tests/test_paper_bitget.py`, `tests/test_bitget_paper_shadow.py` — explicit partial-fill state machine и bounded-runner boundary; targeted paper/shadow набор прошёл, но это не 90-дневное доказательство.
+- [historical_preflight_2026-08-18-v10.json](preflight/historical_preflight_2026-08-18-v10.json) — актуальный BTC preflight после пересборки metrics: hash execution inputs совпадает, остальные public-only/cache проверки проходят, funding остаётся `blocked`.
+- [risk_grid_scenarios_2026-08-17-v8.json](inputs/risk_grid_scenarios_2026-08-17-v8.json) — сохранённый локальный roadmap-run: 15 проверок для 14 сценариев, все прошли; торговых операций 0. Он не заменяет свежий machine package.
+- [historical-rejected-2026-08-18-v17](runs/historical-rejected-2026-08-18-v17/report.md) — архивная фиксация: старые шесть BTC-кандидатов отклонены, новый протокол не запускался, обязательные входы закрыты.
+- [historical protocol 2026-08-17](historical_protocol/2026-08-17/report.md) — машинный план на 240 независимых учебных запусков; текущий статус `blocked` из-за профиля Bitget и неполной funding-истории.
+
+## Текущий допуск
+
+Торговый допуск не выдан. Текущая цепочка — NAS v6 + `shadow-readiness-2026-08-20-v24` (`check_status=passed`, admission `passed`); `baseline-2026-08-20-v84` plan-binding на evidence v78; data v47 failed only on funding; historical v34 не запускал optimizer; paper/live и портфель не начинались. P0-E и P0-D в live. Frozen feed `qualifying=false`. Mac v5, v21/v22/v23 и baseline v77/v82 — historical.
+
+Профиль Bitget — `failed`: текущий ключ находится в Classic Account, поэтому нужный UTA isolated/hedge-контракт не подтверждён. Переключение режима счёта не выполнялось.
+
+Этап данных — `failed` и fresh: минутное OHLCV-окно и 1H mark/index-окно покрыты полностью, но frozen funding dataset содержит 270 строк из 2 332 ожидаемых. В preflight v10 hash execution inputs, semantic identity, cache path, local-only policy и zero remote fetch подтверждались; data gate закрыт неполным funding. Официальные Bitget endpoints и доступные внешние варианты полного архива проверены read-only; полного источника без отдельного доступа не найдено.
+
+Исторический кандидат — `failed`: все шесть ранее отобранных BTC-кандидатов дали отрицательный результат на проверочном периоде. Paper и real этапы намеренно не запускались.
+
+Исторический протокол теперь также требует четыре последовательных окна, минимум пять независимых запусков оптимизатора, отдельные Long/Short, проверку соседних значений, полный набор стрессов и сохранённый holdout. Старый отчёт этим требованиям не соответствует и не может быть повышен до допуска.
+
+Запускаемый план и отдельный отборщик уже записаны в [историческом протоколе](historical_protocol/2026-08-17/report.md). Отборщик требует четыре окна, пять seed и 32 соседа на каждое окно; неполный набор блокируется, а итог `no_suitable_candidate` считается корректным отклонением. Текущий запуск не разрешён, потому что preflight остаётся `blocked`.
+
+Публичные ETH-входы подготовлены отдельно, и минутное окно после безопасного ремонта полностью покрыто. Допуск всё ещё закрыт: funding покрывает только 270 из 2 332 расчётов в frozen dataset, а профиль Bitget не подтверждает нужный UTA isolated/hedge-контракт.
+
+Для завершённых paper/live-периодов `research-gates` пересчитывает временные и событийные показатели через `passivbot tool crypto-runtime-evidence`; ручное увеличение `days`, `planned_orders`, `fills` или `closed_cycles` больше не продвигает этап. Каждая строка журнала также обязана содержать `strategy_id`, `cycle_id` и `config_hash`; неполная идентификация блокирует доказательство.
+
+Следующий безопасный порядок: дождаться финала v7, не останавливая `passivbot-shadow-v7`. Не делать `docker start` `passivbot-shadow`. v6/v24/v25 не перезаписывать. Восемь `CODE_PATHS` не менять до финала v7. Queue/depth не стартовать. `p0d_local/` не кормить в shared status. Funding blocker формально подтверждён read-only аудитом; внешний архив или API-ключ не покупать и не использовать без отдельного решения пользователя. Data/preflight/historical продолжаются только с полным новым источником. Private UTA, ETH/SOL, optimizer, семидневный shadow, paper и live отложены. Заявки, переводы и изменения счёта не выполняются.

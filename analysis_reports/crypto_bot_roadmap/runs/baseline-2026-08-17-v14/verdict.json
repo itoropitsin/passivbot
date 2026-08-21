@@ -1,0 +1,41 @@
+{
+  "blocked_count": 0,
+  "failed_count": 0,
+  "gate_count": 5,
+  "gates": [
+    {
+      "actual": "passed",
+      "id": "baseline.python_tests",
+      "metric": "python_tests_status",
+      "status": "passed"
+    },
+    {
+      "actual": "passed",
+      "id": "baseline.fake_live_tests",
+      "metric": "fake_live_tests_status",
+      "status": "passed"
+    },
+    {
+      "actual": "passed",
+      "id": "baseline.rust_tests",
+      "metric": "rust_tests_status",
+      "status": "passed"
+    },
+    {
+      "actual": "passed",
+      "id": "baseline.editable_install",
+      "metric": "editable_install_status",
+      "status": "passed"
+    },
+    {
+      "actual": "passed",
+      "id": "baseline.determinism",
+      "metric": "determinism_status",
+      "status": "passed"
+    }
+  ],
+  "passed_count": 5,
+  "schema_version": "crypto-grid-experiment-v1",
+  "stage": "baseline",
+  "status": "passed"
+}

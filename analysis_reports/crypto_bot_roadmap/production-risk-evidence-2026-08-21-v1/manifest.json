@@ -1,0 +1,106 @@
+{
+  "artifacts": {
+    "comparison": {
+      "path": "comparison.json",
+      "sha256": "6e5dca01e407d4d4fa3ca34a90ec0e31de05daa015fef3027cf98bf08f52a51d"
+    },
+    "config": {
+      "path": "config.json",
+      "sha256": "5112f9201e0514054a35eb116367d71370bf07618736ac59ad60e52f5dac1247"
+    },
+    "invocation": {
+      "path": "invocation.json",
+      "sha256": "edb0e75d102ceaba72dcde5b535977ce31ffd3ada80664a80e9e9677126cb412"
+    },
+    "live_export": {
+      "path": "live_export.json",
+      "sha256": "9d7d6ca8f16099d7b2678324331ed04c790586d2b36ec72ef126fd5a147dc75a"
+    },
+    "market_profile": {
+      "path": "market_profile.json",
+      "sha256": "7c36c253af60590f51a44116e616048d7e686e2b25e6aed8346f8ee6592b5424"
+    },
+    "probe": {
+      "path": "comparison.json",
+      "sha256": "6e5dca01e407d4d4fa3ca34a90ec0e31de05daa015fef3027cf98bf08f52a51d"
+    },
+    "report": {
+      "path": "report.json",
+      "sha256": "18ee0b5140edb67d2b7644f76beb13317c6adb12622b8110e59a63d58c983161"
+    },
+    "rust_trace": {
+      "path": "rust_trace.json",
+      "sha256": "b5a86b8bc854f49049a66d1fd1747de0b064d533c7d971662914415d09fc8dd6"
+    },
+    "snapshot": {
+      "canonical_hash": "cb50c9a16fb808c0f77a28d862a0a04b786bdd3eb482725e4558d49b7d5b142f",
+      "path": "snapshot.json",
+      "sha256": "3337f5584d49242038b97739db5b27b926175b8093055531f3408b2a7b6213fb"
+    },
+    "surface_matrix": {
+      "path": "surface_probe.json",
+      "sha256": "191e85b2d007ffca7786aad82cb75292e7ae23370d172518d26424402554ab14"
+    }
+  },
+  "code": {
+    "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+    "git_dirty": true,
+    "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+    "implementation_fingerprint_version": "implementation-fingerprint-v2"
+  },
+  "engine": "Rust Backtest + Passivbot Python live gate",
+  "execution": {
+    "account_changes_count": 0,
+    "candidate_admission": false,
+    "fixture_mode": false,
+    "python_live_gate_called": true,
+    "python_live_gate_engine": "python-live-gate",
+    "python_live_gate_method": "Passivbot._apply_crypto_portfolio_risk_limits",
+    "research_policy_used": false,
+    "rust_backtest_called": true,
+    "rust_trace_source": "Rust Backtest risk_gate_trace",
+    "trading_operations_count": 0,
+    "transfers_count": 0
+  },
+  "inputs": {
+    "config_sha256": "5112f9201e0514054a35eb116367d71370bf07618736ac59ad60e52f5dac1247",
+    "market_profile_sha256": "7c36c253af60590f51a44116e616048d7e686e2b25e6aed8346f8ee6592b5424",
+    "surface_matrix_sha256": "191e85b2d007ffca7786aad82cb75292e7ae23370d172518d26424402554ab14"
+  },
+  "probe": {
+    "probe_sha256": "6e5dca01e407d4d4fa3ca34a90ec0e31de05daa015fef3027cf98bf08f52a51d",
+    "report_sha256": "18ee0b5140edb67d2b7644f76beb13317c6adb12622b8110e59a63d58c983161",
+    "snapshot_hash": "cb50c9a16fb808c0f77a28d862a0a04b786bdd3eb482725e4558d49b7d5b142f",
+    "source_mode": "actual_engine_trace_set",
+    "status": "passed",
+    "trace_record_count": 6
+  },
+  "read_only": true,
+  "required_regression": {
+    "checksums": {
+      "comparison.json": "6e5dca01e407d4d4fa3ca34a90ec0e31de05daa015fef3027cf98bf08f52a51d",
+      "live_export.json": "9d7d6ca8f16099d7b2678324331ed04c790586d2b36ec72ef126fd5a147dc75a",
+      "manifest.json": "6eab68afaecc2edede56c23ff948f7d04ee53cb83cc65066fb6c4a84af510490",
+      "rust_trace.json": "33dfd02323f2b3b44ee2e8e7da09973334325341c2aac6be2b25e8da058ff7a1",
+      "snapshot.json": "3337f5584d49242038b97739db5b27b926175b8093055531f3408b2a7b6213fb"
+    },
+    "manifest_sha256": "6eab68afaecc2edede56c23ff948f7d04ee53cb83cc65066fb6c4a84af510490",
+    "path": "analysis_reports/crypto_bot_roadmap/actual_risk_parity_probe_2026-08-17-v3",
+    "report_sha256": "18ee0b5140edb67d2b7644f76beb13317c6adb12622b8110e59a63d58c983161",
+    "snapshot_hash": "cb50c9a16fb808c0f77a28d862a0a04b786bdd3eb482725e4558d49b7d5b142f",
+    "status": "passed",
+    "trace_record_count": 6
+  },
+  "schema_version": "risk-parity-production-evidence-v1",
+  "source_mode": "actual_engine_trace_set",
+  "surface_matrix": {
+    "failed_count": 0,
+    "fixture_mode": true,
+    "passed_count": 14,
+    "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/production-risk-evidence-2026-08-21-v1/surface_probe.json",
+    "scenario_count": 14,
+    "sha256": "191e85b2d007ffca7786aad82cb75292e7ae23370d172518d26424402554ab14",
+    "source_mode": "research_policy",
+    "status": "passed"
+  }
+}

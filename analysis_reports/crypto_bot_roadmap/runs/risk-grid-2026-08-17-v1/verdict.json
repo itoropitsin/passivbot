@@ -1,0 +1,86 @@
+{
+  "blocked_count": 1,
+  "failed_count": 0,
+  "gate_count": 8,
+  "gates": [
+    {
+      "actual": true,
+      "id": "risk_grid.no_liquidations",
+      "limit": true,
+      "metric": "no_liquidations",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_grid.no_duplicate_orders",
+      "limit": true,
+      "metric": "no_duplicate_orders",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_grid.limits_not_bypassed",
+      "limit": true,
+      "metric": "limits_not_bypassed",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_grid.state_recovery_consistent",
+      "limit": true,
+      "metric": "state_recovery_consistent",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_grid.api_outage_safe",
+      "limit": true,
+      "metric": "api_outage_safe",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_grid.manual_position_safe",
+      "limit": true,
+      "metric": "manual_position_safe",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "risk_grid.ordinary_market_orders_blocked",
+      "limit": true,
+      "metric": "ordinary_market_orders_blocked",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "blockers": [
+        {
+          "stage": "profile",
+          "status": "failed"
+        },
+        {
+          "stage": "data",
+          "status": "failed"
+        }
+      ],
+      "id": "stage.prerequisites",
+      "required": [
+        "baseline",
+        "profile",
+        "data"
+      ],
+      "status": "blocked"
+    }
+  ],
+  "passed_count": 7,
+  "schema_version": "crypto-grid-experiment-v1",
+  "stage": "risk_grid",
+  "status": "blocked"
+}

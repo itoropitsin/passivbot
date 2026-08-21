@@ -1,0 +1,115 @@
+{
+  "captured_at_utc": "2026-08-17T06:26:08+00:00",
+  "category": "USDT-FUTURES",
+  "complete_requested_window_available": false,
+  "endpoints": {
+    "classic_v2": {
+      "category": "USDT-FUTURES",
+      "documentation": "https://www.bitget.com/api-doc/classic/contract/market/Get-History-Funding-Rate",
+      "endpoint": "classic_v2",
+      "error": null,
+      "last_page_empty": true,
+      "max_pages_requested": 100,
+      "newest_observed_timestamp_ms": 1786924800000,
+      "newest_observed_utc": "2026-08-17T00:00:00+00:00",
+      "observed_rows": 270,
+      "oldest_observed_timestamp_ms": 1779177600000,
+      "oldest_observed_utc": "2026-05-19T08:00:00+00:00",
+      "page_count": 4,
+      "page_limit": 100,
+      "page_row_counts": [
+        100,
+        100,
+        70,
+        0
+      ],
+      "path": "/api/v2/mix/market/history-fund-rate",
+      "quality_for_requested_window": {
+        "actual_rows": 270,
+        "complete_between_observed_bounds": true,
+        "complete_requested_window": false,
+        "duplicate_rows": 0,
+        "expected_interval_hours": 8,
+        "expected_rows": 2332,
+        "first_timestamp_ms": 1779177600000,
+        "future_rows": 0,
+        "interval_gaps": 0,
+        "invalid_rows": 0,
+        "last_timestamp_ms": 1786924800000,
+        "missing_rows": 2062,
+        "outside_requested_range": 0,
+        "rows": 270,
+        "unexpected_in_range_rows": 0
+      },
+      "response_sha256": [
+        "f2fd93aca365209cb33f8f207fced68256a7da6dadb44f52cb3c319c1172352b",
+        "46992ee6b4a0c9d676e62671b1bf505e3bc8debdc5d22fe3a3a81174f76188fd",
+        "3f0f1cabd8250ac93769a050b778a8aab04503a1aa5576273d1abe58ce99d15b",
+        "2953eb26317132d67e7c5e759c85ae908ef6e14d979ec2e719b02ca8df377114"
+      ],
+      "symbol": "BTCUSDT"
+    },
+    "uta_v3": {
+      "category": "USDT-FUTURES",
+      "documentation": "https://www.bitget.com/api-doc/uta/public/Get-History-Funding-Rate",
+      "endpoint": "uta_v3",
+      "error": null,
+      "last_page_empty": true,
+      "max_pages_requested": 100,
+      "newest_observed_timestamp_ms": 1786924800000,
+      "newest_observed_utc": "2026-08-17T00:00:00+00:00",
+      "observed_rows": 270,
+      "oldest_observed_timestamp_ms": 1779177600000,
+      "oldest_observed_utc": "2026-05-19T08:00:00+00:00",
+      "page_count": 4,
+      "page_limit": 100,
+      "page_row_counts": [
+        100,
+        100,
+        70,
+        0
+      ],
+      "path": "/api/v3/market/history-fund-rate",
+      "quality_for_requested_window": {
+        "actual_rows": 270,
+        "complete_between_observed_bounds": true,
+        "complete_requested_window": false,
+        "duplicate_rows": 0,
+        "expected_interval_hours": 8,
+        "expected_rows": 2332,
+        "first_timestamp_ms": 1779177600000,
+        "future_rows": 0,
+        "interval_gaps": 0,
+        "invalid_rows": 0,
+        "last_timestamp_ms": 1786924800000,
+        "missing_rows": 2062,
+        "outside_requested_range": 0,
+        "rows": 270,
+        "unexpected_in_range_rows": 0
+      },
+      "response_sha256": [
+        "08a739d4d16ced206e57dc68ee8746c51d28b7cd25bbaa624374aa72470c3253",
+        "c0d3b8a48ea4caaa0f5809af604ffc282b89e6179cf087b7a1be4671ff363689",
+        "9102923d3fbbd9bef4101d7b7d6d79be1ef39cc6430fc771a4a1b455f1f510e2",
+        "60887e2a16b5c99faab653aa0c68e46e910354c610e83a32d99b497ca2c0af7b"
+      ],
+      "symbol": "BTCUSDT"
+    }
+  },
+  "exchange": "bitget",
+  "notes": [
+    "This probe records observed public pages only.",
+    "No rows are synthesized, copied from another exchange, or inferred from the other endpoint.",
+    "A non-empty recent horizon does not satisfy the requested historical window."
+  ],
+  "read_only_external_operations": true,
+  "requested_window": {
+    "end_utc": "2026-08-17T00:00:00+00:00",
+    "interval_hours": 8,
+    "start_utc": "2024-07-01T00:00:00+00:00"
+  },
+  "schema_version": "bitget-funding-horizon-probe-v1",
+  "status": "blocked",
+  "symbol": "BTCUSDT",
+  "trading_operations_count": 0
+}

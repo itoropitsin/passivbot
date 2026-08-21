@@ -105,7 +105,21 @@ def _monitor_record_event(
     publisher = getattr(self, "monitor_publisher", None)
     if publisher is None:
         return None
-    return publisher.record_event(kind, tags, payload, ts=ts, symbol=symbol, pside=pside)
+    enriched = dict(payload or {})
+    context = {
+        "strategy_id": getattr(self, "strategy_id", None),
+        "cycle_id": getattr(self, "_monitor_cycle_id", None),
+        "config_hash": getattr(self, "config_hash", None),
+    }
+    event_context = getattr(self, "_monitor_event_context", {})
+    if isinstance(event_context, dict):
+        context.update(event_context)
+    for key, value in context.items():
+        if value is not None and key not in enriched:
+            enriched[key] = value
+    return publisher.record_event(
+        kind, tags, enriched, ts=ts, symbol=symbol, pside=pside
+    )
 
 
 def _monitor_record_error(
@@ -122,11 +136,20 @@ def _monitor_record_error(
     publisher = getattr(self, "monitor_publisher", None)
     if publisher is None:
         return None
+    enriched = dict(payload or {})
+    context = {
+        "strategy_id": getattr(self, "strategy_id", None),
+        "cycle_id": getattr(self, "_monitor_cycle_id", None),
+        "config_hash": getattr(self, "config_hash", None),
+    }
+    for key, value in context.items():
+        if value is not None and key not in enriched:
+            enriched[key] = value
     return publisher.record_error(
         kind,
         error,
         tags=tags,
-        payload=payload,
+        payload=enriched,
         ts=ts,
         symbol=symbol,
         pside=pside,
@@ -184,6 +207,11 @@ def _monitor_order_payload(self, order: dict, *, source: str) -> dict:
         "pb_order_type": self._resolve_pb_order_type(order),
         "source": source,
     }
+    planned_level = order.get("planned_level", order.get("_planned_level"))
+    if planned_level is not None:
+        payload["planned_level"] = planned_level
+    if order.get("execution_price") is not None:
+        payload["actual_execution_price"] = float(order["execution_price"])
     if order.get("_context"):
         payload["context"] = str(order["_context"])
     if order.get("_reason"):
@@ -194,21 +222,172 @@ def _monitor_order_payload(self, order: dict, *, source: str) -> dict:
 
 
 def _monitor_fill_payload(self, event) -> dict:
+    def _raw_objects() -> list[dict]:
+        raw = getattr(event, "raw", None)
+        rows = raw if isinstance(raw, list) else [raw]
+        objects: list[dict] = []
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            objects.append(row)
+            data = row.get("data")
+            if isinstance(data, dict):
+                objects.append(data)
+                info = data.get("info")
+                if isinstance(info, dict):
+                    objects.append(info)
+            info = row.get("info")
+            if isinstance(info, dict):
+                objects.append(info)
+        return objects
+
+    raw_objects = _raw_objects()
+
+    def _raw_values(*names: str) -> list[object]:
+        values = []
+        for row in raw_objects:
+            for name in names:
+                if row.get(name) not in (None, ""):
+                    values.append(row[name])
+        return values
+
+    def _raw_mappings(*names: str) -> list[dict]:
+        mappings = []
+        for value in _raw_values(*names):
+            if isinstance(value, dict):
+                mappings.append(value)
+        return mappings
+
+    def _first_number(*values: object) -> float | None:
+        for value in values:
+            if value in (None, ""):
+                continue
+            try:
+                number = float(value)
+            except (TypeError, ValueError):
+                continue
+            if math.isfinite(number):
+                return number
+        return None
+
+    event_id = getattr(event, "id", None)
+    fill_id = str(event_id).strip() if event_id not in (None, "") else None
+    order_id = getattr(event, "order_id", None)
+    if order_id in (None, ""):
+        raw_order_ids = (
+            _raw_values("order_id")
+            + _raw_values("orderId")
+            + _raw_values("order")
+        )
+        order_id = raw_order_ids[0] if raw_order_ids else None
+    order_id = str(order_id).strip() if order_id not in (None, "") else None
+    qty = _first_number(getattr(event, "qty", None))
+    price = _first_number(getattr(event, "price", None))
+    typed_fees = _raw_mappings("typed_fee")
+    typed_fee = typed_fees[0] if typed_fees else {}
+    fee_amount = _first_number(
+        typed_fee.get("amount"),
+        getattr(event, "fee_paid", None),
+        getattr(event, "fee", None),
+    )
+    # FillEvent.fee_paid is a signed balance impact. Runtime evidence stores
+    # the paid amount as a non-negative typed cost, so normalize only this
+    # audit field and leave PnL accounting untouched.
+    if fee_amount is not None:
+        fee_amount = abs(float(fee_amount))
+    fee_currency = typed_fee.get("currency") or getattr(event, "fee_currency", None)
+    if fee_currency in (None, ""):
+        fee_currency = getattr(self, "quote", None)
+    fee_currency = str(fee_currency).strip().upper() if fee_currency not in (None, "") else None
+    fee_rate = _first_number(
+        typed_fee.get("rate"),
+        getattr(event, "fee_ratio", None),
+        getattr(event, "fee_rate", None),
+    )
+    if fee_rate is not None:
+        fee_rate = abs(float(fee_rate))
+    if fee_rate is None and fee_amount is not None and qty and price:
+        c_mult = _first_number(getattr(event, "c_mult", None), 1.0)
+        notional = qty * price * c_mult if c_mult and c_mult > 0.0 else 0.0
+        if notional > 0.0:
+            fee_rate = fee_amount / notional
+    typed_slippages = _raw_mappings("typed_slippage")
+    typed_slippage = typed_slippages[0] if typed_slippages else {}
+    reference_price = _first_number(
+        typed_slippage.get("reference_price"),
+        getattr(event, "reference_price", None),
+        getattr(event, "expected_price", None),
+        getattr(event, "order_price", None),
+        *_raw_values("reference_price"),
+        *_raw_values("expected_price"),
+        *_raw_values("order_price"),
+    )
+    part_sequence = getattr(event, "part_sequence", None)
+    if part_sequence in (None, ""):
+        raw_parts = _raw_values("part_sequence")
+        part_sequence = raw_parts[0] if raw_parts else None
+    quantity_before = _first_number(
+        getattr(event, "quantity_before", None),
+        *_raw_values("quantity_before"),
+    )
+    quantity_after = _first_number(
+        getattr(event, "quantity_after", None),
+        *_raw_values("quantity_after"),
+    )
     payload = {
-        "id": getattr(event, "id", None),
+        "id": event_id,
+        "fill_id": fill_id,
+        "order_id": order_id,
         "timestamp": int(getattr(event, "timestamp", 0) or 0),
         "symbol": getattr(event, "symbol", None),
         "side": str(getattr(event, "side", "") or "").lower(),
         "position_side": str(getattr(event, "position_side", "") or "").lower(),
-        "qty": float(getattr(event, "qty", 0.0) or 0.0),
-        "price": float(getattr(event, "price", 0.0) or 0.0),
+        "qty": qty,
+        "price": price,
+        "executed_price": price,
+        "reference_price": reference_price,
+        "part_sequence": part_sequence,
+        "quantity_before": quantity_before,
+        "quantity_after": quantity_after,
         "pnl": float(getattr(event, "pnl", 0.0) or 0.0),
-        "fee": float(getattr(event, "fee", 0.0) or 0.0),
+        "fee": {
+            "amount": fee_amount,
+            "currency": fee_currency,
+            "rate": fee_rate,
+        },
+        "slippage": {
+            "reference_price": reference_price,
+            "executed_price": price,
+        },
         "pb_order_type": str(getattr(event, "pb_order_type", "") or "").lower(),
         "client_order_id": getattr(event, "client_order_id", None),
         "source_ids": list(getattr(event, "source_ids", []) or []),
     }
-    return {k: v for k, v in payload.items() if v is not None}
+    for context_key in ("strategy_id", "cycle_id", "config_hash"):
+        value = getattr(event, context_key, None)
+        if value in (None, ""):
+            values = _raw_values(context_key)
+            value = values[0] if values else None
+        if value not in (None, ""):
+            payload[context_key] = str(value)
+    # Keep typed-audit fields even when the source event does not provide
+    # them. ``summarize_runtime_events`` must see the missing value and stay
+    # blocked; dropping it would hide why the evidence is incomplete.
+    required_audit_fields = {
+        "fill_id",
+        "order_id",
+        "reference_price",
+        "part_sequence",
+        "quantity_before",
+        "quantity_after",
+        "fee",
+        "slippage",
+    }
+    return {
+        k: v
+        for k, v in payload.items()
+        if v is not None or k in required_audit_fields
+    }
 
 
 def _monitor_record_fill_history(self, event) -> Optional[dict]:
@@ -245,6 +424,336 @@ def _monitor_record_price_ticks(
         if publisher.record_price_tick(symbol, price, ts=ts, source=source) is not None:
             emitted += 1
     return emitted
+
+
+def _monitor_record_runtime_observations(
+    self,
+    snapshot: dict,
+    *,
+    ts: Optional[int] = None,
+) -> int:
+    """Write typed runtime observations without inventing missing surfaces.
+
+    The paper process has a local ledger and a validated public Bitget market
+    surface.  Record those observations explicitly so the runtime reader can
+    distinguish known evidence from absent funding, reconciliation, or live
+    account data.  A missing surface is intentionally omitted and therefore
+    keeps the runtime gate fail-closed.
+    """
+
+    publisher = getattr(self, "monitor_publisher", None)
+    if publisher is None:
+        return 0
+    now_ms = utc_ms() if ts is None else int(ts)
+    emitted = 0
+    account = snapshot.get("account") if isinstance(snapshot, dict) else {}
+    account = account if isinstance(account, dict) else {}
+    heartbeat_payload: dict[str, Any] = {
+        "source": "monitor_snapshot",
+        "uptime_ms": max(0, now_ms - int(getattr(self, "start_time_ms", now_ms) or now_ms)),
+    }
+    for key in ("equity", "realized_pnl_cumsum"):
+        if key in account:
+            heartbeat_payload[key] = deepcopy(account[key])
+    if self._monitor_record_event(
+        "runtime.heartbeat",
+        ("runtime", "heartbeat"),
+        heartbeat_payload,
+        ts=now_ms,
+    ) is not None:
+        emitted += 1
+
+    surfaces = getattr(self, "_crypto_market_surfaces", {})
+    if isinstance(surfaces, dict):
+        for symbol in sorted(surfaces):
+            surface = surfaces.get(symbol)
+            if not isinstance(surface, dict):
+                continue
+            try:
+                mark_price = float(surface["mark_price"])
+                index_price = float(surface["index_price"])
+            except (KeyError, TypeError, ValueError):
+                continue
+            if not all(
+                math.isfinite(value) and value > 0.0
+                for value in (mark_price, index_price)
+            ):
+                continue
+            market_payload: dict[str, Any] = {
+                "market": {
+                    "mark_price": mark_price,
+                    "index_price": index_price,
+                },
+                "source": "bitget_public_market_surface",
+            }
+            for key in ("surface_hash", "observed_at_ms"):
+                if surface.get(key) not in (None, ""):
+                    market_payload[key] = surface[key]
+            if self._monitor_record_event(
+                "market.mark_index",
+                ("market", "risk", "mark_index"),
+                market_payload,
+                symbol=str(symbol),
+                ts=now_ms,
+            ) is not None:
+                emitted += 1
+
+    # Only the local paper ledger has a declared margin model here.  Live
+    # account margin is deliberately not reconstructed from notional; it must
+    # come from an authoritative exchange account surface in a later package.
+    paper_mode = bool(
+        getattr(self, "paper_mode", False)
+        or getattr(self, "_paper_mode", False)
+        or (
+            isinstance(getattr(self, "config", None), dict)
+            and bool(getattr(self, "config", {}).get("_paper_mode", False))
+        )
+    )
+    positions = snapshot.get("positions") if isinstance(snapshot, dict) else {}
+    positions = positions if isinstance(positions, dict) else {}
+    if paper_mode and isinstance(surfaces, dict):
+        equity = account.get("equity", account.get("balance_raw"))
+        try:
+            equity = float(equity)
+        except (TypeError, ValueError):
+            equity = 0.0
+        leverage = getattr(self, "paper_leverage", None)
+        if leverage in (None, "") and isinstance(getattr(self, "config", None), dict):
+            leverage = getattr(self, "config", {}).get("leverage", 3.0)
+        try:
+            leverage = float(leverage)
+        except (TypeError, ValueError):
+            leverage = 0.0
+        gross_exposure = 0.0
+        position_count = 0
+        complete = equity > 0.0 and math.isfinite(equity) and leverage > 0.0
+        for symbol, symbol_positions in positions.items():
+            surface = surfaces.get(symbol)
+            if not isinstance(surface, dict):
+                if any(
+                    isinstance(symbol_positions, dict)
+                    and float((symbol_positions.get(pside) or {}).get("size", 0.0) or 0.0)
+                    != 0.0
+                    for pside in ("long", "short")
+                    if isinstance(symbol_positions.get(pside), dict)
+                ):
+                    complete = False
+                continue
+            try:
+                mark_price = float(surface["mark_price"])
+                contract_size = float(surface["contract_size"])
+            except (KeyError, TypeError, ValueError):
+                complete = False
+                continue
+            if (
+                not math.isfinite(mark_price)
+                or mark_price <= 0.0
+                or not math.isfinite(contract_size)
+                or contract_size <= 0.0
+            ):
+                complete = False
+                continue
+            if not isinstance(symbol_positions, dict):
+                continue
+            for pside in ("long", "short"):
+                side_position = symbol_positions.get(pside)
+                if not isinstance(side_position, dict):
+                    continue
+                try:
+                    size = abs(float(side_position.get("size", 0.0) or 0.0))
+                except (TypeError, ValueError):
+                    complete = False
+                    continue
+                if not math.isfinite(size) or size < 0.0:
+                    complete = False
+                    continue
+                if size > 0.0:
+                    position_count += 1
+                    gross_exposure += size * mark_price * contract_size
+        distance = getattr(self, "_crypto_min_liquidation_distance", None)
+        if position_count == 0:
+            distance = 1.0
+        try:
+            distance = float(distance)
+        except (TypeError, ValueError):
+            complete = False
+            distance = 0.0
+        if not math.isfinite(distance) or distance < 0.0 or distance > 1.0:
+            complete = False
+        if complete:
+            margin_payload = {
+                "margin": {
+                    "equity": equity,
+                    "gross_exposure": gross_exposure,
+                    "used_margin": gross_exposure / leverage,
+                    "liquidation_distance": distance,
+                },
+                "source": "paper_local_ledger_model",
+                "leverage": leverage,
+                "position_count": position_count,
+            }
+            if self._monitor_record_event(
+                "margin.snapshot",
+                ("risk", "margin", "snapshot"),
+                margin_payload,
+                ts=now_ms,
+            ) is not None:
+                emitted += 1
+    return emitted
+
+
+def _monitor_record_funding_evidence(
+    self,
+    evidence: Any,
+    *,
+    ts: Optional[int] = None,
+) -> int:
+    """Persist one already-validated explicit funding settlement.
+
+    Funding is deliberately supplied by the paper ledger caller.  This
+    helper never fetches a rate or invents a settlement; malformed evidence is
+    ignored so the runtime gate cannot be made to pass by an incomplete row.
+    """
+
+    if not isinstance(evidence, dict):
+        return 0
+    if str(evidence.get("kind") or "").strip().lower() != "funding.settled":
+        return 0
+    payload = evidence.get("payload")
+    if not isinstance(payload, dict):
+        return 0
+    funding = payload.get("funding")
+    if not isinstance(funding, dict):
+        return 0
+    required = ("amount", "rate", "notional", "currency")
+    if any(key not in funding for key in required):
+        return 0
+    try:
+        amount = float(funding["amount"])
+        rate = float(funding["rate"])
+        notional = float(funding["notional"])
+    except (TypeError, ValueError, OverflowError):
+        return 0
+    currency = str(funding.get("currency") or "").strip().upper()
+    if (
+        not all(math.isfinite(value) for value in (amount, rate, notional))
+        or notional < 0.0
+        or not currency
+        or not math.isclose(abs(amount), abs(notional * rate), rel_tol=1e-5, abs_tol=1e-8)
+    ):
+        return 0
+    raw_ts = evidence.get("ts", payload.get("timestamp", ts))
+    try:
+        event_ts = int(raw_ts)
+    except (TypeError, ValueError, OverflowError):
+        return 0
+    if event_ts <= 0:
+        return 0
+    event_payload = deepcopy(payload)
+    event_payload["funding"] = {
+        "amount": amount,
+        "rate": rate,
+        "notional": notional,
+        "currency": currency,
+    }
+    recorded = self._monitor_record_event(
+        "funding.settled",
+        tuple(evidence.get("tags") or ("funding", "settlement")),
+        event_payload,
+        symbol=payload.get("symbol"),
+        pside=payload.get("position_side"),
+        ts=event_ts,
+    )
+    return 1 if recorded is not None else 0
+
+
+def _monitor_record_reconciliation_evidence(
+    self,
+    evidence: Any,
+    *,
+    ts: Optional[int] = None,
+) -> int:
+    """Persist one explicit paper-ledger reconciliation result.
+
+    The paper ledger is responsible for calculating the checks.  This
+    boundary only accepts the two known evidence envelopes and verifies that
+    they carry a non-empty source and a SHA-256 source hash.  It never turns
+    an incomplete cost record into a complete one.
+    """
+
+    if not isinstance(evidence, dict):
+        return 0
+    kind = str(evidence.get("kind") or "").strip().lower()
+    if kind not in {"reconciliation.check", "costs.reconciled"}:
+        return 0
+    payload = evidence.get("payload")
+    if not isinstance(payload, dict):
+        return 0
+    source = str(payload.get("source") or "").strip()
+    source_hash = str(payload.get("source_hash") or "").strip().lower()
+    if (
+        not source
+        or len(source_hash) != 64
+        or any(char not in "0123456789abcdef" for char in source_hash)
+    ):
+        return 0
+    raw_ts = evidence.get("ts", payload.get("timestamp", ts))
+    try:
+        event_ts = int(raw_ts)
+    except (TypeError, ValueError, OverflowError):
+        return 0
+    if event_ts <= 0:
+        return 0
+    recorded = self._monitor_record_event(
+        kind,
+        tuple(evidence.get("tags") or ("paper", "reconciliation")),
+        deepcopy(payload),
+        symbol=payload.get("symbol"),
+        pside=payload.get("position_side"),
+        ts=event_ts,
+    )
+    return 1 if recorded is not None else 0
+
+
+def _monitor_record_paper_reconciliation(
+    self,
+    *,
+    ts: Optional[int] = None,
+) -> int:
+    """Ask an explicitly paper-only bot to publish its current ledger proof.
+
+    The paper bot owns the ledger calculation.  If an explicit saved public
+    execution feed is configured, it is asked to apply only newly validated
+    settlements before reconciliation.  This helper never downloads funding,
+    calls a private exchange endpoint, or fills a missing source value.
+    """
+
+    paper_mode = bool(
+        getattr(self, "paper_mode", False)
+        or getattr(self, "_paper_mode", False)
+        or (
+            isinstance(getattr(self, "config", None), dict)
+            and bool(getattr(self, "config", {}).get("_paper_mode", False))
+        )
+    )
+    recorder = getattr(self, "record_paper_reconciliation", None)
+    if not paper_mode or not callable(recorder):
+        return 0
+    emitted = 0
+    funding_recorder = getattr(self, "apply_recorded_public_execution_inputs", None)
+    if callable(funding_recorder):
+        try:
+            funding_evidence = funding_recorder(timestamp=ts)
+            if isinstance(funding_evidence, list):
+                emitted += len(funding_evidence)
+        except Exception as exc:
+            logging.error("[monitor] public paper execution feed failed: %s", exc)
+    try:
+        evidence = recorder(timestamp=ts)
+    except Exception as exc:
+        logging.error("[monitor] paper reconciliation failed: %s", exc)
+        return emitted
+    return emitted + (len(evidence) if isinstance(evidence, list) else 0)
 
 
 def _monitor_handle_candlestick_persist(
@@ -1213,6 +1722,8 @@ async def _monitor_flush_snapshot(self, *, force: bool = False, ts: Optional[int
         return False
     try:
         snapshot = await self._build_monitor_snapshot(now_ms=ts)
+        self._monitor_record_runtime_observations(snapshot, ts=ts)
+        _monitor_record_paper_reconciliation(self, ts=ts)
         return publisher.write_snapshot(snapshot, ts=ts, force=force)
     except Exception as exc:
         logging.error("[monitor] failed building monitor snapshot: %s", exc)

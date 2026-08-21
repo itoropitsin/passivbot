@@ -1,0 +1,15 @@
+{
+  "fixture_mode": false,
+  "invoked_by": "src/tools/risk_parity_actual_probe.py",
+  "live_export_sha256": "9d7d6ca8f16099d7b2678324331ed04c790586d2b36ec72ef126fd5a147dc75a",
+  "python_live_gate_called": true,
+  "python_live_gate_engine": "python-live-gate",
+  "python_live_gate_method": "Passivbot._apply_crypto_portfolio_risk_limits",
+  "research_policy_used": false,
+  "rust_backtest_called": true,
+  "rust_trace_sha256": "b5a86b8bc854f49049a66d1fd1747de0b064d533c7d971662914415d09fc8dd6",
+  "rust_trace_source": "Rust Backtest risk_gate_trace",
+  "schema_version": "risk-parity-production-invocation-v1",
+  "snapshot_hash": "cb50c9a16fb808c0f77a28d862a0a04b786bdd3eb482725e4558d49b7d5b142f",
+  "trace_record_count": 6
+}

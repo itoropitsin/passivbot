@@ -1,0 +1,9 @@
+{
+  "history_through_plan_date": false,
+  "history_last_available_utc": "2026-06-26T23:59:00+00:00",
+  "funding_history_complete": false,
+  "mark_price_history_complete": false,
+  "position_tiers_captured": false,
+  "execution_model_implemented": false,
+  "source_evidence": "Existing Bitget BTC cache and validation report end on 2026-06-26; the plan requires history and execution inputs through 2026-08-17."
+}

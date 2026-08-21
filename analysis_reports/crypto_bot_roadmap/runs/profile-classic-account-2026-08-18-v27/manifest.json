@@ -1,0 +1,54 @@
+{
+  "code": {
+    "dirty_diff_sha256": "596af71c9721765b9d0deb1a19ae313acb9a3d1df2ede95114a963e0e68fa33c",
+    "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
+    "git_dirty": true
+  },
+  "command": [
+    "passivbot",
+    "tool",
+    "research-gates",
+    "--run-id",
+    "profile-classic-account-2026-08-18-v27",
+    "--stage",
+    "account_profile",
+    "--metrics",
+    "analysis_reports/crypto_bot_roadmap/runs/profile-classic-account-2026-08-18-v19/metrics.json",
+    "--config",
+    "analysis_reports/crypto_bot_roadmap/runs/profile-classic-account-2026-08-18-v19/config.json",
+    "--dataset",
+    "analysis_reports/crypto_bot_roadmap/inputs",
+    "--account-profile",
+    "analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_market_profile_read_only.json",
+    "--output-dir",
+    "analysis_reports/crypto_bot_roadmap/runs",
+    "--repo-root",
+    "."
+  ],
+  "created_at_utc": "2026-08-18T09:03:32+00:00",
+  "environment": {
+    "cargo": "cargo 1.96.0 (30a34c682 2026-05-25) (Homebrew)",
+    "ccxt": "4.5.48",
+    "numpy": "1.26.4",
+    "pandas": "2.2.2",
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "python": "3.12.13",
+    "python_executable": "/opt/homebrew/Cellar/python@3.12/3.12.13_4/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+    "python_implementation": "CPython",
+    "rust_extension_sha256": "a29b13ee4b6a1918e2933b919a21b795152bbc66c51616bf2a0bc39601e79f01",
+    "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25) (Homebrew)",
+    "scipy": "1.17.1"
+  },
+  "inputs": {
+    "account_profile_sha256": "7c36c253af60590f51a44116e616048d7e686e2b25e6aed8346f8ee6592b5424",
+    "config_sha256": "7eb752600e60e12600870178806ecac123a8ae1566b0997f00aec662505f29c8",
+    "dataset_sha256": "660894c5c8ebedc04407bd9422fa2bb9f108bc8169ef0d7c517cc7e6d04c48b3",
+    "execution_inputs_sha256": null,
+    "market_profile_sha256": null
+  },
+  "plan_date": "2026-08-17",
+  "random_seeds": [],
+  "run_id": "profile-classic-account-2026-08-18-v27",
+  "schema_version": "crypto-grid-experiment-v1",
+  "stage": "account_profile"
+}

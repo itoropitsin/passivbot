@@ -1,0 +1,298 @@
+{
+  "candidate_admission": false,
+  "comparisons": [
+    {
+      "comparison": {
+        "decision": "allow",
+        "diagnostic": {
+          "candidate_admission": false,
+          "integration_point": {
+            "comparison": "a read-only harness calls compare_decisions before any order path",
+            "decision": "each adapter emits risk-decision-v1",
+            "external_operations": "none",
+            "snapshot": "Python live adapter and Rust tester adapter emit risk-snapshot-v1"
+          },
+          "risk_parity_reached": false,
+          "schema_version": "risk-parity-diagnostic-v1",
+          "second_engine_adapter_connected": false,
+          "status": "adapter_pending",
+          "trading_operations_count": 0
+        },
+        "differences": [],
+        "fail_closed": false,
+        "left_engine": "python-live-gate",
+        "order_identity": {
+          "execution_type": "limit",
+          "order_id": "risk-order-v1:BTC/USDT:USDT:long:buy:entry_grid_cropped_long:limit:ro=0:panic=0:1.556:92.700000000000003:0",
+          "order_side": "buy",
+          "panic_close": false,
+          "position_side": "long",
+          "price": "92.7",
+          "qty": "1.556",
+          "reduce_only": false,
+          "strategy_order_type": "entry_grid_cropped_long",
+          "symbol": "BTC/USDT:USDT"
+        },
+        "parity": "passed",
+        "reason": "engine decisions match",
+        "right_engine": "rust-backtest",
+        "risk_metrics": {
+          "daily_loss_ratio": "0",
+          "hsl_state": "disabled",
+          "requested_notional": "144.24120000000002"
+        },
+        "schema_version": "risk-parity-comparison-v1",
+        "side": "long",
+        "snapshot_hash": "c66bc9db3de9362d054d703bc67eccf158f0ad93e1fa9513e185073f249f6002"
+      },
+      "order_id": "risk-order-v1:BTC/USDT:USDT:long:buy:entry_grid_cropped_long:limit:ro=0:panic=0:1.556:92.700000000000003:0"
+    },
+    {
+      "comparison": {
+        "decision": "allow",
+        "diagnostic": {
+          "candidate_admission": false,
+          "integration_point": {
+            "comparison": "a read-only harness calls compare_decisions before any order path",
+            "decision": "each adapter emits risk-decision-v1",
+            "external_operations": "none",
+            "snapshot": "Python live adapter and Rust tester adapter emit risk-snapshot-v1"
+          },
+          "risk_parity_reached": false,
+          "schema_version": "risk-parity-diagnostic-v1",
+          "second_engine_adapter_connected": false,
+          "status": "adapter_pending",
+          "trading_operations_count": 0
+        },
+        "differences": [],
+        "fail_closed": false,
+        "left_engine": "python-live-gate",
+        "order_identity": {
+          "execution_type": "limit",
+          "order_id": "risk-order-v1:BTC/USDT:USDT:long:buy:entry_grid_normal_long:limit:ro=0:panic=0:0.191:97.900000000000006:0",
+          "order_side": "buy",
+          "panic_close": false,
+          "position_side": "long",
+          "price": "97.9",
+          "qty": "0.191",
+          "reduce_only": false,
+          "strategy_order_type": "entry_grid_normal_long",
+          "symbol": "BTC/USDT:USDT"
+        },
+        "parity": "passed",
+        "reason": "engine decisions match",
+        "right_engine": "rust-backtest",
+        "risk_metrics": {
+          "daily_loss_ratio": "0",
+          "hsl_state": "disabled",
+          "requested_notional": "18.698900000000002"
+        },
+        "schema_version": "risk-parity-comparison-v1",
+        "side": "long",
+        "snapshot_hash": "c66bc9db3de9362d054d703bc67eccf158f0ad93e1fa9513e185073f249f6002"
+      },
+      "order_id": "risk-order-v1:BTC/USDT:USDT:long:buy:entry_grid_normal_long:limit:ro=0:panic=0:0.191:97.900000000000006:0"
+    },
+    {
+      "comparison": {
+        "decision": "allow",
+        "diagnostic": {
+          "candidate_admission": false,
+          "integration_point": {
+            "comparison": "a read-only harness calls compare_decisions before any order path",
+            "decision": "each adapter emits risk-decision-v1",
+            "external_operations": "none",
+            "snapshot": "Python live adapter and Rust tester adapter emit risk-snapshot-v1"
+          },
+          "risk_parity_reached": false,
+          "schema_version": "risk-parity-diagnostic-v1",
+          "second_engine_adapter_connected": false,
+          "status": "adapter_pending",
+          "trading_operations_count": 0
+        },
+        "differences": [],
+        "fail_closed": false,
+        "left_engine": "python-live-gate",
+        "order_identity": {
+          "execution_type": "limit",
+          "order_id": "risk-order-v1:BTC/USDT:USDT:long:buy:entry_grid_normal_long:limit:ro=0:panic=0:0.382:96.799999999999997:0",
+          "order_side": "buy",
+          "panic_close": false,
+          "position_side": "long",
+          "price": "96.8",
+          "qty": "0.382",
+          "reduce_only": false,
+          "strategy_order_type": "entry_grid_normal_long",
+          "symbol": "BTC/USDT:USDT"
+        },
+        "parity": "passed",
+        "reason": "engine decisions match",
+        "right_engine": "rust-backtest",
+        "risk_metrics": {
+          "daily_loss_ratio": "0",
+          "hsl_state": "disabled",
+          "requested_notional": "36.9776"
+        },
+        "schema_version": "risk-parity-comparison-v1",
+        "side": "long",
+        "snapshot_hash": "c66bc9db3de9362d054d703bc67eccf158f0ad93e1fa9513e185073f249f6002"
+      },
+      "order_id": "risk-order-v1:BTC/USDT:USDT:long:buy:entry_grid_normal_long:limit:ro=0:panic=0:0.382:96.799999999999997:0"
+    },
+    {
+      "comparison": {
+        "decision": "allow",
+        "diagnostic": {
+          "candidate_admission": false,
+          "integration_point": {
+            "comparison": "a read-only harness calls compare_decisions before any order path",
+            "decision": "each adapter emits risk-decision-v1",
+            "external_operations": "none",
+            "snapshot": "Python live adapter and Rust tester adapter emit risk-snapshot-v1"
+          },
+          "risk_parity_reached": false,
+          "schema_version": "risk-parity-diagnostic-v1",
+          "second_engine_adapter_connected": false,
+          "status": "adapter_pending",
+          "trading_operations_count": 0
+        },
+        "differences": [],
+        "fail_closed": false,
+        "left_engine": "python-live-gate",
+        "order_identity": {
+          "execution_type": "limit",
+          "order_id": "risk-order-v1:BTC/USDT:USDT:long:buy:entry_grid_normal_long:limit:ro=0:panic=0:0.764:95.599999999999994:0",
+          "order_side": "buy",
+          "panic_close": false,
+          "position_side": "long",
+          "price": "95.6",
+          "qty": "0.764",
+          "reduce_only": false,
+          "strategy_order_type": "entry_grid_normal_long",
+          "symbol": "BTC/USDT:USDT"
+        },
+        "parity": "passed",
+        "reason": "engine decisions match",
+        "right_engine": "rust-backtest",
+        "risk_metrics": {
+          "daily_loss_ratio": "0",
+          "hsl_state": "disabled",
+          "requested_notional": "73.0384"
+        },
+        "schema_version": "risk-parity-comparison-v1",
+        "side": "long",
+        "snapshot_hash": "c66bc9db3de9362d054d703bc67eccf158f0ad93e1fa9513e185073f249f6002"
+      },
+      "order_id": "risk-order-v1:BTC/USDT:USDT:long:buy:entry_grid_normal_long:limit:ro=0:panic=0:0.764:95.599999999999994:0"
+    },
+    {
+      "comparison": {
+        "decision": "allow",
+        "diagnostic": {
+          "candidate_admission": false,
+          "integration_point": {
+            "comparison": "a read-only harness calls compare_decisions before any order path",
+            "decision": "each adapter emits risk-decision-v1",
+            "external_operations": "none",
+            "snapshot": "Python live adapter and Rust tester adapter emit risk-snapshot-v1"
+          },
+          "risk_parity_reached": false,
+          "schema_version": "risk-parity-diagnostic-v1",
+          "second_engine_adapter_connected": false,
+          "status": "adapter_pending",
+          "trading_operations_count": 0
+        },
+        "differences": [],
+        "fail_closed": false,
+        "left_engine": "python-live-gate",
+        "order_identity": {
+          "execution_type": "limit",
+          "order_id": "risk-order-v1:BTC/USDT:USDT:long:buy:entry_grid_normal_long:limit:ro=0:panic=0:1.528:94.299999999999997:0",
+          "order_side": "buy",
+          "panic_close": false,
+          "position_side": "long",
+          "price": "94.3",
+          "qty": "1.528",
+          "reduce_only": false,
+          "strategy_order_type": "entry_grid_normal_long",
+          "symbol": "BTC/USDT:USDT"
+        },
+        "parity": "passed",
+        "reason": "engine decisions match",
+        "right_engine": "rust-backtest",
+        "risk_metrics": {
+          "daily_loss_ratio": "0",
+          "hsl_state": "disabled",
+          "requested_notional": "144.0904"
+        },
+        "schema_version": "risk-parity-comparison-v1",
+        "side": "long",
+        "snapshot_hash": "c66bc9db3de9362d054d703bc67eccf158f0ad93e1fa9513e185073f249f6002"
+      },
+      "order_id": "risk-order-v1:BTC/USDT:USDT:long:buy:entry_grid_normal_long:limit:ro=0:panic=0:1.528:94.299999999999997:0"
+    },
+    {
+      "comparison": {
+        "decision": "allow",
+        "diagnostic": {
+          "candidate_admission": false,
+          "integration_point": {
+            "comparison": "a read-only harness calls compare_decisions before any order path",
+            "decision": "each adapter emits risk-decision-v1",
+            "external_operations": "none",
+            "snapshot": "Python live adapter and Rust tester adapter emit risk-snapshot-v1"
+          },
+          "risk_parity_reached": false,
+          "schema_version": "risk-parity-diagnostic-v1",
+          "second_engine_adapter_connected": false,
+          "status": "adapter_pending",
+          "trading_operations_count": 0
+        },
+        "differences": [],
+        "fail_closed": false,
+        "left_engine": "python-live-gate",
+        "order_identity": {
+          "execution_type": "limit",
+          "order_id": "risk-order-v1:BTC/USDT:USDT:long:buy:entry_initial_normal_long:limit:ro=0:panic=0:0.191:100:0",
+          "order_side": "buy",
+          "panic_close": false,
+          "position_side": "long",
+          "price": "100",
+          "qty": "0.191",
+          "reduce_only": false,
+          "strategy_order_type": "entry_initial_normal_long",
+          "symbol": "BTC/USDT:USDT"
+        },
+        "parity": "passed",
+        "reason": "engine decisions match",
+        "right_engine": "rust-backtest",
+        "risk_metrics": {
+          "daily_loss_ratio": "0",
+          "hsl_state": "disabled",
+          "requested_notional": "19.1"
+        },
+        "schema_version": "risk-parity-comparison-v1",
+        "side": "long",
+        "snapshot_hash": "c66bc9db3de9362d054d703bc67eccf158f0ad93e1fa9513e185073f249f6002"
+      },
+      "order_id": "risk-order-v1:BTC/USDT:USDT:long:buy:entry_initial_normal_long:limit:ro=0:panic=0:0.191:100:0"
+    }
+  ],
+  "decision": "allow",
+  "differences": [],
+  "fail_closed": false,
+  "left_engine": "python-live-gate",
+  "order_identity": null,
+  "parity": "passed",
+  "reason": "all engine decisions match",
+  "right_engine": "rust-backtest",
+  "risk_metrics": {
+    "failed_count": 0,
+    "record_count": 6
+  },
+  "schema_version": "risk-parity-comparison-v1",
+  "side": "long",
+  "snapshot_hash": "c66bc9db3de9362d054d703bc67eccf158f0ad93e1fa9513e185073f249f6002",
+  "source_mode": "actual_engine_trace_set",
+  "trading_operations_count": 0
+}

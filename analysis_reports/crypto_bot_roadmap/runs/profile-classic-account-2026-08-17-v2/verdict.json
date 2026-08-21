@@ -1,0 +1,115 @@
+{
+  "blocked_count": 0,
+  "failed_count": 8,
+  "gate_count": 13,
+  "gates": [
+    {
+      "actual": true,
+      "id": "account_profile.account_profile_input_present",
+      "limit": true,
+      "metric": "account_profile_input_present",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": false,
+      "id": "account_profile.account_contract_read_only",
+      "limit": true,
+      "metric": "account_contract_read_only",
+      "operator": "==",
+      "status": "failed"
+    },
+    {
+      "actual": true,
+      "id": "account_profile.read_only_check",
+      "limit": true,
+      "metric": "read_only_check",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": false,
+      "id": "account_profile.account_mode_uta",
+      "limit": true,
+      "metric": "account_mode_uta",
+      "operator": "==",
+      "status": "failed"
+    },
+    {
+      "actual": false,
+      "id": "account_profile.position_mode_hedge",
+      "limit": true,
+      "metric": "position_mode_hedge",
+      "operator": "==",
+      "status": "failed"
+    },
+    {
+      "actual": false,
+      "id": "account_profile.margin_mode_isolated",
+      "limit": true,
+      "metric": "margin_mode_isolated",
+      "operator": "==",
+      "status": "failed"
+    },
+    {
+      "actual": true,
+      "id": "account_profile.collateral_usdt",
+      "limit": true,
+      "metric": "collateral_usdt",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": false,
+      "id": "account_profile.borrowing_disabled",
+      "limit": true,
+      "metric": "borrowing_disabled",
+      "operator": "==",
+      "status": "failed"
+    },
+    {
+      "actual": false,
+      "id": "account_profile.withdrawals_disabled",
+      "limit": true,
+      "metric": "withdrawals_disabled",
+      "operator": "==",
+      "status": "failed"
+    },
+    {
+      "actual": false,
+      "id": "account_profile.ip_allowlist_enabled",
+      "limit": true,
+      "metric": "ip_allowlist_enabled",
+      "operator": "==",
+      "status": "failed"
+    },
+    {
+      "actual": false,
+      "id": "account_profile.separate_long_short_leverage",
+      "limit": true,
+      "metric": "separate_long_short_leverage",
+      "operator": "==",
+      "status": "failed"
+    },
+    {
+      "actual": true,
+      "id": "account_profile.raw_responses_hashed",
+      "limit": true,
+      "metric": "raw_responses_hashed",
+      "operator": "==",
+      "status": "passed"
+    },
+    {
+      "actual": true,
+      "id": "account_profile.trading_operations_count_zero",
+      "limit": true,
+      "metric": "trading_operations_count_zero",
+      "operator": "==",
+      "status": "passed"
+    }
+  ],
+  "passed_count": 5,
+  "schema_version": "crypto-grid-experiment-v1",
+  "stage": "account_profile",
+  "status": "failed"
+}

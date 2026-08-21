@@ -1,0 +1,17 @@
+{
+  "schema_version": "bitget-uta-market-profile-v1",
+  "status": "blocked",
+  "plan_date": "2026-08-17",
+  "exchange": "bitget",
+  "symbol": "BTC/USDT:USDT",
+  "account_mode": null,
+  "position_mode": null,
+  "margin_mode": null,
+  "leverage_long": null,
+  "leverage_short": null,
+  "collateral_currency": "USDT",
+  "withdrawals_enabled": null,
+  "ip_allowlist_enabled": null,
+  "reason": "No authenticated read-only account profile has been collected yet; this fixture must not authorize trading.",
+  "required_next_step": "Run the Bitget read-only profile check and replace this fixture with the raw responses plus their hashes."
+}

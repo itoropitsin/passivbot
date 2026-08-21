@@ -1,0 +1,13 @@
+{
+  "risk_contract_implemented": true,
+  "risk_snapshot_contract_present": true,
+  "parity_harness_present": true,
+  "live_tester_decisions_identical": false,
+  "risk_limits_enforced_in_live_and_tester": false,
+  "risk_parity_reached": false,
+  "risk_contract_fails_closed_on_mismatch": true,
+  "adapter_status": "adapter_pending",
+  "candidate_admission": false,
+  "trading_operations_count": 0,
+  "reason": "The read-only parity boundary and fail-closed harness exist, but the Python live and Rust tester adapters have not yet emitted comparable decisions from the same snapshot."
+}

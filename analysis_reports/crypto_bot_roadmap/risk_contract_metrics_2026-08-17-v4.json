@@ -1,0 +1,22 @@
+{
+  "risk_contract_implemented": true,
+  "risk_snapshot_contract_present": true,
+  "parity_harness_present": true,
+  "live_tester_decisions_identical": false,
+  "risk_limits_enforced_in_live_and_tester": false,
+  "risk_parity_reached": false,
+  "risk_contract_fails_closed_on_mismatch": true,
+  "adapter_status": {
+    "fixture_boundary": "connected",
+    "python_live_gate_exporter": "connected_after_actual_gate",
+    "rust_backtest_gate_trace": "connected_before_order_distribution",
+    "rust_risk_snapshot": "connected_before_pending_order_queue_clear",
+    "rust_snapshot_failure_behavior": "new_entries_blocked; close_orders_retained",
+    "canonical_snapshot": "present_but_not_reconciled_with_live",
+    "stable_order_id": "shared_semantic_format_present; occurrence_canonicalization_pending",
+    "canonical_decisions": "pending"
+  },
+  "candidate_admission": false,
+  "trading_operations_count": 0,
+  "reason": "Rust now emits the required snapshot fields before pending-order replacement and Python/Rust share a semantic risk-order-v1 format, but actual live/tester trace records are not yet normalized into identical risk-decision-v1 outputs on the same canonical snapshot. Rust balance, daily loss, HSL, liquidation buffer and margin-tier semantics still require cross-engine reconciliation."
+}

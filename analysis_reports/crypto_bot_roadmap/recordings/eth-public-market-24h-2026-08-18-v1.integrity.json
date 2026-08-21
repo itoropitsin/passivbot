@@ -1,0 +1,85 @@
+{
+  "capture_gap_count": 0,
+  "error_count": 12,
+  "errors": [
+    {
+      "detail": "URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1010)>",
+      "line": 73,
+      "reason": "recorder_error"
+    },
+    {
+      "line": 73,
+      "reason": "funding_snapshot_missing"
+    },
+    {
+      "line": 73,
+      "reason": "source_timestamp_missing"
+    },
+    {
+      "line": 73,
+      "reason": "source_response_hashes_missing"
+    },
+    {
+      "detail": "URLError: <urlopen error timed out>",
+      "line": 200,
+      "reason": "recorder_error"
+    },
+    {
+      "line": 200,
+      "reason": "funding_snapshot_missing"
+    },
+    {
+      "line": 200,
+      "reason": "source_timestamp_missing"
+    },
+    {
+      "line": 200,
+      "reason": "source_response_hashes_missing"
+    },
+    {
+      "detail": "URLError: <urlopen error [Errno 8] nodename nor servname provided, or not known>",
+      "line": 201,
+      "reason": "recorder_error"
+    },
+    {
+      "line": 201,
+      "reason": "funding_snapshot_missing"
+    },
+    {
+      "line": 201,
+      "reason": "source_timestamp_missing"
+    },
+    {
+      "line": 201,
+      "reason": "source_response_hashes_missing"
+    }
+  ],
+  "first_timestamp_ms": 1787069161219,
+  "funding_continuity_status": "passed",
+  "funding_interval_gaps": 0,
+  "funding_interval_hours": [
+    8.0
+  ],
+  "funding_missing_rows_between_observed_bounds": 0,
+  "funding_settlement_timestamps": [
+    1787068800000
+  ],
+  "gap_timestamp_kind": "source",
+  "last_timestamp_ms": 1787083622498,
+  "max_capture_gap_seconds": 261.516,
+  "max_gap_limit_seconds": 300.0,
+  "max_source_gap_seconds": 261.655,
+  "observed_categories": [
+    "USDT-FUTURES"
+  ],
+  "observed_symbols": [
+    "ETHUSDT"
+  ],
+  "path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/recordings/eth-public-market-24h-2026-08-18-v1.jsonl",
+  "row_count": 231,
+  "schema_version": "bitget-market-log-audit-v2",
+  "sha256": "45316e3727f1250742620793e8f596e6c18dabc407384426ff35d0ff7b6235a7",
+  "source_gap_count": 0,
+  "status": "failed",
+  "verified_at_utc": "2026-08-18T20:08:15.032108+00:00"
+}

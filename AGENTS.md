@@ -74,6 +74,12 @@ rg -n "except Exception|return_exceptions=True|\.get\([^\n]*,\s*(0|0\.0|None|Fal
 cd passivbot-rust && maturin develop --release && cd ..
 ```
 
+Run the executable Rust suite on macOS through the PyO3-aware wrapper:
+
+```bash
+PYO3_PYTHON="$(pwd)/.venv/bin/python" passivbot-rust/cargotest.sh
+```
+
 See `docs/ai/code_review_prompt.md` for the review/test checklist.
 
 ## Commands

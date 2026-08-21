@@ -1,0 +1,13 @@
+{
+  "command": ".venv/bin/python -m pytest -q --disable-warnings",
+  "identical": true,
+  "observed_at": "2026-08-17T07:49:47Z",
+  "output_sha256": [
+    "bfe2da27eb01f7d48963fa4895d683c33f985e8931d5a69655f6abe742de2686",
+    "bfe2da27eb01f7d48963fa4895d683c33f985e8931d5a69655f6abe742de2686",
+    "bfe2da27eb01f7d48963fa4895d683c33f985e8931d5a69655f6abe742de2686"
+  ],
+  "return_codes": [0, 0, 0],
+  "run_count": 3,
+  "test_count": 2292
+}

@@ -852,7 +852,8 @@ async def test_fake_live_all_lookback_backfills_narrow_fill_cache_once(tmp_path,
     user = "fake_hsl_pnls_lookback_all_test"
     user = f"{user}_{tmp_path.name}"
     scenario_path = REPO_ROOT / "scenarios" / "fake_live" / "hsl_long_red_restart.hjson"
-    cache_dir = REPO_ROOT / "caches" / "fill_events" / "fake" / user
+    runtime_root = tmp_path / ".fake-live-runtime"
+    cache_dir = runtime_root / "caches" / "fill_events" / "fake" / user
     _cleanup_fake_user_state(user)
 
     cfg = load_config(str(REPO_ROOT / "configs" / "fake_live_hsl_btc.hjson"), verbose=False)
@@ -887,20 +888,28 @@ async def test_fake_live_all_lookback_backfills_narrow_fill_cache_once(tmp_path,
         user=user,
         max_steps=None,
         output_dir=str(tmp_path),
+        _runtime_root=str(runtime_root),
         log_level=1,
         snapshot_each_step=False,
     )
 
     try:
         assert await _async_main(args) == 0
-        output_dirs = sorted(path for path in tmp_path.iterdir() if path.is_dir())
+        output_dirs = sorted(
+            path
+            for path in tmp_path.iterdir()
+            if path.is_dir() and (path / "remote_calls.json").exists()
+        )
         assert len(output_dirs) == 1
         run_dir = output_dirs[0]
 
         log_text = (run_dir / "fake_live.log").read_text(encoding="utf-8")
         assert "[fills] refresh: events=3 (+1)" in log_text
         assert "initial_entry_boot" in log_text
-        assert log_text.count("id=10") == 1
+        fill_lines_for_id_10 = [
+            line for line in log_text.splitlines() if "[fill]" in line and "id=10" in line
+        ]
+        assert len(fill_lines_for_id_10) == 1
 
         cache = FillEventCache(cache_dir)
         cached_ids = [str(event.id) for event in cache.load()]

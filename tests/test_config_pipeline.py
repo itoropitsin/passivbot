@@ -278,6 +278,94 @@ def test_prepare_config_assigns_current_schema_version_to_legacy_configs():
     assert prepared["config_version"] == CONFIG_SCHEMA_VERSION
 
 
+def test_crypto_profile_contract_is_present_and_opt_in():
+    template = get_template_config()
+    assert template["live"]["sizing_balance_cap"] == 1000.0
+    assert template["live"]["portfolio_risk"]["max_initial_entry_sizing_balance_pct"] == 0.03
+    assert template["live"]["portfolio_risk"]["max_active_grids"] == 2
+    assert template["bot"]["long"]["entry_grid_max_levels"] == 500
+
+    template["live"]["portfolio_risk"]["enabled"] = True
+    template["live"]["hedge_mode"] = True
+    template["live"]["margin_mode_preference"] = "isolated"
+    template["live"]["leverage"] = 3
+    template["live"]["market_orders_allowed"] = False
+    template["live"]["max_n_restarts_per_day"] = 1
+    for pside in ("long", "short"):
+        template["bot"][pside]["entry_grid_max_levels"] = 8
+        template["bot"][pside]["entry_grid_double_down_factor"] = 1.2
+        template["bot"][pside]["entry_initial_qty_pct"] = 0.03
+        template["bot"][pside]["hsl_enabled"] = True
+        template["bot"][pside]["hsl_red_threshold"] = 0.20
+        template["bot"][pside]["hsl_no_restart_drawdown_threshold"] = 0.25
+        template["bot"][pside]["hsl_tier_ratios"] = {"yellow": 0.50, "orange": 0.75}
+
+    prepared = prepare_config(template, verbose=False, target="canonical", runtime=None)
+    assert prepared["live"]["portfolio_risk"]["enabled"] is True
+
+
+def test_crypto_profile_rejects_initial_entry_sizing_cap_above_hard_limit():
+    template = get_template_config()
+    template["live"]["portfolio_risk"]["enabled"] = True
+    template["live"]["portfolio_risk"]["max_initial_entry_sizing_balance_pct"] = 0.030001
+    template["live"]["hedge_mode"] = True
+    template["live"]["margin_mode_preference"] = "isolated"
+    template["live"]["leverage"] = 3
+    template["live"]["market_orders_allowed"] = False
+    template["live"]["max_n_restarts_per_day"] = 1
+    for pside in ("long", "short"):
+        template["bot"][pside]["entry_grid_max_levels"] = 8
+        template["bot"][pside]["entry_grid_double_down_factor"] = 1.2
+        template["bot"][pside]["entry_initial_qty_pct"] = 0.03
+        template["bot"][pside]["hsl_enabled"] = True
+        template["bot"][pside]["hsl_red_threshold"] = 0.20
+        template["bot"][pside]["hsl_no_restart_drawdown_threshold"] = 0.25
+        template["bot"][pside]["hsl_tier_ratios"] = {"yellow": 0.50, "orange": 0.75}
+
+    with pytest.raises(ValueError, match="max_initial_entry_sizing_balance_pct.*0.03"):
+        prepare_config(template, verbose=False, target="canonical", runtime=None)
+
+
+def test_crypto_profile_rejects_grid_above_hard_limit():
+    template = get_template_config()
+    template["live"]["portfolio_risk"]["enabled"] = True
+    template["live"]["hedge_mode"] = True
+    template["live"]["margin_mode_preference"] = "isolated"
+    template["live"]["leverage"] = 3
+    template["live"]["market_orders_allowed"] = False
+    template["live"]["max_n_restarts_per_day"] = 1
+    for pside in ("long", "short"):
+        template["bot"][pside]["entry_grid_max_levels"] = 8
+        template["bot"][pside]["hsl_enabled"] = True
+        template["bot"][pside]["hsl_red_threshold"] = 0.20
+        template["bot"][pside]["hsl_no_restart_drawdown_threshold"] = 0.25
+        template["bot"][pside]["hsl_tier_ratios"] = {"yellow": 0.50, "orange": 0.75}
+    template["bot"]["long"]["entry_grid_double_down_factor"] = 1.26
+
+    with pytest.raises(ValueError, match="double-down factor"):
+        prepare_config(template, verbose=False, target="canonical", runtime=None)
+
+
+def test_crypto_profile_rejects_weaker_portfolio_cap():
+    template = get_template_config()
+    template["live"]["portfolio_risk"]["enabled"] = True
+    template["live"]["portfolio_risk"]["max_total_exposure_ratio"] = 0.81
+    template["live"]["hedge_mode"] = True
+    template["live"]["margin_mode_preference"] = "isolated"
+    template["live"]["leverage"] = 3
+    template["live"]["market_orders_allowed"] = False
+    template["live"]["max_n_restarts_per_day"] = 1
+    for pside in ("long", "short"):
+        template["bot"][pside]["entry_grid_max_levels"] = 8
+        template["bot"][pside]["hsl_enabled"] = True
+        template["bot"][pside]["hsl_red_threshold"] = 0.20
+        template["bot"][pside]["hsl_no_restart_drawdown_threshold"] = 0.25
+        template["bot"][pside]["hsl_tier_ratios"] = {"yellow": 0.50, "orange": 0.75}
+
+    with pytest.raises(ValueError, match="weaker than the plan"):
+        prepare_config(template, verbose=False, target="canonical", runtime=None)
+
+
 def test_prepare_config_rejects_future_config_version():
     source = {
         "config_version": "v8.0.0",

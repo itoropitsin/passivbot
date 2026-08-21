@@ -1,0 +1,38 @@
+[
+  {
+    "name": "close_markup_end_0.0124",
+    "config": "analysis_reports/sensitivity_2026-06-26_markup_micro/configs/close_markup_end_0.0124.json",
+    "changed_path": "bot.long.close_grid_markup_end",
+    "value": 0.0124
+  },
+  {
+    "name": "close_markup_end_0.0127",
+    "config": "analysis_reports/sensitivity_2026-06-26_markup_micro/configs/close_markup_end_0.0127.json",
+    "changed_path": "bot.long.close_grid_markup_end",
+    "value": 0.0127
+  },
+  {
+    "name": "close_markup_end_0.0130",
+    "config": "analysis_reports/sensitivity_2026-06-26_markup_micro/configs/close_markup_end_0.0130.json",
+    "changed_path": "bot.long.close_grid_markup_end",
+    "value": 0.013
+  },
+  {
+    "name": "close_markup_end_0.0133",
+    "config": "analysis_reports/sensitivity_2026-06-26_markup_micro/configs/close_markup_end_0.0133.json",
+    "changed_path": "bot.long.close_grid_markup_end",
+    "value": 0.0133
+  },
+  {
+    "name": "close_markup_end_0.0136",
+    "config": "analysis_reports/sensitivity_2026-06-26_markup_micro/configs/close_markup_end_0.0136.json",
+    "changed_path": "bot.long.close_grid_markup_end",
+    "value": 0.0136
+  },
+  {
+    "name": "close_markup_end_0.0140",
+    "config": "analysis_reports/sensitivity_2026-06-26_markup_micro/configs/close_markup_end_0.0140.json",
+    "changed_path": "bot.long.close_grid_markup_end",
+    "value": 0.014
+  }
+]

@@ -1,0 +1,54 @@
+{
+  "config_hash": "3715768af927242eefadb361ff2924f09bd48bcde0f01254daf9f6fe52e7a42c",
+  "event_count": 48,
+  "events_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/public-stream-process-smoke-2026-08-18-v1/deterministic_full_replay/events.ndjson",
+  "ledger_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/public-stream-process-smoke-2026-08-18-v1/deterministic_full_replay/paper_ledger.json",
+  "next_seq": 48,
+  "processed_snapshot_ids": [
+    "25b9b17cd41b60e40be32eb1365adb090abcaaa544973edac75e6291262f0af5",
+    "28810623ce683bd4ac542f94bbd0509e18bc7bd02c9277905ea213796d13bd04",
+    "3060b77e2d2a84760dc38c7953f1cc80f59524a8e0798aff1a76141674204877",
+    "413969e654cda853021a893946b0aad3aa77fe842a69632d5c7201ca96a48519",
+    "acdaef8961f667c56e62c2163aeb3841b7e1d76ebad57d3f01c7cd6cc73f1dd6",
+    "bd4abdafd71f5ce9bd1f4042dd4ed448cb7c7e12c1535f6ea24e34156edb1f19"
+  ],
+  "replay_operations": [],
+  "restart_operations": [],
+  "schema_version": "crypto-strategy-shadow-v1",
+  "snapshot_provenance": [
+    {
+      "snapshot_id": "25b9b17cd41b60e40be32eb1365adb090abcaaa544973edac75e6291262f0af5",
+      "source_hash": "7fcd090fee146a976f1db146af5f49f4a9b06606c29e2a40a55e0bb38f690a1d",
+      "timestamp": 1787035653734
+    },
+    {
+      "snapshot_id": "28810623ce683bd4ac542f94bbd0509e18bc7bd02c9277905ea213796d13bd04",
+      "source_hash": "98fd43a09477643b3dd4c4c57970e0c0e9467c4f00b4fdb6d10b4a6d22a83124",
+      "timestamp": 1787035658014
+    },
+    {
+      "snapshot_id": "3060b77e2d2a84760dc38c7953f1cc80f59524a8e0798aff1a76141674204877",
+      "source_hash": "d9dd6a6c7039b0236f4f096cbbf7fa2dbc3b1929de8c45c2ebc10ce08f50de19",
+      "timestamp": 1787035662371
+    },
+    {
+      "snapshot_id": "413969e654cda853021a893946b0aad3aa77fe842a69632d5c7201ca96a48519",
+      "source_hash": "8e15c26c6211ccda7cc5003c6fb217fc1fe82bb59acc5fb76826c99d7cbb8a9f",
+      "timestamp": 1787035660196
+    },
+    {
+      "snapshot_id": "acdaef8961f667c56e62c2163aeb3841b7e1d76ebad57d3f01c7cd6cc73f1dd6",
+      "source_hash": "361ac3d1376d584f6222cc7e2921d9ed877c51f93fcae599ead20284db2c231c",
+      "timestamp": 1787035651580
+    },
+    {
+      "snapshot_id": "bd4abdafd71f5ce9bd1f4042dd4ed448cb7c7e12c1535f6ea24e34156edb1f19",
+      "source_hash": "f44b366d4cce137b4f6692a3c36134aa53b6fd46addf2335b89f059cfe4d0f10",
+      "timestamp": 1787035655904
+    }
+  ],
+  "strategy_id": "crypto-grid-shadow-stream-engineering-v1",
+  "symbols": [
+    "BTCUSDT/USDT:USDT"
+  ]
+}

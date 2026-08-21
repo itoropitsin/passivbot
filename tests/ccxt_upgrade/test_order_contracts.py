@@ -1,6 +1,8 @@
 from types import SimpleNamespace
+from unittest.mock import AsyncMock
 
 import ccxt
+import ccxt.async_support as ccxt_async
 import pytest
 
 from ccxt_contracts import build_contract_bot
@@ -345,6 +347,39 @@ def test_bitget_uta_order_params_use_hedge_mode_side_posside_contract():
     assert "reduceOnly" not in gtc_params
 
 
+def test_bitget_uta_isolated_order_carries_margin_mode():
+    bot = BitgetBot.__new__(BitgetBot)
+    bot.config = {"live": {"time_in_force": "gtc", "margin_mode_preference": "isolated"}}
+    bot.is_uta = True
+    bot._live_margin_modes = {}
+    bot.positions = {}
+    params = bot._build_order_params(
+        {
+            "symbol": "BTC/USDT:USDT",
+            "position_side": "long",
+            "reduce_only": False,
+            "custom_id": "0x0007abcdef",
+        }
+    )
+    assert params["marginMode"] == "isolated"
+
+
+def test_bitget_crypto_profile_records_minimum_liquidation_distance():
+    bot = BitgetBot.__new__(BitgetBot)
+    bot.config = {"live": {"portfolio_risk": {"enabled": True}}}
+    positions = [
+        {"markPrice": "100", "liquidationPrice": "70"},
+        {"markPrice": "200", "liquidationPrice": "170"},
+        {"markPrice": None, "liquidationPrice": "1"},
+    ]
+
+    bot._update_crypto_liquidation_distance(positions)
+
+    assert bot._crypto_min_liquidation_distance == pytest.approx(0.15)
+    bot._update_crypto_liquidation_distance([])
+    assert bot._crypto_min_liquidation_distance is None
+
+
 def test_bitget_uta_order_params_survive_ccxt_v3_request_construction():
     bot = BitgetBot.__new__(BitgetBot)
     bot.config = {"live": {"time_in_force": "gtc"}}
@@ -425,6 +460,61 @@ def test_bitget_uta_broker_code_is_signed_as_v3_channel_header():
     )
 
     assert signed["headers"]["X-CHANNEL-API-CODE"] == "p4sve"
+
+
+@pytest.mark.asyncio
+async def test_ccxt_bitget_uta_isolated_leverage_request_keeps_long_short_side():
+    """The adapter must reach CCXT's UTA v3 endpoint without touching the network."""
+    exchange = ccxt_async.bitget()
+    exchange.markets = {
+        "BTC/USDT:USDT": {
+            "id": "BTCUSDT",
+            "symbol": "BTC/USDT:USDT",
+            "spot": False,
+            "swap": True,
+            "linear": True,
+            "type": "swap",
+            "contract": True,
+            "settle": "USDT",
+            "settleId": "USDT",
+        }
+    }
+    exchange.load_markets = AsyncMock(return_value=exchange.markets)
+    exchange.privateUtaPostV3AccountSetLeverage = AsyncMock(
+        {"code": "00000", "data": "success"}
+    )
+
+    await exchange.set_leverage(
+        3,
+        symbol="BTC/USDT:USDT",
+        params={
+            "uta": True,
+            "marginMode": "isolated",
+            "posSide": "short",
+        },
+    )
+
+    request = exchange.privateUtaPostV3AccountSetLeverage.call_args.args[0]
+    assert request["category"] == "USDT-FUTURES"
+    assert request["symbol"] == "BTCUSDT"
+    assert request["leverage"] == "3"
+    assert request["marginMode"] == "isolated"
+    assert request["posSide"] == "short"
+
+
+@pytest.mark.asyncio
+async def test_ccxt_bitget_uta_position_mode_request_is_hedge_mode():
+    exchange = ccxt_async.bitget()
+    exchange.markets = {}
+    exchange.load_markets = AsyncMock(return_value=exchange.markets)
+    exchange.privateUtaPostV3AccountSetHoldMode = AsyncMock(
+        {"code": "00000", "data": "success"}
+    )
+
+    await exchange.set_position_mode(True, params={"uta": True})
+
+    request = exchange.privateUtaPostV3AccountSetHoldMode.call_args.args[0]
+    assert request == {"holdMode": "hedge_mode"}
 
 
 def test_bitget_uta_balance_uses_equity_minus_upnl_not_effective_margin():

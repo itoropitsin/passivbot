@@ -1,15 +1,22 @@
 from exchanges.ccxt_bot import CCXTBot, format_exchange_config_response
-from passivbot import logging, custom_id_to_snake, clip_by_timestamp
+from passivbot import (
+    logging,
+    custom_id_to_snake,
+    clip_by_timestamp,
+    enforce_crypto_live_authorization,
+)
 import asyncio
 import json
+import math
 import os
 import re
 from copy import deepcopy
 from typing import Callable, Dict, List, Tuple
 from utils import symbol_to_coin, utc_ms, ts_to_date
-from config.access import require_live_value
+from config.access import get_optional_live_value, require_live_value
 from pure_funcs import calc_hash
 import passivbot_rust as pbr
+from research.bitget_market_surfaces import normalize_bitget_public_market_surface
 
 calc_order_price_diff = pbr.calc_order_price_diff
 
@@ -302,6 +309,15 @@ class BitgetBot(CCXTBot):
         # is_uta == False and every code path below behaves exactly as before.
         self.is_uta = False
         self._account_mode_detected = False
+        # Crypto risk must consume a fresh, explicit public Bitget surface.
+        # Generic Passivbot unit fixtures do not set this flag and keep their
+        # existing synthetic surfaces; the real Bitget adapter fails closed.
+        self._crypto_market_surface_required = True
+        self._crypto_market_surfaces = {}
+        self._crypto_mark_prices = {}
+        self._crypto_index_prices = {}
+        self._crypto_surface_hashes = {}
+        self._crypto_surface_last_refresh_ms = None
 
     def create_ccxt_sessions(self):
         """Bitget: set Passivbot channel code for broker rebate attribution."""
@@ -419,6 +435,7 @@ class BitgetBot(CCXTBot):
     async def fetch_positions(self):
         """Bitget: use CCXT unified fields (contracts, entryPrice, side)."""
         fetched = await self.cca.fetch_positions()
+        self._update_crypto_liquidation_distance(fetched)
         for elm in fetched:
             elm["position_side"] = elm["side"]
             elm["size"] = elm["contracts"]
@@ -434,6 +451,7 @@ class BitgetBot(CCXTBot):
         return fetched, self.fetch_positions_from_fetched(deepcopy(fetched))
 
     def fetch_positions_from_fetched(self, fetched: list) -> list:
+        self._update_crypto_liquidation_distance(fetched)
         for elm in fetched:
             elm["position_side"] = elm["side"]
             elm["size"] = elm["contracts"]
@@ -443,6 +461,177 @@ class BitgetBot(CCXTBot):
                 elm["margin_mode"] = margin_mode
                 self._record_live_margin_mode(elm["symbol"], margin_mode)
         return fetched
+
+    def _update_crypto_liquidation_distance(self, fetched: list) -> None:
+        """Record the smallest mark-to-liquidation distance from positions.
+
+        This is a measurement only. The live portfolio boundary continues to
+        block entries when Bitget has not supplied a usable liquidation price.
+        Empty or incomplete position payloads never receive a permissive
+        default.
+        """
+        profile = get_optional_live_value(getattr(self, "config", {}), "portfolio_risk", {})
+        if not isinstance(profile, dict) or not bool(profile.get("enabled", False)):
+            return
+        distances: list[float] = []
+        for position in fetched or []:
+            if not isinstance(position, dict):
+                continue
+            try:
+                mark = float(position.get("markPrice") or position.get("mark_price") or 0.0)
+                liquidation = float(
+                    position.get("liquidationPrice")
+                    or position.get("liquidation_price")
+                    or 0.0
+                )
+            except (TypeError, ValueError):
+                continue
+            if mark <= 0.0 or liquidation <= 0.0:
+                continue
+            distance = abs(mark - liquidation) / mark
+            if math.isfinite(distance):
+                distances.append(distance)
+        self._crypto_min_liquidation_distance = min(distances) if distances else None
+
+    async def refresh_crypto_market_surfaces(self, symbols=None) -> dict[str, dict]:
+        """Fetch and validate Bitget's public market surfaces for ``symbols``.
+
+        This method performs only public GET requests.  It is intentionally
+        separate from account setup so a market-data refresh cannot mutate
+        hedge mode, margin mode, leverage or orders.
+        """
+
+        profile = get_optional_live_value(
+            getattr(self, "config", {}), "portfolio_risk", {}
+        )
+        if not isinstance(profile, dict) or not bool(profile.get("enabled", False)):
+            return {}
+        if not getattr(self, "is_uta", False):
+            raise RuntimeError(
+                "bitget crypto risk requires a detected UTA account; "
+                "classic-account public data is not sufficient for isolated hedge trading"
+            )
+
+        ordered_symbols = list(
+            dict.fromkeys(
+                str(symbol)
+                for symbol in (
+                    symbols
+                    if symbols is not None
+                    else getattr(self, "active_symbols", [])
+                )
+                if str(symbol).strip()
+            )
+        )
+        if not ordered_symbols:
+            raise RuntimeError(
+                "bitget crypto risk market surface refresh requires at least one symbol"
+            )
+
+        client = getattr(self, "cca", None)
+        if client is None:
+            raise RuntimeError("bitget public market surface client is unavailable")
+        # PaperBitgetCCXTClient deliberately exposes only the local ledger;
+        # its public CCXT client remains the read-only source of Bitget data.
+        if not hasattr(client, "public_uta_get_v3_market_instruments"):
+            client = getattr(client, "public_client", None)
+        if client is None:
+            raise RuntimeError("bitget public market surface endpoints are unavailable")
+
+        category = "USDT-FUTURES"
+        refreshed: dict[str, dict] = {}
+        for symbol in ordered_symbols:
+            market = (getattr(self, "markets_dict", {}) or {}).get(symbol) or {}
+            exchange_symbol = (
+                (getattr(self, "symbol_ids", {}) or {}).get(symbol)
+                or market.get("id")
+                or symbol
+            )
+            contract_size = (getattr(self, "c_mults", {}) or {}).get(symbol)
+            if contract_size in (None, ""):
+                contract_size = market.get("contractSize")
+            params = {"category": category, "symbol": str(exchange_symbol)}
+
+            async def public_get(method_name: str):
+                method = getattr(client, method_name, None)
+                if not callable(method):
+                    raise RuntimeError(
+                        f"bitget public market endpoint is unavailable: {method_name}"
+                    )
+                return await method(dict(params))
+
+            surface = normalize_bitget_public_market_surface(
+                internal_symbol=symbol,
+                exchange_symbol=str(exchange_symbol),
+                category=category,
+                instrument_response=await public_get(
+                    "public_uta_get_v3_market_instruments"
+                ),
+                tier_response=await public_get(
+                    "public_uta_get_v3_market_position_tier"
+                ),
+                ticker_response=await public_get("public_uta_get_v3_market_tickers"),
+                funding_response=await public_get(
+                    "public_uta_get_v3_market_current_fund_rate"
+                ),
+                contract_size=contract_size,
+            )
+            # Do not allow a stale CCXT contract description to disagree with
+            # the public Bitget instrument surface used by the risk gate.
+            for mapping_name, surface_key in (
+                ("qty_steps", "qty_step"),
+                ("price_steps", "price_step"),
+                ("c_mults", "contract_size"),
+            ):
+                runtime_value = (getattr(self, mapping_name, {}) or {}).get(symbol)
+                if runtime_value in (None, ""):
+                    continue
+                try:
+                    runtime_value = float(runtime_value)
+                    surface_value = float(surface[surface_key])
+                except (KeyError, TypeError, ValueError) as exc:
+                    raise RuntimeError(
+                        f"bitget {mapping_name} surface is not numeric for {symbol}"
+                    ) from exc
+                if not math.isfinite(runtime_value) or not math.isclose(
+                    runtime_value, surface_value, rel_tol=0.0, abs_tol=1e-12
+                ):
+                    raise RuntimeError(
+                        f"bitget {mapping_name} disagrees with public instrument "
+                        f"surface for {symbol}: runtime={runtime_value!r} "
+                        f"public={surface_value!r}"
+                    )
+            refreshed[symbol] = surface
+
+        merged = dict(getattr(self, "_crypto_market_surfaces", {}) or {})
+        merged.update(refreshed)
+        self._crypto_market_surfaces = merged
+        self._crypto_mark_prices = {
+            symbol: float(surface["mark_price"])
+            for symbol, surface in merged.items()
+        }
+        self._crypto_index_prices = {
+            symbol: float(surface["index_price"])
+            for symbol, surface in merged.items()
+        }
+        self._crypto_surface_hashes = {
+            symbol: str(surface["surface_hash"])
+            for symbol, surface in merged.items()
+        }
+        self._crypto_margin_tiers = [
+            tier
+            for surface in merged.values()
+            for tier in surface["margin_tiers"]
+        ]
+        self._crypto_risk_margin_tiers = [
+            tier
+            for surface in merged.values()
+            for tier in surface["risk_margin_tiers"]
+        ]
+        self._crypto_surface_last_refresh_ms = max(
+            int(surface["observed_at_ms"]) for surface in refreshed.values()
+        )
+        return refreshed
 
     async def _do_fetch_balance(self) -> dict:
         if getattr(self, "is_uta", False):
@@ -1003,6 +1192,12 @@ class BitgetBot(CCXTBot):
             params = {
                 "posSide": order["position_side"],
                 "clientOid": order["custom_id"],
+                # UTA futures accepts the margin mode on every order.  This is
+                # required because the classic v2 set-margin endpoint does not
+                # configure UTA isolated futures.
+                "marginMode": "isolated"
+                if self._get_margin_mode_for_symbol(order.get("symbol", "")) == "isolated"
+                else "crossed",
             }
             if use_post_only:
                 params["postOnly"] = True
@@ -1019,12 +1214,26 @@ class BitgetBot(CCXTBot):
         }
 
     async def update_exchange_config_by_symbols(self, symbols):
+        enforce_crypto_live_authorization(
+            getattr(self, "config", {}),
+            self.exchange,
+            authorized=bool(getattr(self, "_crypto_live_authorized", False)),
+        )
+        profile = get_optional_live_value(
+            getattr(self, "config", {}), "portfolio_risk", {}
+        )
+        if isinstance(profile, dict) and bool(profile.get("enabled", False)):
+            # Validate all public risk surfaces before any account-setting
+            # request below. A failed read must not be followed by a write.
+            await self.refresh_crypto_market_surfaces(symbols)
+        roadmap_profile_enabled = isinstance(profile, dict) and bool(
+            profile.get("enabled", False)
+        )
+        configuration_errors = []
         coros_to_call_lev, coros_to_call_margin_mode = {}, {}
         for symbol in symbols:
             margin_mode = self._get_margin_mode_for_symbol(symbol)
             log_symbol = symbol_to_coin(symbol, verbose=False) or symbol
-            # UTA/elite: ccxt has no v3 routing for set_margin_mode and the elite
-            # portfolio is cross-only, so skip it (avoids a failing v2 call).
             if not getattr(self, "is_uta", False):
                 try:
                     coros_to_call_margin_mode[symbol] = asyncio.create_task(
@@ -1034,33 +1243,78 @@ class BitgetBot(CCXTBot):
                         )
                     )
                 except Exception as e:
-                    logging.error(f"{log_symbol}: error setting {margin_mode} mode {e}")
+                    message = f"{log_symbol}: error setting {margin_mode} mode {e}"
+                    if roadmap_profile_enabled:
+                        configuration_errors.append(message)
+                    else:
+                        logging.error(message)
             try:
-                coros_to_call_lev[symbol] = asyncio.create_task(
-                    self.cca.set_leverage(self._calc_leverage_for_symbol(symbol), symbol=symbol)
-                )
+                leverage = self._calc_leverage_for_symbol(symbol)
+                if getattr(self, "is_uta", False) and margin_mode == "isolated":
+                    # Bitget UTA permits separate isolated leverage for each
+                    # hedge side.  Configure both sides explicitly even when
+                    # the research profile currently uses the same 3x value.
+                    for pside in ("long", "short"):
+                        coros_to_call_lev[(symbol, pside)] = asyncio.create_task(
+                            self.cca.set_leverage(
+                                leverage,
+                                symbol=symbol,
+                                params={
+                                    "uta": True,
+                                    "marginMode": "isolated",
+                                    "posSide": pside,
+                                },
+                            )
+                        )
+                else:
+                    params = {"uta": True, "marginMode": "crossed"} if self.is_uta else {}
+                    coros_to_call_lev[(symbol, "both")] = asyncio.create_task(
+                        self.cca.set_leverage(leverage, symbol=symbol, params=params)
+                    )
             except Exception as e:
-                logging.error(f"{log_symbol}: error setting leverage {e}")
+                message = f"{log_symbol}: error setting leverage {e}"
+                if roadmap_profile_enabled:
+                    configuration_errors.append(message)
+                else:
+                    logging.error(message)
         for symbol in symbols:
             log_symbol = symbol_to_coin(symbol, verbose=False) or symbol
-            res = None
             to_print = ""
-            try:
-                res = await coros_to_call_lev[symbol]
-                to_print += f"leverage={format_exchange_config_response(res)} "
-            except Exception as e:
-                logging.error(f"{log_symbol} error setting leverage {e}")
+            leverage_results = []
+            for key in ((symbol, "long"), (symbol, "short"), (symbol, "both")):
+                if key not in coros_to_call_lev:
+                    continue
+                try:
+                    leverage_results.append(format_exchange_config_response(await coros_to_call_lev[key]))
+                except Exception as e:
+                    message = f"{log_symbol} error setting leverage {key[1]} {e}"
+                    if roadmap_profile_enabled:
+                        configuration_errors.append(message)
+                    else:
+                        logging.error(message)
+            if leverage_results:
+                to_print += f"leverage={','.join(leverage_results)} "
             res = None
             if symbol in coros_to_call_margin_mode:
                 try:
                     res = await coros_to_call_margin_mode[symbol]
                     to_print += f"margin={format_exchange_config_response(res)}"
                 except Exception as e:
-                    logging.error(
-                        f"{log_symbol} error setting {self._get_margin_mode_for_symbol(symbol)} mode {e}"
+                    message = (
+                        f"{log_symbol} error setting "
+                        f"{self._get_margin_mode_for_symbol(symbol)} mode {e}"
                     )
+                    if roadmap_profile_enabled:
+                        configuration_errors.append(message)
+                    else:
+                        logging.error(message)
             if to_print:
                 logging.info(f"{log_symbol}: {to_print}")
+        if configuration_errors:
+            raise RuntimeError(
+                "Bitget crypto account configuration was not applied: "
+                + "; ".join(configuration_errors)
+            )
 
     async def calc_ideal_orders(self):
         # Bitget returns max 100 open orders per fetch_open_orders.
@@ -1095,12 +1349,56 @@ class BitgetBot(CCXTBot):
     async def update_exchange_config(self):
         # Detect classic vs UTA/elite once, before any balance/position/order call.
         await self._detect_account_mode()
+        profile = get_optional_live_value(
+            getattr(self, "config", {}), "portfolio_risk", {}
+        )
+        if isinstance(profile, dict) and bool(profile.get("enabled", False)):
+            enforce_crypto_live_authorization(
+                getattr(self, "config", {}),
+                self.exchange,
+                authorized=bool(getattr(self, "_crypto_live_authorized", False)),
+            )
+            symbols = list(getattr(self, "active_symbols", []) or [])
+            if symbols:
+                # This is public-only validation and intentionally precedes
+                # the existing hedge-mode setup request.
+                await self.refresh_crypto_market_surfaces(symbols)
         res = None
         try:
-            res = await self.cca.set_position_mode(True)
+            params = {"uta": True} if getattr(self, "is_uta", False) else {}
+            res = await self.cca.set_position_mode(True, params=params)
             logging.debug("[config] set hedge mode response: %s", res)
         except Exception as e:
+            if isinstance(profile, dict) and bool(profile.get("enabled", False)):
+                raise RuntimeError(
+                    f"Bitget crypto hedge mode could not be confirmed: {e}"
+                ) from e
             logging.error("[config] error setting hedge mode: %s %s", e, res)
+
+    def _get_margin_mode_preference(self) -> str:
+        """Return the configured mode, including UTA isolated futures support."""
+
+        if not getattr(self, "is_uta", False):
+            return super()._get_margin_mode_preference()
+        raw = get_optional_live_value(self.config, "margin_mode_preference", "cross")
+        normalized = str(raw).strip().lower() if raw is not None else "cross"
+        if normalized in {"cross", "crossed"}:
+            return "cross"
+        if normalized in {"isolated", "isolate"}:
+            return "isolated"
+        raise ValueError(
+            f"invalid Bitget UTA live.margin_mode_preference={raw!r}; expected cross or isolated"
+        )
+
+    def _get_margin_mode_for_symbol(self, symbol: str) -> str:
+        """Use UTA's per-order mode while preserving known existing positions."""
+
+        if not getattr(self, "is_uta", False):
+            return super()._get_margin_mode_for_symbol(symbol)
+        existing = getattr(self, "_live_margin_modes", {}).get(symbol)
+        if self._has_live_symbol_state(symbol) and existing in {"cross", "isolated"}:
+            return existing
+        return self._get_margin_mode_preference()
 
     def format_custom_id_single(self, order_type_id: int) -> str:
         formatted = super().format_custom_id_single(order_type_id)

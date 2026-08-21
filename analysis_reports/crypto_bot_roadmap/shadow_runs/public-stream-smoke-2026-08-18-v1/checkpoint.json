@@ -1,0 +1,24 @@
+{
+  "config_hash": "dda48e483614d51ef5575f8ed95bb16e83b61dd5e556bdf17e325a053b5f194a",
+  "event_count": 8,
+  "events_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/public-stream-smoke-2026-08-18-v1/events.ndjson",
+  "ledger_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/shadow_runs/public-stream-smoke-2026-08-18-v1/paper_ledger.json",
+  "next_seq": 8,
+  "processed_snapshot_ids": [
+    "88b809180105cc3b9f7168d2095ffa9bf008ac1b576e9a6efe2808977f7e6fd7"
+  ],
+  "replay_operations": [],
+  "restart_operations": [],
+  "schema_version": "crypto-strategy-shadow-v1",
+  "snapshot_provenance": [
+    {
+      "snapshot_id": "88b809180105cc3b9f7168d2095ffa9bf008ac1b576e9a6efe2808977f7e6fd7",
+      "source_hash": "9747d3047e08e746c5ef3c9d8cbf1b049744be1d0afe40a4e09e836a424038c1",
+      "timestamp": 1787035639726
+    }
+  ],
+  "strategy_id": "crypto-grid-shadow-stream-engineering-v1",
+  "symbols": [
+    "BTCUSDT/USDT:USDT"
+  ]
+}

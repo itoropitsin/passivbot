@@ -1,0 +1,11 @@
+{
+  "files": {
+    "config.json": "cb97c1b5c55f784b98b58b32de59612dccf434127fe6759c7f10f977e22adce1",
+    "events.jsonl.gz": "f2bf2fd792385787935d166ce717b0461874abb1f324df146ebfe9c806a4169a",
+    "ledger.json": "1cc5b4eafcc71e8f0026245d5046d47a12111c010ded4f6323ec5708c482885f",
+    "manifest.json": "1d47c3d2d0ee58e200bc2fb6ec18384d1af4b10a652a58ab64fa77b85a774925",
+    "market_profile.json": "edea12c9f4500e1763d3e2514db7426733e273c8ff30d5016c86c5429f789f23",
+    "verdict.json": "b586de988fde26231a08ab2eefddebe5548bd141005ef646d8d3d2739a05f005"
+  },
+  "schema_version": "crypto-paper-shadow-checksums-v1"
+}

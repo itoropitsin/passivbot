@@ -1,0 +1,24 @@
+{
+  "artifacts": {
+    "config": "config.json",
+    "events": "events.jsonl.gz",
+    "ledger": "ledger.json",
+    "market_profile": "market_profile.json",
+    "verdict": "verdict.json",
+    "wal": null
+  },
+  "config_hash": "cb97c1b5c55f784b98b58b32de59612dccf434127fe6759c7f10f977e22adce1",
+  "ended_at_utc": "2026-08-17T22:28:12.664059+00:00",
+  "error": null,
+  "execution_inputs_hash": null,
+  "execution_inputs_path": null,
+  "max_observations": null,
+  "observed_duration_seconds": 2.3794147968292236,
+  "poll_seconds": 0.5,
+  "requested_duration_seconds": 2.0,
+  "run_status": "no_trade_observed",
+  "run_type": "bounded_public_bitget_paper_shadow",
+  "schema_version": "crypto-paper-shadow-manifest-v1",
+  "started_at_utc": "2026-08-17T22:28:10.284644+00:00",
+  "symbol": "BTC/USDT:USDT"
+}

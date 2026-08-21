@@ -9,15 +9,21 @@ __pycache__/
 *.pyo
 *.pyd
 
+# Ignore local environments and secrets. The shadow image is public-only.
+.venv/
+venv/
+api-keys.json
+.env
+analysis_reports/
+
 # Ignore build artifacts
 build/
 dist/
 *.egg-info/
 .eggs/
 
-# Ignore Rust artifacts
+# Ignore Rust artifacts, but keep Cargo.lock for reproducible NAS builds
 target/
-Cargo.lock
 
 # Ignore VCS and editor files
 .git/

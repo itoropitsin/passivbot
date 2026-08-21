@@ -37,6 +37,10 @@ fn passivbot_rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(calc_pnl_short, m)?)?;
     m.add_function(wrap_pyfunction!(calc_wallet_exposure, m)?)?;
     m.add_function(wrap_pyfunction!(calc_new_psize_pprice, m)?)?;
+    m.add_function(wrap_pyfunction!(
+        calc_liquidation_distance_for_position_py,
+        m
+    )?)?;
     m.add_function(wrap_pyfunction!(calc_next_entry_long_py, m)?)?;
     m.add_function(wrap_pyfunction!(calc_next_close_long_py, m)?)?;
     m.add_function(wrap_pyfunction!(calc_entries_long_py, m)?)?;
@@ -60,6 +64,7 @@ fn passivbot_rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(order_type_snake_to_id, m)?)?;
     m.add_function(wrap_pyfunction!(get_order_id_type_from_string_alias, m)?)?;
     m.add_function(wrap_pyfunction!(compute_ideal_orders_json, m)?)?;
+    m.add_function(wrap_pyfunction!(evaluate_crypto_risk_decision_json, m)?)?;
     m.add_function(wrap_pyfunction!(gate_entries_by_twel_py, m)?)?;
     m.add_function(wrap_pyfunction!(calc_unstucking_close_py, m)?)?;
     m.add_function(wrap_pyfunction!(trailing_bundle_default_py, m)?)?;

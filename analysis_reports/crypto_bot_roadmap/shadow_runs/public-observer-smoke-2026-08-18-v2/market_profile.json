@@ -1,0 +1,42 @@
+{
+  "markets": {
+    "BTC/USDT:USDT": {
+      "base": "BTC",
+      "contractSize": 1,
+      "limits": {
+        "amount": {
+          "max": null,
+          "min": 0.0001
+        },
+        "cost": {
+          "max": null,
+          "min": 5.0
+        },
+        "leverage": {
+          "max": 150.0,
+          "min": 1.0
+        },
+        "price": {
+          "max": null,
+          "min": null
+        }
+      },
+      "linear": true,
+      "maker": 0.0002,
+      "precision": {
+        "amount": 0.0001,
+        "base": null,
+        "cost": null,
+        "price": 0.1,
+        "quote": null
+      },
+      "quote": "USDT",
+      "settle": "USDT",
+      "swap": true,
+      "symbol": "BTC/USDT:USDT",
+      "taker": 0.0006,
+      "type": "swap"
+    }
+  },
+  "schema_version": "crypto-paper-shadow-market-profile-v1"
+}

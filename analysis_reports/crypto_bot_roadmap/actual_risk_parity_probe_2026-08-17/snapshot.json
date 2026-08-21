@@ -1,0 +1,40 @@
+{
+  "as_of_ms": "1704067380000",
+  "balance": {
+    "available": "1000",
+    "equity": "1000"
+  },
+  "daily_loss": {
+    "ratio": "0"
+  },
+  "hsl": {
+    "long": {
+      "state": "disabled"
+    },
+    "short": {
+      "state": "disabled"
+    }
+  },
+  "leverage": {
+    "long": "3",
+    "short": "3"
+  },
+  "margin_tiers": [
+    {
+      "maintenance_margin_rate": "0.005",
+      "max_notional": "200000",
+      "min_notional": "0",
+      "symbol": "BTC/USDT:USDT",
+      "tier": "1"
+    }
+  ],
+  "mark_prices": {
+    "BTC/USDT:USDT": "100"
+  },
+  "pending_orders": [],
+  "positions": {
+    "long": [],
+    "short": []
+  },
+  "schema_version": "risk-snapshot-v1"
+}

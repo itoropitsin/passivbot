@@ -1,0 +1,106 @@
+{
+  "asset_scope": [
+    "BTCUSDT",
+    "ETHUSDT"
+  ],
+  "captured_at_utc": "2026-08-17T03:39:56Z",
+  "exchange": "bitget",
+  "official_api": {
+    "documentation": [
+      "https://www.bitget.com/api-doc/uta/public/Get-History-Funding-Rate",
+      "https://www.bitget.com/api-doc/classic/contract/market/Get-History-Funding-Rate"
+    ],
+    "observed_page_row_counts": [
+      100,
+      100,
+      70,
+      0
+    ],
+    "observed_rows": 270,
+    "requested_window": {
+      "start": "2024-07-01T00:00:00Z",
+      "end": "2026-08-17T00:00:00Z"
+    },
+    "status": "horizon_reached"
+  },
+  "parameter_probe": {
+    "classic_endpoint": "https://api.bitget.com/api/v2/mix/market/history-fund-rate",
+    "page_numbers_tested": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      10,
+      50,
+      100
+    ],
+    "page_row_counts": [
+      100,
+      100,
+      70,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "status": "same_horizon_reached",
+    "note": "The alternate public v2 endpoint also stopped at 270 rows; no older rows were used."
+  },
+  "third_party_sources": [
+    {
+      "url": "https://www.cryptohftdata.com/datasets/bitget-funding-rate-data",
+      "observed_history_start": "2025-07-15",
+      "observed_access": "sample_public_file; larger_downloads_require_api_key",
+      "usable_for_full_plan_window": false,
+      "reason": "does not cover the requested start date and was not used as a substitute"
+    },
+    {
+      "url": "https://coinlyse.com/en/funding-history/BTCUSDT",
+      "observed_access": "database_unavailable_at_probe_time",
+      "usable_for_full_plan_window": false,
+      "reason": "no reproducible response was available for validation"
+    },
+    {
+      "url": "https://dspace.vut.cz/items/0c45b1d0-a8d3-4a43-9941-fc71ef4f84fd/full",
+      "observed_access": "public thesis appendix with source code but no raw funding archive",
+      "usable_for_full_plan_window": false,
+      "reason": "the appendix contains a fetch script and an empty static-data directory, but no raw funding rows; its script points to the separate D3lta mirror below, so the appendix cannot serve as an input archive"
+    },
+    {
+      "url": "https://docs.tardis.dev/historical-data-details/bitget-futures",
+      "observed_history_start": "2024-11-08",
+      "observed_access": "public documentation; only the first day of each month is available without an API key",
+      "usable_for_full_plan_window": false,
+      "reason": "the documented history starts after the requested date and full daily access requires a paid/API-key route"
+    },
+    {
+      "url": "https://api.d3lta.dev/static/d3lta_data_v2.tar.gz",
+      "observed_access": "public mirror URL returned HTTP 530 at probe time",
+      "usable_for_full_plan_window": false,
+      "reason": "the archive could not be downloaded and therefore could not be hashed or validated"
+    },
+    {
+      "url": "https://aidata.vip/zh-cn/api/endpoints/bitget/futures/funding/history",
+      "observed_access": "historical Bitget endpoint is documented but requires a paid API request with a Bearer key",
+      "usable_for_full_plan_window": false,
+      "reason": "no key was available or requested; an undocumented or unauthenticated substitution would not be independently reproducible"
+    },
+    {
+      "url": "https://www.sharpe.ai/docs/funding-rates",
+      "observed_access": "aggregated history endpoint is documented but its request requires an API key",
+      "usable_for_full_plan_window": false,
+      "reason": "the source was not downloadable in the current workspace and venue-level provenance could not be validated"
+    },
+    {
+      "url": "https://api.loris.tools/funding/historical?symbol=BTC&exchanges=bitget&start=2024-07-01&end=2026-08-17",
+      "observed_access": "public endpoint identified from the Loris web client; request returned HTTP 401 Missing API key",
+      "usable_for_full_plan_window": false,
+      "reason": "no API key was available or requested, so no rows or date coverage could be independently validated"
+    }
+  ],
+  "status": "no_acceptable_complete_archive_found",
+  "synthetic_rows_added": 0,
+  "trading_operations_count": 0
+}

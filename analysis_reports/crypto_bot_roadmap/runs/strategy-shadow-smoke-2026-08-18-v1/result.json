@@ -1,0 +1,60 @@
+{
+  "candidate_admission": false,
+  "checkpoint_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/runs/strategy-shadow-smoke-2026-08-18-v1/checkpoint.json",
+  "config_hash": "0fec0dd903f588e84ac021729ae144fabc362f1789e15df040cca14ac370a0ac",
+  "deterministic_replay_hash": "a0ffa9599dd3ad439cdb7fb98ca8c44964411c72117ca3a78f61005b2ce54e78",
+  "duplicate_snapshot_count": 0,
+  "event_count": 32,
+  "event_log_hash": "5d6733c7ffa0eaa81fec3868ac5ade45b088a73c9115df734ba8dcf3d96fdad9",
+  "events_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/runs/strategy-shadow-smoke-2026-08-18-v1/events.ndjson",
+  "external_network_calls": 0,
+  "input_snapshot_count": 3,
+  "ledger_path": "/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka/analysis_reports/crypto_bot_roadmap/runs/strategy-shadow-smoke-2026-08-18-v1/paper_ledger.json",
+  "paper_fill_count": 4,
+  "paper_order_count": 4,
+  "planned_order_count": 4,
+  "positions": [],
+  "private_requests": 0,
+  "processed_snapshot_count": 3,
+  "public_call_log": [
+    [
+      "load_markets",
+      "local"
+    ],
+    [
+      "fetch_ticker",
+      "BTC/USDT:USDT"
+    ],
+    [
+      "fetch_ticker",
+      "BTC/USDT:USDT"
+    ],
+    [
+      "fetch_ticker",
+      "BTC/USDT:USDT"
+    ],
+    [
+      "fetch_ticker",
+      "BTC/USDT:USDT"
+    ],
+    [
+      "fetch_ticker",
+      "BTC/USDT:USDT"
+    ],
+    [
+      "fetch_ticker",
+      "BTC/USDT:USDT"
+    ],
+    [
+      "fetch_ticker",
+      "BTC/USDT:USDT"
+    ]
+  ],
+  "public_snapshot_client": true,
+  "public_write_calls": 0,
+  "read_only": true,
+  "schema_version": "crypto-strategy-shadow-v1",
+  "status": "passed",
+  "strategy_id": "crypto-grid-shadow-v1",
+  "trading_operations_count": 0
+}

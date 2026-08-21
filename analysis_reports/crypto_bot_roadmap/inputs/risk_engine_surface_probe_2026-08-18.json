@@ -1,0 +1,257 @@
+{
+  "candidate_admission": false,
+  "failed_count": 0,
+  "passed_count": 14,
+  "read_only": true,
+  "scenario_count": 14,
+  "scenarios": [
+    {
+      "expected": {
+        "decision": "allow",
+        "reason": "entry_within_risk_limits"
+      },
+      "name": "initial_entry",
+      "observed": {
+        "decision": "allow",
+        "differences": [],
+        "left_reason": "entry_within_risk_limits",
+        "parity": "passed",
+        "reason": "engine decisions match",
+        "right_reason": "entry_within_risk_limits",
+        "snapshot_hash": "2912787030fa3de390286f937a83a45628e546f513a342de5e6b1ea36bb8562b"
+      },
+      "status": "passed",
+      "trading_operations_count": 0
+    },
+    {
+      "expected": {
+        "decision": "deny",
+        "reason": "daily_loss_stop_reached"
+      },
+      "name": "daily_loss_stop",
+      "observed": {
+        "decision": "deny",
+        "differences": [],
+        "left_reason": "daily_loss_stop_reached",
+        "parity": "passed",
+        "reason": "engine decisions match",
+        "right_reason": "daily_loss_stop_reached",
+        "snapshot_hash": "e6e4a84724d105a8e635fbaf586e0619ad938e0ce03afed7449d5d6d590a8762"
+      },
+      "status": "passed",
+      "trading_operations_count": 0
+    },
+    {
+      "expected": {
+        "decision": "deny",
+        "reason": "hsl_blocks_new_entry"
+      },
+      "name": "hsl_orange",
+      "observed": {
+        "decision": "deny",
+        "differences": [],
+        "left_reason": "hsl_blocks_new_entry",
+        "parity": "passed",
+        "reason": "engine decisions match",
+        "right_reason": "hsl_blocks_new_entry",
+        "snapshot_hash": "e8bb7d9a760a824828e26d1194e19cb8579db24bed7c9c15133dcd5d1ddc1843"
+      },
+      "status": "passed",
+      "trading_operations_count": 0
+    },
+    {
+      "expected": {
+        "decision": "deny",
+        "reason": "hsl_blocks_new_entry"
+      },
+      "name": "hsl_red",
+      "observed": {
+        "decision": "deny",
+        "differences": [],
+        "left_reason": "hsl_blocks_new_entry",
+        "parity": "passed",
+        "reason": "engine decisions match",
+        "right_reason": "hsl_blocks_new_entry",
+        "snapshot_hash": "50553c2a37c2fe0be77dc54902030c12770bb3e181f6f1c848111e2613f8b98c"
+      },
+      "status": "passed",
+      "trading_operations_count": 0
+    },
+    {
+      "expected": {
+        "decision": "deny",
+        "reason": "hsl_blocks_new_entry"
+      },
+      "name": "hsl_terminal_no_restart",
+      "observed": {
+        "decision": "deny",
+        "differences": [],
+        "left_reason": "hsl_blocks_new_entry",
+        "parity": "passed",
+        "reason": "engine decisions match",
+        "right_reason": "hsl_blocks_new_entry",
+        "snapshot_hash": "0662356aaefc5c564102c26419aeaa9688e86afb5907d8335611f030eb15dc70"
+      },
+      "status": "passed",
+      "trading_operations_count": 0
+    },
+    {
+      "expected": {
+        "decision": "deny",
+        "reason": "leverage_above_roadmap_max"
+      },
+      "name": "leverage_above_roadmap_max",
+      "observed": {
+        "decision": "deny",
+        "differences": [],
+        "left_reason": "leverage_above_roadmap_max",
+        "parity": "passed",
+        "reason": "engine decisions match",
+        "right_reason": "leverage_above_roadmap_max",
+        "snapshot_hash": "23b72f8ffe482b29679058b91d5ab621467bf21959e2c5a2da83b8f6ac5510e3"
+      },
+      "status": "passed",
+      "trading_operations_count": 0
+    },
+    {
+      "expected": {
+        "decision": "deny",
+        "reason": "max_total_exposure_exceeded"
+      },
+      "name": "max_total_exposure",
+      "observed": {
+        "decision": "deny",
+        "differences": [],
+        "left_reason": "max_total_exposure_exceeded",
+        "parity": "passed",
+        "reason": "engine decisions match",
+        "right_reason": "max_total_exposure_exceeded",
+        "snapshot_hash": "2850e342b332f0b886877d2667b959654ad8362edadf15f4359175455a34672a"
+      },
+      "status": "passed",
+      "trading_operations_count": 0
+    },
+    {
+      "expected": {
+        "decision": "deny",
+        "reason": "max_used_margin_exceeded"
+      },
+      "name": "max_used_margin",
+      "observed": {
+        "decision": "deny",
+        "differences": [],
+        "left_reason": "max_used_margin_exceeded",
+        "parity": "passed",
+        "reason": "engine decisions match",
+        "right_reason": "max_used_margin_exceeded",
+        "snapshot_hash": "48344f22625840034105d6e9e2885a518ddb3b9a63b865ceda694891ad769f5c"
+      },
+      "status": "passed",
+      "trading_operations_count": 0
+    },
+    {
+      "expected": {
+        "decision": "deny",
+        "reason": "liquidation_buffer_below_entry_minimum"
+      },
+      "name": "entry_low_liquidation_buffer",
+      "observed": {
+        "decision": "deny",
+        "differences": [],
+        "left_reason": "liquidation_buffer_below_entry_minimum",
+        "parity": "passed",
+        "reason": "engine decisions match",
+        "right_reason": "liquidation_buffer_below_entry_minimum",
+        "snapshot_hash": "13d2feee56a2c3327d949e1105d8cff13007c62d9538f555f7a0e2a6f036a62a"
+      },
+      "status": "passed",
+      "trading_operations_count": 0
+    },
+    {
+      "expected": {
+        "decision": "deny",
+        "reason": "liquidation_buffer_below_reduce_only_minimum"
+      },
+      "name": "reduce_only_low_liquidation_buffer",
+      "observed": {
+        "decision": "deny",
+        "differences": [],
+        "left_reason": "liquidation_buffer_below_reduce_only_minimum",
+        "parity": "passed",
+        "reason": "engine decisions match",
+        "right_reason": "liquidation_buffer_below_reduce_only_minimum",
+        "snapshot_hash": "4d10f6999d0d523a741ed5aa3987cca46746ac0d8abfa19a6e89d9ac6f525680"
+      },
+      "status": "passed",
+      "trading_operations_count": 0
+    },
+    {
+      "expected": {
+        "decision": "deny",
+        "reason": "ordinary_market_order_not_allowed"
+      },
+      "name": "ordinary_market_order",
+      "observed": {
+        "decision": "deny",
+        "differences": [],
+        "left_reason": "ordinary_market_order_not_allowed",
+        "parity": "passed",
+        "reason": "engine decisions match",
+        "right_reason": "ordinary_market_order_not_allowed",
+        "snapshot_hash": "2912787030fa3de390286f937a83a45628e546f513a342de5e6b1ea36bb8562b"
+      },
+      "status": "passed",
+      "trading_operations_count": 0
+    },
+    {
+      "expected": {
+        "decision": "allow",
+        "reason": "entry_within_risk_limits"
+      },
+      "name": "short_initial_entry",
+      "observed": {
+        "decision": "allow",
+        "differences": [],
+        "left_reason": "entry_within_risk_limits",
+        "parity": "passed",
+        "reason": "engine decisions match",
+        "right_reason": "entry_within_risk_limits",
+        "snapshot_hash": "2912787030fa3de390286f937a83a45628e546f513a342de5e6b1ea36bb8562b"
+      },
+      "status": "passed",
+      "trading_operations_count": 0
+    },
+    {
+      "expected": {
+        "decision": "allow",
+        "reason": "panic_close_allowed"
+      },
+      "name": "panic_close_overrides_entry_stops",
+      "observed": {
+        "decision": "allow",
+        "differences": [],
+        "left_reason": "panic_close_allowed",
+        "parity": "passed",
+        "reason": "engine decisions match",
+        "right_reason": "panic_close_allowed",
+        "snapshot_hash": "b45a2866428037c6a5eeb0198031d65489094efa0a61c1919169e23aa0d4aa51"
+      },
+      "status": "passed",
+      "trading_operations_count": 0
+    },
+    {
+      "expected": {
+        "blocked_field": "margin_tiers"
+      },
+      "name": "missing_margin_tiers",
+      "observed": {
+        "error": "missing required snapshot field: margin_tiers"
+      },
+      "status": "passed",
+      "trading_operations_count": 0
+    }
+  ],
+  "schema_version": "risk-engine-surface-probe-v1",
+  "status": "passed",
+  "trading_operations_count": 0
+}

@@ -1,0 +1,48 @@
+{
+  "after_missing_rows": 1108881,
+  "api_symbol": "ETHUSDT",
+  "before_missing_rows": 1118881,
+  "collected_at_utc": "2026-08-17T02:45:12+00:00",
+  "documentation": "https://www.bitget.com/api-doc/uta/public/Get-History-Candle-Data",
+  "exchange": "bitget",
+  "missing_ranges_after": [
+    {
+      "end_utc": "2026-08-10T01:20:00+00:00",
+      "start_utc": "2024-07-01T00:00:00+00:00"
+    }
+  ],
+  "missing_ranges_before": [
+    {
+      "end_utc": "2026-08-17T00:00:00+00:00",
+      "start_utc": "2024-07-01T00:00:00+00:00"
+    }
+  ],
+  "range": {
+    "end_utc": "2026-08-17T00:00:00+00:00",
+    "start_utc": "2024-07-01T00:00:00+00:00"
+  },
+  "read_only_external_operations": true,
+  "repaired_rows": 10000,
+  "requests": [
+    {
+      "end_utc": "2026-08-17T00:00:00+00:00",
+      "missing_rows_after_fetch": 1108881,
+      "raw_pages_sha256": "91a6a96fede16b689a46600871aed28fe10fadddf07212d03c6bcbcfa34bf025",
+      "rows_returned": 10000,
+      "rows_written": 10000,
+      "start_utc": "2024-07-01T00:00:00+00:00"
+    }
+  ],
+  "schema_version": "bitget-public-ohlcv-repair-v1",
+  "status": "blocked",
+  "symbol": "ETH/USDT:USDT",
+  "timeframe": "1m",
+  "trading_operations_count": 0,
+  "unresolved_ranges": [
+    {
+      "end_utc": "2026-08-10T01:20:00+00:00",
+      "rows": 1108881,
+      "start_utc": "2024-07-01T00:00:00+00:00"
+    }
+  ]
+}

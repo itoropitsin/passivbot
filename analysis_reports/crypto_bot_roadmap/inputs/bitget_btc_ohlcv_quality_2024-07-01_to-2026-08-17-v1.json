@@ -1,0 +1,40 @@
+{
+  "as_of_utc": "2026-08-17T00:00:00+00:00",
+  "checks": {
+    "chunk_checksums_verified": true,
+    "coverage_complete": true,
+    "no_future_rows": true,
+    "no_persistent_gaps": true,
+    "prices_ordered": true,
+    "prices_positive": true,
+    "timestamps_unique": true,
+    "values_finite": true,
+    "volume_nonnegative": true
+  },
+  "checksum_error": null,
+  "checksum_verified_chunks": 26,
+  "chunks": 26,
+  "exchange": "bitget",
+  "expected_rows": 1118881,
+  "future_rows": 0,
+  "missing_ranges": [],
+  "missing_rows": 0,
+  "persistent_gaps": [],
+  "range": {
+    "end_utc": "2026-08-17T00:00:00+00:00",
+    "start_utc": "2024-07-01T00:00:00+00:00"
+  },
+  "read_only_external_operations": true,
+  "schema_version": "bitget-ohlcv-quality-v1",
+  "status": "passed",
+  "symbol": "BTC/USDT:USDT",
+  "timeframe": "1m",
+  "trading_operations_count": 0,
+  "valid_rows": 1118881,
+  "value_quality": {
+    "negative_volume_rows": 0,
+    "nonfinite_rows": 0,
+    "nonpositive_price_rows": 0,
+    "price_order_rows": 0
+  }
+}

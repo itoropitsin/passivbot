@@ -1,0 +1,58 @@
+[
+  {
+    "name": "close_markup_end_0.01365",
+    "value": 0.01365,
+    "config": "analysis_reports/sensitivity_2026-06-26_markup_micro2/configs/close_markup_end_0.01365.json",
+    "backtest_dir": "backtests/binance/2026-06-26T21_27_12",
+    "adg": 0.00015561638666428124,
+    "drawdown_pct": 9.501074364682696,
+    "final_equity": 527.5926,
+    "gain_pct": 5.518519999999993,
+    "fills": 213,
+    "fees": -7.35544144,
+    "net_pnl": 50.06395856000012,
+    "elapsed_sec": 3.9570066928863525
+  },
+  {
+    "name": "close_markup_end_0.01370",
+    "value": 0.0137,
+    "config": "analysis_reports/sensitivity_2026-06-26_markup_micro2/configs/close_markup_end_0.01370.json",
+    "backtest_dir": "backtests/binance/2026-06-26T21_27_15",
+    "adg": 0.0001559838196942831,
+    "drawdown_pct": 9.500686543468824,
+    "final_equity": 527.6662,
+    "gain_pct": 5.533239999999995,
+    "fills": 213,
+    "fees": -7.355475239999999,
+    "net_pnl": 50.13942475999997,
+    "elapsed_sec": 3.595019817352295
+  },
+  {
+    "name": "close_markup_end_0.01380",
+    "value": 0.0138,
+    "config": "analysis_reports/sensitivity_2026-06-26_markup_micro2/configs/close_markup_end_0.01380.json",
+    "backtest_dir": "backtests/binance/2026-06-26T21_27_19",
+    "adg": 0.00015672624089679843,
+    "drawdown_pct": 9.499918300921031,
+    "final_equity": 527.8152,
+    "gain_pct": 5.563040000000008,
+    "fills": 213,
+    "fees": -7.355543399999998,
+    "net_pnl": 50.29195659999998,
+    "elapsed_sec": 3.683357000350952
+  },
+  {
+    "name": "close_markup_end_0.01390",
+    "value": 0.0139,
+    "config": "analysis_reports/sensitivity_2026-06-26_markup_micro2/configs/close_markup_end_0.01390.json",
+    "backtest_dir": "backtests/binance/2026-06-26T21_27_23",
+    "adg": 0.00015173160554304843,
+    "drawdown_pct": 9.512189874356428,
+    "final_equity": 526.854,
+    "gain_pct": 5.370800000000009,
+    "fills": 209,
+    "fees": -7.166274999999999,
+    "net_pnl": 49.30752499999999,
+    "elapsed_sec": 3.544975996017456
+  }
+]

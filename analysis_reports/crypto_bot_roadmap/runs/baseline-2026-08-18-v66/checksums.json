@@ -1,0 +1,31 @@
+{
+  "files": {
+    "config.json": {
+      "sha256": "13d19c9a971f728adeaf4b1e38a460c968e6956337ab11095ce6695ac59b9b03",
+      "size_bytes": 336
+    },
+    "events.jsonl.gz": {
+      "sha256": "6ff16353bcf686f1192f72e595029a1ba7bbabe67c57f52b357c7caa6c286a62",
+      "size_bytes": 33
+    },
+    "manifest.json": {
+      "sha256": "7b2fe90bacc69b916a6b2b15768f96e324e3936d4cb78b46b17017597852d309",
+      "size_bytes": 1803
+    },
+    "metrics.json": {
+      "sha256": "17c284daaab6b724ef588b25cc84324b90fc74dc860beac048556640e1ae6a02",
+      "size_bytes": 2814
+    },
+    "report.md": {
+      "sha256": "6f8f7cc27e026c8527dd9fd01290f701d8cca0fa8700cacf49af8daded8d08c1",
+      "size_bytes": 576
+    },
+    "verdict.json": {
+      "sha256": "4c9d6c10a32b8193e49ebfda5660a563e012ba28f9300f1897cc96b14e9e41c5",
+      "size_bytes": 994
+    }
+  },
+  "run_id": "baseline-2026-08-18-v66",
+  "schema_version": "crypto-grid-run-checksums-v1",
+  "stage": "baseline"
+}

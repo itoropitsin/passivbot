@@ -5,7 +5,7 @@ script_dir="$(cd -- "$(dirname "$0")" && pwd)"
 cd "$script_dir"
 
 py_lib=$(
-    python3 - <<'PY'
+    "${PYO3_PYTHON:-python3}" - <<'PY'
 import sys
 import sysconfig
 from pathlib import Path
@@ -37,11 +37,21 @@ for libdir in search_dirs:
 raise SystemExit("libpython.dylib not found; ensure Python dev libraries are installed.")
 PY
 ) || {
-    printf 'Failed to locate libpython for DYLD insertion. Aborting tests.\n' >&2
+    printf 'Failed to locate libpython for direct test linking. Aborting tests.\n' >&2
     exit 1
 }
 
-export RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup"
-export DYLD_INSERT_LIBRARIES="$py_lib"
+# The extension build intentionally leaves Python symbols unresolved.  A test
+# executable is different: it embeds PyO3 tests and must link the interpreter
+# explicitly.  Injecting libpython with DYLD_INSERT_LIBRARIES lets the tests
+# start, but can segfault while the test harness exits on current macOS/Python
+# combinations.  Linking the exact interpreter found above keeps the process
+# lifetime normal and makes the result reproducible.
+if [[ -n "${RUSTFLAGS:-}" ]]; then
+    export RUSTFLAGS="${RUSTFLAGS} -C link-arg=${py_lib}"
+else
+    export RUSTFLAGS="-C link-arg=${py_lib}"
+fi
+unset DYLD_INSERT_LIBRARIES
 
 cargo test "$@"
