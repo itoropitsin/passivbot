@@ -1,23 +1,20 @@
 # Состояние реализации криптовалютного плана
 
-Дата фиксации: **21 августа 2026 года**, Europe/Amsterdam.
+Дата фиксации: **24 августа 2026 года**, Europe/Amsterdam.
 
 Основной план: [crypto_grid_bot_development_plan_2026-08-17.md](../../docs/plans/crypto_grid_bot_development_plan_2026-08-17.md).
 
 Последний подробный снимок: [intermediate_checkpoint_2026-08-18.md](inputs/intermediate_checkpoint_2026-08-18.md).
 
-Актуальная интерпретация статуса — редакция **1.71** канонического плана: live NAS `public-stream-process-24h-2026-08-21-v7` запущен (`passivbot-shadow-v7`, образ v6, `SHADOW_RESUME=0`). Сбор snapshots подтверждён. Exam `passivbot-shadow` не стартовать. v6 не перезаписывать. `shadow-readiness` для v7 не биндить до финала. Последний bound machine-срез — v85/v49/v31/v25 на `d46be477…`. Восемь `CODE_PATHS` не менять до финала v7. ETH sidecar не перезапускать. Queue/depth не стартовать. `status.json` не писать вручную. Funding 270/2332 закрывает data/historical/paper/live.
+Актуальная интерпретация статуса — редакция **1.74** канонического плана: публичный полный funding-архив 24 августа не найден (**248/2332** в фиксированном окне, coverage `0.10635`). Bound-срез BL-24/MP-24/RE-24/SR-24 без изменений. Frozen funding input не перезаписывался. `bitget-funding-archive` и `bitget-funding-promote` не запускались. Exam-контейнеры не стартовать. `status.json` не писать вручную. Data/historical/paper/live закрыты, пока не появится полный лицензированный архив.
 
-Последняя независимая проверка funding `2026-08-18T14:08–14:10Z` подтвердила:
-официальный Bitget funding API отдаёт только `270` строк (`100+100+70+0`),
-а открытые sample/collector-источники не заменяют полный settlement-архив.
-Data gate остаётся закрытым.
+Сводка сбора: [funding_archive_collect_attempt_2026-08-24.md](inputs/funding_archive_collect_attempt_2026-08-24.md). Историческая проверка `2026-08-18T14:08–14:10Z` уже фиксировала rolling `270` строк (`100+100+70+0`); 24 августа в окно плана входят 248 точек, не 266. Открытые sample/collector-источники полный settlement-архив не заменяют. Data gate остаётся закрытым.
 
-## Актуальная цепочка: v7 пишет public snapshots; bound gates без изменений
+## Актуальная цепочка: BL-24 / MP-24 / RE-24 / SR-24 bound на `f5af0643…`
 
-`status.json` имеет схему `crypto-grid-roadmap-status-v3` и обновлён штатной командой в `2026-08-20T23:26:05Z`. Fingerprint: `d46be477…`. Baseline v85 passed/fresh. `market_profile v49` passed/fresh. `risk_engine v31` passed/fresh с bound production-path evidence; v30 historical. `shadow-readiness v25` passed/fresh на NAS v6 (40/40); v24 не перезаписан. Funding 266/2 332; data gate закрыт. v83 не существовал.
+`status.json` имеет схему `crypto-grid-roadmap-status-v3` и обновлён штатной командой `research-gates` (`updated_at_utc=2026-08-23T22:21:42Z`). Bound срез: `baseline-2026-08-24-rebind` 5/5, `market-profile-2026-08-24-rebind` 4/4, `risk-engine-2026-08-24-rebind` 35/35, `shadow-readiness-2026-08-24-exam7` 40/40 admission passed. Живое дерево: commit `7a8be7892`, `git_dirty=false`, fingerprint `f5af0643…`. EX-7 exam passed. Публичный funding-сбор 24 августа: 248/2 332 в окне плана; frozen input по-прежнему 270 строк и не перезаписывался. Data gate закрыт. v83 не существовал.
 
-Machine stage `shadow_readiness` = `shadow-readiness-2026-08-21-v25`: 40/40 gates, `freshness=fresh` на `d46be477…`. Evidence NAS v6; пакет v24 не перезаписывать. Live 24h v7 запущен отдельно и ещё не bound. Mac v5 и v21/v22/v23 — historical. Полное test evidence текущего дерева — v85. P0-E добавил `src/research/data_passport.py`; frozen feed остаётся `qualifying=false`.
+Machine stage `shadow_readiness` = `shadow-readiness-2026-08-24-exam7`. Live evidence — NAS EX-7, копия `shadow_runs/public-stream-process-24h-2026-08-21-v7/`, path-bind `result.mac-path-bind-2026-08-24.json`. SR-21/v24 не перезаписывать. Следующий внешний blocker — funding archive.
 
 Главная причина повторной работы устранена в P0: implementation fingerprint больше не включает runtime/generated outputs, а fake-live использует отдельные временные roots. Пересборка public data metrics добавила фактический `execution_inputs_sha256`; preflight v10 теперь блокируется только неполным funding. Это не удаляет старые файлы и не делает старые run-пакеты свежими автоматически.
 
@@ -88,7 +85,8 @@ Machine stage `shadow_readiness` = `shadow-readiness-2026-08-21-v25`: 40/40 gate
 - [market-profile-2026-08-20-v48](runs/market-profile-2026-08-20-v48/report.md) — перепривязка того же public BTC market profile; `passed/fresh`.
 - [profile-classic-account-2026-08-18-v31](runs/profile-classic-account-2026-08-18-v31/report.md) — сохранённый read-only профиль показывает Classic Account (`40084`); настройки не менялись.
 - [data-public-snapshot-2026-08-18-v47](runs/data-public-snapshot-2026-08-18-v47/report.md) — 14/16 checks проходят; OHLCV и mark/index проходят, funding frozen dataset покрывает 270 из 2 332 расчётов, gate `failed/stale`.
-- [funding_horizon_rerun_2026-08-18.md](inputs/funding_horizon_rerun_2026-08-18.md) — последний public-only BTC/ETH horizon rerun: 266 из 2 332 в точном окне; blocked, архив не принят.
+- [funding_horizon_rerun_2026-08-18.md](inputs/funding_horizon_rerun_2026-08-18.md) — исторический public-only BTC/ETH horizon rerun: 266 из 2 332 в точном окне; blocked, архив не принят.
+- [funding_archive_collect_attempt_2026-08-24.md](inputs/funding_archive_collect_attempt_2026-08-24.md) — актуальная попытка 1.74: публичный полный архив не найден, 248/2332 в окне плана; frozen input не перезаписывался.
 - [risk-engine-2026-08-20-v30](runs/risk-engine-2026-08-20-v30/report.md) — historical local run: surface 14/14; после P0-D его метрика production-parity больше не является admission. Не перезапускать в этом окне.
 - [p0d_local/production-risk-evidence-2026-08-18](p0d_local/production-risk-evidence-2026-08-18/report.md) — исторический isolated bundle schema `risk-parity-production-evidence-v1`; не кормить в shared `status.json`.
 - [risk-contract-2026-08-18-v55](runs/risk-contract-2026-08-18-v55/report.md) — локальная parity не открывает общий risk-contract; run `failed/fresh` из-за отсутствующего private UTA/account evidence.
@@ -139,11 +137,11 @@ Machine stage `shadow_readiness` = `shadow-readiness-2026-08-21-v25`: 40/40 gate
 
 ## Текущий допуск
 
-Торговый допуск не выдан. Текущая цепочка — NAS v6 + `shadow-readiness-2026-08-20-v24` (`check_status=passed`, admission `passed`); `baseline-2026-08-20-v84` plan-binding на evidence v78; data v47 failed only on funding; historical v34 не запускал optimizer; paper/live и портфель не начинались. P0-E и P0-D в live. Frozen feed `qualifying=false`. Mac v5, v21/v22/v23 и baseline v77/v82 — historical.
+Торговый допуск не выдан. Текущая цепочка — BL-24 / MP-24 / RE-24 / SR-24 на `f5af0643…` (`passed`/`fresh`); live evidence NAS EX-7. Data v47 failed only on funding; historical v34 не запускал optimizer; paper/live и портфель не начинались. Frozen feed `qualifying=false`. Публичный полный архив 24 августа не найден (248/2332). SR-21/v24, EX-6 и Mac v5/v21/v22/v23 — historical.
 
 Профиль Bitget — `failed`: текущий ключ находится в Classic Account, поэтому нужный UTA isolated/hedge-контракт не подтверждён. Переключение режима счёта не выполнялось.
 
-Этап данных — `failed` и fresh: минутное OHLCV-окно и 1H mark/index-окно покрыты полностью, но frozen funding dataset содержит 270 строк из 2 332 ожидаемых. В preflight v10 hash execution inputs, semantic identity, cache path, local-only policy и zero remote fetch подтверждались; data gate закрыт неполным funding. Официальные Bitget endpoints и доступные внешние варианты полного архива проверены read-only; полного источника без отдельного доступа не найдено.
+Этап данных — `failed` и stale: минутное OHLCV-окно и 1H mark/index-окно покрыты полностью, но frozen funding dataset содержит 270 строк из 2 332 ожидаемых и не перезаписывался. Публичный сбор 24 августа дал 248/2 332 в окне плана. В preflight v10 hash execution inputs, semantic identity, cache path, local-only policy и zero remote fetch подтверждались; data gate закрыт неполным funding. Исчерпанные публичные GET 24 августа не открыли архив; следующий вход — файл пользователя или явное разрешение на платный источник.
 
 Исторический кандидат — `failed`: все шесть ранее отобранных BTC-кандидатов дали отрицательный результат на проверочном периоде. Paper и real этапы намеренно не запускались.
 
@@ -155,4 +153,4 @@ Machine stage `shadow_readiness` = `shadow-readiness-2026-08-21-v25`: 40/40 gate
 
 Для завершённых paper/live-периодов `research-gates` пересчитывает временные и событийные показатели через `passivbot tool crypto-runtime-evidence`; ручное увеличение `days`, `planned_orders`, `fills` или `closed_cycles` больше не продвигает этап. Каждая строка журнала также обязана содержать `strategy_id`, `cycle_id` и `config_hash`; неполная идентификация блокирует доказательство.
 
-Следующий безопасный порядок: дождаться финала v7, не останавливая `passivbot-shadow-v7`. Не делать `docker start` `passivbot-shadow`. v6/v24/v25 не перезаписывать. Восемь `CODE_PATHS` не менять до финала v7. Queue/depth не стартовать. `p0d_local/` не кормить в shared status. Funding blocker формально подтверждён read-only аудитом; внешний архив или API-ключ не покупать и не использовать без отдельного решения пользователя. Data/preflight/historical продолжаются только с полным новым источником. Private UTA, ETH/SOL, optimizer, семидневный shadow, paper и live отложены. Заявки, переводы и изменения счёта не выполняются.
+Следующий безопасный порядок: публичный полный funding-архив 24 августа не найден (248/2332). Нужен файл пользователя или явное разрешение на платный источник, затем `bitget-funding-archive` и `bitget-funding-promote` в **новый** путь. Frozen input не перезаписывать. Не делать `docker start` exam-контейнеров. Восемь `CODE_PATHS` не менять без нового 24h. Queue/depth не стартовать. Optimizer, paper и live отложены. Заявки, переводы и изменения счёта не выполняются.

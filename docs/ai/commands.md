@@ -107,5 +107,32 @@ docker run -d --name passivbot-shadow-v7 --restart on-failure:1 --memory 768m \
   --deterministic-replay-runs 3 --repo-root /app
 ```
 
-Live evidence: `passivbot-shadow-v7` started `2026-08-20T23:58:33Z`. Do not bind `shadow-readiness` until `result.json` and `process_supervisor.json` exist.
+Live evidence: `passivbot-shadow-v7` finished `2026-08-22T01:29:41Z`, `exit=0`. Original `result.json` sha256 `5b427211…` must not be modified. Local copy: `analysis_reports/crypto_bot_roadmap/shadow_runs/public-stream-process-24h-2026-08-21-v7/`. Mac gates used `result.mac-path-bind-2026-08-24.json`. Bound machine packet: `shadow-readiness-2026-08-24-exam7` (40/40, admission passed) on fingerprint `f5af0643…`. Do not `docker start` the exam containers. Do not overwrite EX-6/EX-7 `result.json` or `shadow-readiness-2026-08-21-v25`.
+
+## Bitget funding archive (edition 1.74)
+
+Public full archive was not found on 2026-08-24: 248/2332 applied settlements in `[2024-07-01T00:00:00Z, 2026-08-17T00:00:00Z]`. Do not repeat exhausted public funding GETs. Do not overwrite the frozen execution input. Do not write `status.json` by hand.
+
+Next input is a user file or explicit paid-source permission, then validate and promote into a **new** path:
+
+```bash
+passivbot tool bitget-funding-archive \
+  --archive /path/to/user_or_licensed_bitget_funding.csv \
+  --symbol BTCUSDT \
+  --start 2024-07-01T00:00:00+00:00 \
+  --end 2026-08-17T00:00:00+00:00 \
+  --output analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_funding_archive_validation_new.json \
+  --normalized-output analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_funding_archive_normalized_new.json
+
+passivbot tool bitget-funding-promote \
+  --archive /path/to/user_or_licensed_bitget_funding.csv \
+  --symbol BTCUSDT \
+  --start 2024-07-01T00:00:00+00:00 \
+  --end 2026-08-17T00:00:00+00:00 \
+  --execution-inputs analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_public_execution_inputs_2024-07-01_to_2026-08-17-repaired-pagination-v2.json \
+  --validation-output analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_funding_promotion_validation_new.json \
+  --output analysis_reports/crypto_bot_roadmap/inputs/bitget_btc_public_execution_inputs_2024-07-01_to_2026-08-17-promoted-new.json
+```
+
+`--output` must be a new path that does not exist. `--execution-inputs` is the current frozen file and is read, not overwritten. Incomplete archives stay `blocked`.
 

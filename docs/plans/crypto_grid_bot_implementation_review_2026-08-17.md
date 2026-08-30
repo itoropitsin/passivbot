@@ -8,11 +8,11 @@
 
 Полное промежуточное ревью 1.63 на срезе `21:37Z` подтверждает: цель и обязательная последовательность этапов сохранены, но проект ещё не имеет торгового кандидата. После v24 свежи baseline/market_profile/risk_engine/shadow_readiness; data по-прежнему отклонён из-за неполного funding. `risk_engine v30` проходит собственный machine verdict, однако его сильная метрика production parity остаётся в карантине.
 
-Этот файл сохраняет прежние наблюдения как исторический слой. Актуальное решение задаёт [редакция 1.71 канонического плана](crypto_grid_bot_development_plan_2026-08-17.md): live NAS v7 (`passivbot-shadow-v7`) пишет public snapshots; exam `passivbot-shadow` не стартовать; v6/v24/v25 не перезаписывать; `shadow-readiness` для v7 не биндить до финала. Последний bound срез — v85/v49/v31/v25 на `d46be477…`. ETH sidecar завершился с integrity `failed`. Реальные операции, приватные настройки Bitget, покупка данных и работа с секретами не разрешены.
+Этот файл сохраняет прежние наблюдения как исторический слой. Актуальное решение задаёт [редакция 1.74 канонического плана](crypto_grid_bot_development_plan_2026-08-17.md): публичный полный funding-архив 24 августа не найден (248/2332 в фиксированном окне). Frozen input не перезаписывался. Bound-срез BL-24/MP-24/RE-24/SR-24 без изменений. Следующий вход — файл пользователя или явное разрешение на платный источник, затем `bitget-funding-archive` и `bitget-funding-promote` в новый путь. Exam-контейнеры не стартовать; EX-6/v24/SR-21 не перезаписывать. ETH sidecar завершился с integrity `failed`. Реальные операции, приватные настройки Bitget, покупка данных без отдельного разрешения и работа с секретами не разрешены.
 
 Срез 1.63 **не** перезапускал полный Python/Rust baseline. Канон тестового evidence остаётся v78. Историческая локальная перепроверка 1.61 дала 275/275 критических Python-тестов, 145/145 Rust-тестов через `passivbot-rust/cargotest.sh`, успешные Ruff и `git diff --check`. Прямой документированный `cargo test` воспроизводимо падает на линковке PyO3; команда уже исправлена в `docs/ai/commands.md` и `docs/ai/build_pitfalls.md`.
 
-Два главных внешних факта не изменились. Полного BTCUSDT funding archive за окно 2024-07-01…2026-08-17 нет: официальный ряд покрывает 266 из 2 332 точек точного окна. Paper adapter теперь требует named mark/index и bound maintenance tiers; ticker `last` не подменяет mark. Queue/depth в `create_order` не моделируются. Public input feed может исключить funding без более раннего mark. Поэтому контур не является exchange-parity моделью для 90-дневного зачёта.
+Два главных внешних факта не изменились. Полного BTCUSDT funding archive за окно 2024-07-01…2026-08-17 нет: публичный сбор 24 августа дал **248 из 2 332** точек точного окна (rolling 270 строк; 18 августа в окно входили 266). Frozen input не перезаписывался. Paper adapter теперь требует named mark/index и bound maintenance tiers; ticker `last` не подменяет mark. Queue/depth в `create_order` не моделируются. Public input feed может исключить funding без более раннего mark. Поэтому контур не является exchange-parity моделью для 90-дневного зачёта.
 
 ## Исторический полный срез после 1 дня 6 часов 23 минут — 18 августа 2026 года, финальная проверка 16:57 UTC
 
@@ -348,7 +348,7 @@ Data gate независимо закрыт. Последний public funding r
 
 Следующий исполнитель должен начать с `status.json`, последнего `manifest.json`, `report.md`, `git status` и проверки source fingerprint Rust. Без этого легко принять старый зелёный пакет за доказательство текущего кода.
 
-Безопасный следующий пакет: проверить входы и запустить один 24-часовой public shadow на frozen implementation/config hash. Параллельно допустим только read-only поиск funding. Семидневный shadow, historical optimizer, paper и live пока не начинать.
+Безопасный следующий пакет: файл пользователя или явное разрешение на платный источник, затем `bitget-funding-archive` и `bitget-funding-promote` в **новый** путь. Публичный полный архив 24 августа не найден (248/2332). Frozen input не перезаписывать. EX-7 уже сдан и bound как SR-24; второй 24h не нужен, пока не меняются восемь `CODE_PATHS`. Семидневный shadow, historical optimizer, paper и live пока не начинать.
 
 Если задача требует параллельной работы, Luna Max можно использовать для независимых исследований и отдельных файловых областей. Один интегратор должен последовательно принимать изменения, запускать tests и research-gates и единолично обновлять `status.json`; подагент не получает разрешения на заявки, переводы или настройки Bitget.
 
@@ -505,14 +505,14 @@ plan-binding baseline v82 без повторного полного тесто�
    fail-closed, хотя bundle при этом появится; provenance mapping и profile
    binding уже исправлены и должны остаться обязательными.
 3. Agent order редакции 1.62: live implementation заморожен до v22. P0-E
-   остаётся в `TLI-Setka-p0e-clean` / `p0e/data-passport-clean` и не merge до
-   v22; sibling `TLI-Setka-p0e` не для merge. P0-D изолированная копия готова
-   и uncommitted в `TLI-Setka-p0d`, не merge-ready до v22; в live не копировать.
-   Paper калибровка изолированно готова и uncommitted в `TLI-Setka-p1-paper`
+   остаётся в `TLI-Wings/p0e-data-passport-clean` / `p0e/data-passport-clean` и не merge до
+   v22; sibling `TLI-Wings/p0e-data-passport` не для merge. P0-D изолированная копия готова
+   и uncommitted в `TLI-Wings/p0d-production-risk-evidence`, не merge-ready до v22; в live не копировать.
+   Paper калибровка изолированно готова и uncommitted в `TLI-Wings/p1-paper-execution-calibration`
    (`qualifying=false`, queue/depth не смоделированы); не merge до v22 и
-   не открывает 90-дневный paper. Имя `TLI-Setka-p1-paper-cal` не использовать.
+   не открывает 90-дневный paper. Имя `TLI-Wings/p1-paper-execution-calibration-cal` не использовать.
    P1-F timestamp parser изолированно готов и uncommitted в
-   `TLI-Setka-p1f-timestamps` / `p1f/strict-timestamp-parser`; не merge до v22.
+   `TLI-Wings/p1f-strict-timestamps` / `p1f/strict-timestamp-parser`; не merge до v22.
    Funding research только при новом проверяемом источнике. Второй shadow,
    v83, public/risk rerun, заявки, переводы, секреты и ручная запись
    `status.json` запрещены. Новый engineering-пакет до v22 не запускать.
@@ -539,10 +539,10 @@ v22 нет. Не запускать второй shadow и не пересоби
 менять; v5 не останавливать и не дублировать; v83 и public/risk rerun не
 запускать. v5 — `--side long` transport, не Long+Short. Порог
 `shadow_planned_orders >= 20` не ослаблять. ETH sidecar ~4 часа не есть 24h
-evidence. P0-E остаётся uncommitted в `TLI-Setka-p0e-clean`. P0-D изолированная
-копия готова и uncommitted в `TLI-Setka-p0d`, не merge-ready до v22;
+evidence. P0-E остаётся uncommitted в `TLI-Wings/p0e-data-passport-clean`. P0-D изолированная
+копия готова и uncommitted в `TLI-Wings/p0d-production-risk-evidence`, не merge-ready до v22;
 `risk_engine v29` на shared status по-прежнему завышает production parity.
-Paper-калибровка изолированно готова и uncommitted в `TLI-Setka-p1-paper`
+Paper-калибровка изолированно готова и uncommitted в `TLI-Wings/p1-paper-execution-calibration`
 на `p1/paper-execution-calibration` @ `9dee208e5`; `qualifying=false`,
 queue/depth не смоделированы. Live не содержит `paper_market_surfaces.py`.
 Пакет не открывает 90-дневный paper и не merge-ready до v22.
@@ -556,7 +556,7 @@ Failed `result.json` не принимать как завершённый readi
 переписывать. Порог `shadow_planned_orders >= 20` не ослаблять.
 
 После v22 принять `passed`/`failed`/`blocked` как есть. Порядок merge-review:
-P0-E, затем P0-D, затем paper-пакет из `TLI-Setka-p1-paper`. Один новый
+P0-E, затем P0-D, затем paper-пакет из `TLI-Wings/p1-paper-execution-calibration`. Один новый
 полный baseline — только если fingerprint изменился. Historical, 90d paper
 и live по-прежнему требуют полный лицензированный funding archive; 270/2332
 этот путь не открывает. Торговая готовность остаётся нулевой.
@@ -598,10 +598,10 @@ Production risk и qualifying paper не доказаны. Промежуточ�
 
 ### Изолированные пакеты
 
-- P0-E: `TLI-Setka-p0e-clean` / `p0e/data-passport-clean`, uncommitted,
+- P0-E: `TLI-Wings/p0e-data-passport-clean` / `p0e/data-passport-clean`, uncommitted,
   есть `data_passport.py`, нет `risk_evidence.py`. Frozen feed 270/2332,
-  `qualifying=false`. Sibling `TLI-Setka-p0e` не для merge.
-- P0-D: `TLI-Setka-p0d` / `codex/p0d-production-risk-evidence-20260818`,
+  `qualifying=false`. Sibling `TLI-Wings/p0e-data-passport` не для merge.
+- P0-D: `TLI-Wings/p0d-production-risk-evidence` / `codex/p0d-production-risk-evidence-20260818`,
   uncommitted. Manifest schema `risk-parity-production-evidence-v1`,
   snapshot `cb50c9a…`, invocation
   `Passivbot._apply_crypto_portfolio_risk_limits` + Rust `Backtest`,
@@ -610,10 +610,10 @@ Production risk и qualifying paper не доказаны. Промежуточ�
   fingerprint `e611043b…` не равен live `35a72db6…` и не привязан к
   shared status. `risk_engine v29` по-прежнему завышает production
   parity.
-- P1-G paper: `TLI-Setka-p1-paper` / `p1/paper-execution-calibration`
+- P1-G paper: `TLI-Wings/p1-paper-execution-calibration` / `p1/paper-execution-calibration`
   @ `9dee208e5`, uncommitted, есть `paper_market_surfaces.py`, нет
   `data_passport.py` / `risk_evidence.py`. Каталог
-  `TLI-Setka-p1-paper-cal` отсутствует. `qualifying=false`. Queue/depth
+  `TLI-Wings/p1-paper-execution-calibration-cal` отсутствует. `qualifying=false`. Queue/depth
   не смоделированы: даже после v22 этот пакет не закрывает исходный
   merge-check «отдельный calibration artifact очереди». Live paper
   по-прежнему может подставлять ticker `last` как mark/index.
@@ -661,7 +661,7 @@ Document-only. Isolation claim из isolated P1-F подтверждён. Merge 
   `2026-08-17 16:33`; live tests mtime `2026-08-17 16:43`. После
   `21:50` local в live `src/`/`tests/`/`passivbot-rust/`/`configs/`
   новых файлов нет.
-- Worktree `/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka-p1f-timestamps`
+- Worktree `/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Wings/p1f-strict-timestamps`
   / `p1f/strict-timestamp-parser` @ `9dee208e5`, uncommitted
   (`?? src/research/`, `?? tests/test_bitget_market_surfaces.py`).
   Нет `data_passport.py`, `risk_evidence.py`, `paper_market_surfaces.py`.
@@ -718,7 +718,7 @@ Document-only. Цель не сдвинута. Торгового кандида
 
 **Agent order после 1.63:** единственный обязательный саб-агент — read-only
 runtime reviewer v5. P0-D/P0-E/P1-F не запускать заново. Queue/depth в
-`TLI-Setka-p1-paper` не стартовать в этой пачке. Второй shadow, v83, ETH
+`TLI-Wings/p1-paper-execution-calibration` не стартовать в этой пачке. Второй shadow, v83, ETH
 rerun, merge, ручной `status.json` запрещены.
 
 **После v22:** принять фактический `passed`/`failed`/`blocked`; проверить, что

@@ -20,13 +20,15 @@
       "source_hash": "1802da058477a5036a9190efc17e124634068735c54c5ac7246687706256e32a",
       "stage_admission_status": "failed",
       "stale_checked_against": {
-        "dirty_diff_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
-        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
-        "git_dirty": true,
-        "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "dirty_diff_sha256": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
+        "git_commit": "7a8be78929967a0a6ef498e0710ea1e330db9e3b",
+        "git_dirty": false,
+        "implementation_fingerprint_sha256": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
         "implementation_fingerprint_version": "implementation-fingerprint-v2"
       },
       "stale_reasons": [
+        "git_commit_changed",
+        "git_dirty_state_changed",
         "implementation_fingerprint_missing",
         "dirty_tree_hash_changed"
       ],
@@ -44,25 +46,25 @@
       "check_status": "passed",
       "freshness": "fresh",
       "freshness_checked_against": {
-        "dirty_diff_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
-        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
-        "git_dirty": true,
-        "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "dirty_diff_sha256": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
+        "git_commit": "7a8be78929967a0a6ef498e0710ea1e330db9e3b",
+        "git_dirty": false,
+        "implementation_fingerprint_sha256": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
         "implementation_fingerprint_version": "implementation-fingerprint-v2"
       },
       "outcome": "passed",
-      "run_id": "baseline-2026-08-20-v85",
+      "run_id": "baseline-2026-08-24-rebind",
       "source": {
-        "dirty_diff_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
-        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
-        "git_dirty": true,
-        "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "dirty_diff_sha256": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
+        "git_commit": "7a8be78929967a0a6ef498e0710ea1e330db9e3b",
+        "git_dirty": false,
+        "implementation_fingerprint_sha256": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
         "implementation_fingerprint_version": "implementation-fingerprint-v2"
       },
-      "source_hash": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+      "source_hash": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
       "stage_admission_status": "passed",
       "status": "passed",
-      "verdict_path": "runs/baseline-2026-08-20-v85/verdict.json"
+      "verdict_path": "runs/baseline-2026-08-24-rebind/verdict.json"
     },
     "controlled_live": {
       "admission_blockers": [
@@ -101,13 +103,14 @@
       "source_hash": "bbd19e7dd86d05d23c303dbd9b281601748020dd57bf65c165e4be062d53baed",
       "stage_admission_status": "failed",
       "stale_checked_against": {
-        "dirty_diff_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
-        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
-        "git_dirty": true,
-        "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "dirty_diff_sha256": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
+        "git_commit": "7a8be78929967a0a6ef498e0710ea1e330db9e3b",
+        "git_dirty": false,
+        "implementation_fingerprint_sha256": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
         "implementation_fingerprint_version": "implementation-fingerprint-v2"
       },
       "stale_reasons": [
+        "git_dirty_state_changed",
         "dirty_tree_hash_changed"
       ],
       "status": "stale",
@@ -139,13 +142,14 @@
       "source_hash": "bbd19e7dd86d05d23c303dbd9b281601748020dd57bf65c165e4be062d53baed",
       "stage_admission_status": "blocked",
       "stale_checked_against": {
-        "dirty_diff_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
-        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
-        "git_dirty": true,
-        "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "dirty_diff_sha256": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
+        "git_commit": "7a8be78929967a0a6ef498e0710ea1e330db9e3b",
+        "git_dirty": false,
+        "implementation_fingerprint_sha256": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
         "implementation_fingerprint_version": "implementation-fingerprint-v2"
       },
       "stale_reasons": [
+        "git_dirty_state_changed",
         "dirty_tree_hash_changed"
       ],
       "status": "blocked",
@@ -155,25 +159,25 @@
       "check_status": "passed",
       "freshness": "fresh",
       "freshness_checked_against": {
-        "dirty_diff_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
-        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
-        "git_dirty": true,
-        "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "dirty_diff_sha256": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
+        "git_commit": "7a8be78929967a0a6ef498e0710ea1e330db9e3b",
+        "git_dirty": false,
+        "implementation_fingerprint_sha256": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
         "implementation_fingerprint_version": "implementation-fingerprint-v2"
       },
       "outcome": "passed",
-      "run_id": "market-profile-2026-08-20-v49",
+      "run_id": "market-profile-2026-08-24-rebind",
       "source": {
-        "dirty_diff_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
-        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
-        "git_dirty": true,
-        "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "dirty_diff_sha256": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
+        "git_commit": "7a8be78929967a0a6ef498e0710ea1e330db9e3b",
+        "git_dirty": false,
+        "implementation_fingerprint_sha256": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
         "implementation_fingerprint_version": "implementation-fingerprint-v2"
       },
-      "source_hash": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+      "source_hash": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
       "stage_admission_status": "passed",
       "status": "passed",
-      "verdict_path": "runs/market-profile-2026-08-20-v49/verdict.json"
+      "verdict_path": "runs/market-profile-2026-08-24-rebind/verdict.json"
     },
     "paper_runtime": {
       "admission_blockers": [
@@ -231,13 +235,14 @@
       "source_hash": "bbd19e7dd86d05d23c303dbd9b281601748020dd57bf65c165e4be062d53baed",
       "stage_admission_status": "failed",
       "stale_checked_against": {
-        "dirty_diff_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
-        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
-        "git_dirty": true,
-        "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "dirty_diff_sha256": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
+        "git_commit": "7a8be78929967a0a6ef498e0710ea1e330db9e3b",
+        "git_dirty": false,
+        "implementation_fingerprint_sha256": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
         "implementation_fingerprint_version": "implementation-fingerprint-v2"
       },
       "stale_reasons": [
+        "git_dirty_state_changed",
         "dirty_tree_hash_changed"
       ],
       "status": "stale",
@@ -247,25 +252,25 @@
       "check_status": "passed",
       "freshness": "fresh",
       "freshness_checked_against": {
-        "dirty_diff_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
-        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
-        "git_dirty": true,
-        "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "dirty_diff_sha256": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
+        "git_commit": "7a8be78929967a0a6ef498e0710ea1e330db9e3b",
+        "git_dirty": false,
+        "implementation_fingerprint_sha256": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
         "implementation_fingerprint_version": "implementation-fingerprint-v2"
       },
       "outcome": "passed",
-      "run_id": "risk-engine-2026-08-21-v31",
+      "run_id": "risk-engine-2026-08-24-rebind",
       "source": {
-        "dirty_diff_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
-        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
-        "git_dirty": true,
-        "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "dirty_diff_sha256": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
+        "git_commit": "7a8be78929967a0a6ef498e0710ea1e330db9e3b",
+        "git_dirty": false,
+        "implementation_fingerprint_sha256": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
         "implementation_fingerprint_version": "implementation-fingerprint-v2"
       },
-      "source_hash": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+      "source_hash": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
       "stage_admission_status": "passed",
       "status": "passed",
-      "verdict_path": "runs/risk-engine-2026-08-21-v31/verdict.json"
+      "verdict_path": "runs/risk-engine-2026-08-24-rebind/verdict.json"
     },
     "risk_grid": {
       "check_status": "passed",
@@ -289,13 +294,14 @@
       "source_hash": "bbd19e7dd86d05d23c303dbd9b281601748020dd57bf65c165e4be062d53baed",
       "stage_admission_status": "passed",
       "stale_checked_against": {
-        "dirty_diff_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
-        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
-        "git_dirty": true,
-        "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "dirty_diff_sha256": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
+        "git_commit": "7a8be78929967a0a6ef498e0710ea1e330db9e3b",
+        "git_dirty": false,
+        "implementation_fingerprint_sha256": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
         "implementation_fingerprint_version": "implementation-fingerprint-v2"
       },
       "stale_reasons": [
+        "git_dirty_state_changed",
         "dirty_tree_hash_changed"
       ],
       "status": "stale",
@@ -305,18 +311,18 @@
       "check_status": "passed",
       "freshness": "fresh",
       "outcome": "passed",
-      "run_id": "shadow-readiness-2026-08-21-v25",
+      "run_id": "shadow-readiness-2026-08-24-exam7",
       "source": {
-        "dirty_diff_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
-        "git_commit": "9dee208e5dd7cce8013ae270254e871775d0f78c",
-        "git_dirty": true,
-        "implementation_fingerprint_sha256": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+        "dirty_diff_sha256": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
+        "git_commit": "7a8be78929967a0a6ef498e0710ea1e330db9e3b",
+        "git_dirty": false,
+        "implementation_fingerprint_sha256": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
         "implementation_fingerprint_version": "implementation-fingerprint-v2"
       },
-      "source_hash": "d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8",
+      "source_hash": "f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78",
       "stage_admission_status": "passed",
       "status": "passed",
-      "verdict_path": "runs/shadow-readiness-2026-08-21-v25/verdict.json"
+      "verdict_path": "runs/shadow-readiness-2026-08-24-exam7/verdict.json"
     },
     "technical_live": {
       "admission_blockers": [
@@ -339,5 +345,5 @@
     "outcome": "stage_admission_status at the latest refresh",
     "stage_admission_status": "promotion result after current prerequisites"
   },
-  "updated_at_utc": "2026-08-20T23:26:05+00:00"
+  "updated_at_utc": "2026-08-23T22:21:42+00:00"
 }

@@ -1,0 +1,110 @@
+{
+  "captured_at_utc": "2026-08-24T09:07:08.090822+00:00",
+  "window": {
+    "start": "2024-07-01T00:00:00+00:00",
+    "end": "2026-08-17T00:00:00+00:00",
+    "expected": 2332
+  },
+  "files": {
+    "coinank_indicator": {
+      "status": 402,
+      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "nbytes": 2,
+      "preview": "{}"
+    },
+    "hf_bitget_search": {
+      "status": 200,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "nbytes": 2,
+      "preview": "[]"
+    }
+  },
+  "symbols": {
+    "BTCUSDT": {
+      "pages": [
+        {
+          "page": 1,
+          "status": 200,
+          "rows": 100,
+          "sha256": "750d10efeffb0ce3de5b60d9f30e82a4e5a5d06969994d339875060da47e5977",
+          "nbytes": 8543,
+          "file": "funding_collect_2026-08-24_bitget_uta_v3_BTCUSDT_page1.json"
+        },
+        {
+          "page": 2,
+          "status": 200,
+          "rows": 100,
+          "sha256": "d2bd8d84f08a3f4d76ae57b329b0c50d76dcf890563437e4473d68131acc6a97",
+          "nbytes": 8553,
+          "file": "funding_collect_2026-08-24_bitget_uta_v3_BTCUSDT_page2.json"
+        },
+        {
+          "page": 3,
+          "status": 200,
+          "rows": 70,
+          "sha256": "f66c94a879479f7d18c5a7c61edf8022cc734b33f9e320b4af20e650d40979a2",
+          "nbytes": 6037,
+          "file": "funding_collect_2026-08-24_bitget_uta_v3_BTCUSDT_page3.json"
+        },
+        {
+          "page": 4,
+          "status": 200,
+          "rows": 0,
+          "sha256": "503261d61cfc32366e6e462dc70e80e606793995f90b996eadbb365136ac01d4",
+          "nbytes": 85,
+          "file": "funding_collect_2026-08-24_bitget_uta_v3_BTCUSDT_page4.json"
+        }
+      ],
+      "total_rows": 270,
+      "unique_ts": 270,
+      "in_window": 248,
+      "missing_in_window": 2084,
+      "oldest_utc": "2026-05-26T16:00:00+00:00",
+      "newest_utc": "2026-08-24T08:00:00+00:00",
+      "coverage": 0.10634648370497427
+    },
+    "ETHUSDT": {
+      "pages": [
+        {
+          "page": 1,
+          "status": 200,
+          "rows": 100,
+          "sha256": "0301da6cde569f33110d4401a3ce63c978a06e1658adaec50d098640beb3f406",
+          "nbytes": 8556,
+          "file": "funding_collect_2026-08-24_bitget_uta_v3_ETHUSDT_page1.json"
+        },
+        {
+          "page": 2,
+          "status": 200,
+          "rows": 100,
+          "sha256": "d99f50154b05e421c7424665bc81581ac7bcaeaff0ff72c7ef301a5959d46c1e",
+          "nbytes": 8587,
+          "file": "funding_collect_2026-08-24_bitget_uta_v3_ETHUSDT_page2.json"
+        },
+        {
+          "page": 3,
+          "status": 200,
+          "rows": 70,
+          "sha256": "c817a536c9e03a7fd2874fe980ca0c2058d67af23633102eedafa31bbf4ea6d9",
+          "nbytes": 6040,
+          "file": "funding_collect_2026-08-24_bitget_uta_v3_ETHUSDT_page3.json"
+        },
+        {
+          "page": 4,
+          "status": 200,
+          "rows": 0,
+          "sha256": "1ba290987bab424d0ed33ca9694521a1532b45a72af62865886a5a4789bd6e19",
+          "nbytes": 85,
+          "file": "funding_collect_2026-08-24_bitget_uta_v3_ETHUSDT_page4.json"
+        }
+      ],
+      "total_rows": 270,
+      "unique_ts": 270,
+      "in_window": 248,
+      "missing_in_window": 2084,
+      "oldest_utc": "2026-05-26T16:00:00+00:00",
+      "newest_utc": "2026-08-24T08:00:00+00:00",
+      "coverage": 0.10634648370497427
+    }
+  }
+}

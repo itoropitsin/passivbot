@@ -1,8 +1,35 @@
 # Промежуточный checkpoint после продолжения внедрения
 
-Дата проверки: **21 августа 2026 года**, Europe/Amsterdam. Дата исходного плана: **17 августа 2026 года**.
+Дата проверки: **24 августа 2026 года**, Europe/Amsterdam. Дата исходного плана: **17 августа 2026 года**.
 
-## Текущий блок редакции 1.71 — live 24h v7 запущен
+## Текущий блок редакции 1.74 — полный funding-архив публично не собран
+
+Цель и gates не ослаблены; торгового кандидата нет. `status.json` не редактировался в этом окне (`updated_at_utc=2026-08-23T22:21:42Z`).
+
+- Публичный UTA v3: 270 строк, в окно плана 248/2332, coverage `0.10635`. Oldest `2026-05-26T16:00Z`. Tardis/Amberdata/Laevitas/Coinank без ключа не открываются. Frozen input не перезаписывался. Evidence: [funding_archive_collect_attempt_2026-08-24.md](funding_archive_collect_attempt_2026-08-24.md).
+- Следующий вход: файл пользователя или явное разрешение купить/использовать ключ. Затем `bitget-funding-archive` и `bitget-funding-promote` в новый путь. Исчерпанные публичные GET не повторять.
+- Machine bound без изменений: BL-24/MP-24/RE-24/SR-24.
+
+## Исторический блок редакции 1.73 — bound-срез BL-24/MP-24/RE-24/SR-24
+
+Цель и gates не ослаблены; торгового кандидата нет. `status.json` обновлён штатной командой `research-gates` в `2026-08-23T22:21:42Z`, не вручную. Идентификаторы `v83`/`v86`/`v26` запрещены.
+
+- Machine: `baseline-2026-08-24-rebind` 5/5, `market-profile-2026-08-24-rebind` 4/4, `risk-engine-2026-08-24-rebind` 35/35, `shadow-readiness-2026-08-24-exam7` 40/40 admission passed — `passed`/`fresh` на `f5af0643…` / `7a8be7892`.
+- BL-24: 2641/2523/118 Python, 20 fake-live, 145 Rust, progress-dot hash `9a4a1346…`.
+- RE-24: bound `production-risk-evidence-2026-08-24-v1`, snapshot `cb50c9a1…`. Не `p0d_local`. RE-21 historical.
+- SR-24: EX-7, исходный `result.json` SHA-256 `5b427211…` не менялся. SR-21/v24 не перезаписаны.
+- Следующее окно: funding 270/2332. Queue/depth не стартовать. ETH не перезапускать. Exam-контейнеры не стартовать. CODE_PATHS не менять без нового 24h.
+
+## Исторический блок редакции 1.72 — v7 сдан; следующие тесты не запускались
+
+Цель и gates не ослаблены; торгового кандидата нет. `status.json` тогда не редактировался (`updated_at_utc=2026-08-20T23:26:05Z`). Идентификатор `v83` запрещён.
+
+- NAS v7: `passed`, wall-clock 25.52 ч, coverage 24.25 ч, 1397 snapshots, 0 stream errors, max gap 72.1 с, 51 planned/fill, replay 3/3. `result.json` SHA-256 `5b427211…` не менялся.
+- Локальная копия и `result.mac-path-bind-2026-08-24.json` (56 путей). Artifact hashes совпали. v6 не перезаписывался.
+- In-memory 40/40 passed; admission был бы `blocked` на fingerprint `f5af0643…` (commit `7a8be7892`, dirty=false). Штатный `research-gates` в том окне не запускался.
+- Следующие тесты тогда: BL-24 → MP-24 → RE-24 → SR-24. Закрыто в 1.73.
+
+## Исторический блок редакции 1.71 — live 24h v7 запущен
 
 Цель и gates не ослаблены; торгового кандидата нет. `status.json` не редактировался. Идентификатор `v83` запрещён.
 
@@ -135,11 +162,11 @@ Baseline v76 имеет `checksums.json` и прошедшую независи�
 
 Исправлены и отдельно проверены: fail-closed shadow boundary, конфликтующий `fill_id`, последний partial-fill остаток, WAL для create/cancel/funding, crash/replay, неизменяемость public inputs, source-hash reconciliation, безопасный paper startup без credentials, привязка shadow policy к конфигурации, строгий funding archive contract, запрет synthetic rows и невыравненных окон, запрет naive ISO timestamps, обязательный top-level millisecond source timestamp и контроль обратного source-time порядка. Horizon probe теперь валидирует все raw rows до фильтрации и отдельно показывает malformed/duplicate/foreign-symbol evidence. `bitget-funding-promote` создаёт новый execution-input только после полной проверки внешнего архива и никогда не перезаписывает frozen input. Новый `strategy_shadow` driver формирует локальные intent/plan/order/fill и typed events; public stream supervisor сохраняет PID/state/recovery и связывает результат с хэшами кода, конфигурации и входа. Supervisor теперь использует отдельную process group и fail-safe cleanup при SIGINT/SIGTERM. v2 остановлен после аудита: его хэши снимались до закрытия журналов, а segment-local counters смешивались с cumulative; orphan child остановлен. v3 также остановлен до завершения и сохранён как partial evidence, readiness не считается.
 
-## Решение
+## Историческое решение (18 августа)
 
 Цель не меняется: BTC/USDT perpetual на Bitget, затем BTC+ETH; Long и Short допускаются независимо; капитал, плечо, isolated hedge mode и риск-пределы остаются зафиксированными в каноническом плане.
 
-Продолжать historical optimizer, 90-дневный paper или live сейчас нельзя. Сначала нужно исправить fingerprint/output isolation и коротким fault-injection тестом доказать descendant cleanup + crash/replay. После интеграции выполняется один baseline; затем параллельно идут новый 24-часовой public shadow и поиск полного funding archive. Classic Account остаётся будущим блокером technical live, но не входит в ближайший цикл. Никакие заявки, переводы или изменения счёта не выполнялись.
+На срезе 18 августа historical optimizer, 90-дневный paper или live были закрыты до fingerprint/output isolation и fault-injection. Этот слой закрыт последующими редакциями; актуальный вход — блок 1.74 выше. Никакие заявки, переводы или изменения счёта не выполнялись.
 
 ## Ревью процесса после 1 дня и 2 часов
 

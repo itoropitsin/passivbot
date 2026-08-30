@@ -2,27 +2,44 @@
 
 Дата плана: **17 августа 2026 года**. Часовой пояс: Europe/Amsterdam.
 
-Редакция: **1.71 от 21 августа 2026 года**, next-stage после 1.70. Пользователь явно разрешил следующий 24h. Запущен NAS `public-stream-process-24h-2026-08-21-v7` через новый `docker run` (`passivbot-shadow-v7`, образ `passivbot-shadow:v6`, `SHADOW_RESUME=0`). Exam-контейнер `passivbot-shadow` остаётся `exited 0`; `docker start` не использовался; каталог v6 не перезаписывался. Сбор данных подтверждён: к `2026-08-21T00:00:47Z` три public BTCUSDT snapshots, `fixture_mode=false`, `trading_operations_count=0`, source gap ≈62 с. `shadow-readiness` для v7 не биндить до финала. v85/v49/v31/v25 остаются последним bound machine-срезом на `d46be477…`. Queue/depth не стартовать. ETH не перезапускать. Торговая готовность ноль. `status.json` не писать вручную.
+Редакция: **1.74 от 24 августа 2026 года**, next-stage после 1.73. Попытка собрать полный funding-архив не удалась: публичный Bitget rolling-ряд снова `100, 100, 70, 0` (270 строк), в фиксированное окно `[2024-07-01T00:00:00Z, 2026-08-17T00:00:00Z]` попадает **248 / 2 332**. Frozen input не перезаписывался, promote не запускался. Канцелярия BL-24/MP-24/RE-24/SR-24 без изменений. Торговая готовность ноль. Нужен файл пользователя или отдельно разрешённый платный источник.
 
 Подробные находки ревью: [crypto_grid_bot_implementation_review_2026-08-17.md](crypto_grid_bot_implementation_review_2026-08-17.md).
 
 Терминология: для входного условия этапа используется английское слово `gate`. В этом плане и связанных рабочих документах используется только `gate`; исходные сообщения форума в архиве не переписываются, чтобы не менять цитируемый источник.
 
+Голые номера вроде `v85` не использовать в новых текстах: один и тот же номер встречается у разных этапов (`market_profile v49` ≠ `risk_grid v49`; NAS exam `v7` ≠ gate `v25`). Исторические `run_id` не переименовывать. В речи и в следующих прогонах:
+
+| Коротко | Этап | `run_id` | Смысл |
+|---|---|---|---|
+| BL-20 | `baseline` | `baseline-2026-08-20-v85` | historical: полный suite на `d46be477…` |
+| MP-20 | `market_profile` | `market-profile-2026-08-20-v49` | historical: публичный BTC Bitget surface |
+| RE-21 | `risk_engine` | `risk-engine-2026-08-21-v31` | historical: production live-фильтр ↔ Rust Backtest |
+| SR-21 | `shadow_readiness` | `shadow-readiness-2026-08-21-v25` | historical: machine-допуск EX-6 |
+| EX-6 | public exam | `public-stream-process-24h-2026-08-19-v6` | 24h запись на NAS, 19 авг; не перезаписывать |
+| EX-7 | public exam | `public-stream-process-24h-2026-08-21-v7` | 24h запись на NAS, 21 авг; не перезаписывать |
+| BL-24 | `baseline` | `baseline-2026-08-24-rebind` | bound: полный suite на `f5af0643…` |
+| MP-24 | `market_profile` | `market-profile-2026-08-24-rebind` | bound: те же public surfaces, что MP-20/v47 |
+| RE-24 | `risk_engine` | `risk-engine-2026-08-24-rebind` | bound: `production-risk-evidence-2026-08-24-v1` |
+| SR-24 | `shadow_readiness` | `shadow-readiness-2026-08-24-exam7` | bound: machine-допуск EX-7 |
+
+Bound-цепочка BL-24 → MP-24 → RE-24 → SR-24 закрыта. Формат новых `run_id`: `{этап}-{дата}-{роль}`, без голого счётчика. Не `v83`, не `v86`, не `v26`.
+
 ## Короткий итог ревью
 
 Цель и риск-пределы не изменены. BTC считается готовым только после historical, 90-дневного paper, 30-дневного технического реала и 90-дневного контролируемого реала. Сейчас подходящего кандидата нет; historical, paper и все реальные этапы закрыты.
 
-- `baseline v85` — честный полный suite на `d46be477…`, `passed`/`fresh`. 2 641 Python собраны, 2 523 прошли, 118 пропущено; 20 fake-live; 145 Rust через `cargotest.sh`; три последовательных raw output SHA-256 `9a4a1346…`. v84 — historical plan-binding на v78/`dcae540a…`. v83 не существовал.
-- `market_profile v49` — те же public surfaces, что v47/v48, `passed`/`fresh`. `risk_engine v31` — production-path, `passed`/`fresh`; v30 historical. `shadow-readiness v25` — NAS v6 перепривязка, 40/40, `passed`/`fresh`; v24 не перезаписан. `data v47` failed/stale только по funding; `historical v34` blocked; optimizer не запускался.
+- `BL-24` — честный полный suite на `f5af0643…` / `7a8be7892`, `passed`/`fresh`. 2 641 Python собраны, 2 523 прошли, 118 пропущено; 20 fake-live; 145 Rust через `cargotest.sh`; три последовательных progress-dot SHA-256 `9a4a1346…` (совпал с BL-20). BL-20/v84 historical. v83 не существовал.
+- `MP-24` — те же public surfaces, что MP-20/v47, `passed`/`fresh`. `RE-24` — production-path `production-risk-evidence-2026-08-24-v1`, 35/35, `passed`/`fresh`; не `p0d_local`. `SR-24` — EX-7, 40/40, admission passed; SR-21/v24 не перезаписаны. `data v47` failed/stale только по funding; `historical v34` blocked; optimizer не запускался.
 - BTC NAS `public-stream-process-24h-2026-08-19-v6` сдан. Machine `shadow-readiness-2026-08-20-v24`: 40/40 gates, admission passed, freshness fresh. v23 — historical check-passed/admission-blocked. Mac v5/v21/v22 — historical. Это Long-only transport/recovery exam, не квалификация Long и Short.
-- P0-E `data_passport` перенесён точечно из `TLI-Setka-p0e-clean`. Frozen feed 270/2332 остаётся `qualifying=false`.
-- P0-D production-path перенесён точечно из `TLI-Setka-p0d`: `src/research/risk_evidence.py`, проводка gates/manifest/probe. Kitchen-sink overlay не копировался. `passivbot.py` не менялся. Research-matrix больше не открывает `risk_limits_enforced_in_live_and_tester`.
-- `p1-paper` перенесён точечно из `TLI-Setka-p1-paper`: named mark/index, bound maintenance tiers, evidence writer. Queue/depth в `create_order` не проводён. `qualifying=false`.
+- P0-E `data_passport` перенесён точечно из `TLI-Wings/p0e-data-passport-clean`. Frozen feed 270/2332 остаётся `qualifying=false`.
+- P0-D production-path перенесён точечно из `TLI-Wings/p0d-production-risk-evidence`: `src/research/risk_evidence.py`, проводка gates/manifest/probe. Kitchen-sink overlay не копировался. `passivbot.py` не менялся. Research-matrix больше не открывает `risk_limits_enforced_in_live_and_tester`.
+- `p1-paper` перенесён точечно из `TLI-Wings/p1-paper-execution-calibration`: named mark/index, bound maintenance tiers, evidence writer. Queue/depth в `create_order` не проводён. `qualifying=false`.
 - `p1f-timestamps` перенесён точечно: `_integer()` отклоняет `1.9` вместо `int(1.9) -> 1`. Baseline v85 это закрыл.
 - Срез 1.63 **не** перезапускал полный Python/Rust baseline. Канон тестового evidence текущего дерева — v85, не v78.
-- `--resume-existing-output` изменил восемь `CODE_PATHS` shadow (правило 28) и поэтому сдвинул fingerprint. Freeze на время v6 выдержан. Следующий 24h (`v7`) запущен 21 августа; до его финала эти восемь файлов снова не менять. Document-only правки допустимы. Queue/depth в `TLI-Setka-p1-paper` не стартовать. Документация и generated reports не входят в implementation fingerprint.
+- `--resume-existing-output` изменил восемь `CODE_PATHS` shadow (правило 28) и поэтому сдвинул fingerprint. Freeze на время EX-6 и EX-7 выдержан: hash по-прежнему `b6c53f50…`. SR-24 уже bound; эти восемь файлов всё равно не менять без нового 24h. Document-only правки допустимы. Queue/depth в `TLI-Wings/p1-paper-execution-calibration` не стартовать. Документация и generated reports не входят в implementation fingerprint.
 - `risk_grid v49` checks проходили, но после fingerprint-сдвига stale; в окне 1.66 не пересобирался. `risk_contract v55` — failed evidence; `account_risk_surface` не начинался.
-- Funding blocker подтверждён повторно: официальный UTA v3 и Classic v2 дают 270 последних строк, из которых 266 входят в точное окно; отсутствуют 2 066 из 2 332 ожидаемых settlement points. Полного доступного публичного архива не найдено. Следующие агенты не повторяют исчерпанные источники без нового evidence; data gate может открыть только проверенный полный raw export с правом хранения.
+- Funding blocker редакции 1.74: публичный полный архив 24 августа не найден. UTA v3 снова `100, 100, 70, 0` (270 строк); в фиксированное окно входят **248 / 2 332** (coverage `0.10635`). Frozen execution input не перезаписывался, `bitget-funding-promote` не запускался. Следующие агенты не повторяют исчерпанные GET без нового источника. Data gate открывает только проверенный полный raw export: файл пользователя или явно разрешённый платный источник, затем `bitget-funding-archive` и `bitget-funding-promote` в новый путь.
 - Standalone ETH recorder завершился: запись `eth-public-market-24h-2026-08-18-v1`, wall-clock 4,017 ч, 231 rows, integrity `status=failed` (12 errors на 3 транспортные строки: SSL EOF / timeout / DNS). Funding continuity passed. Имя файла с `24h` не является доказательством длительности. Процесс `67935` мёртв. Не перезапускать ETH и не открывать ETH или portfolio gate.
 - Paper-контур имеет WAL, явные funding settlements, bounded partial fills, named mark/index и bound maintenance tiers. `fetch_positions()` больше не подставляет ticker `last` как mark/index и не использует hardcoded 0,5% maintenance. Queue/depth по-прежнему не моделируются в `create_order`; `qualifying=false`. Public input feed исключает settlement без предшествующего mark. Поэтому текущий paper adapter не является доказательством exchange parity и не готов к 90-дневному зачётному периоду.
 - Официальная документация Bitget подтверждает isolated futures с 19 мая 2026 года и отдельные Long/Short leverage fields для isolated two-way mode с 9 июня 2026 года. Приватное состояние конкретного субсчёта не проверялось и не должно проверяться до соответствующего этапа и отдельного разрешения.
@@ -31,23 +48,23 @@
 
 ## Машинный статус на 20 августа 2026 года
 
-Источник: [`analysis_reports/crypto_bot_roadmap/status.json`](../../analysis_reports/crypto_bot_roadmap/status.json), схема `crypto-grid-roadmap-status-v3`, `updated_at_utc=2026-08-20T23:26:05Z`.
+Источник: [`analysis_reports/crypto_bot_roadmap/status.json`](../../analysis_reports/crypto_bot_roadmap/status.json), схема `crypto-grid-roadmap-status-v3`, `updated_at_utc=2026-08-23T22:21:42Z`.
 
-Таблица ниже фиксирует срез после v31/v25. Точные `run_id`, время обновления и свежесть всегда берутся из `status.json`.
+Таблица ниже фиксирует bound срез BL-24/MP-24/RE-24/SR-24. Точные `run_id` всегда берутся из `status.json`.
 
 | Стадия | Статус | Причина или следующий вход |
 |---|---|---|
-| `baseline` | `passed` / `fresh` | v85: полный suite на `d46be477…`; 2641/2523/118 Python, 20 fake-live, 145 Rust, hash `9a4a1346…` |
-| `market_profile` | `passed` / `fresh` | v49: те же public surfaces, что v47/v48 |
-| `account_profile` | `stale` | v31: Classic Account; UTA isolated/hedge не подтверждён, приватный профиль не нужен для historical |
+| `baseline` | `passed` / `fresh` | BL-24: полный suite на `f5af0643…`; 2641/2523/118 Python, 20 fake-live, 145 Rust, hash `9a4a1346…`. BL-20 historical |
+| `market_profile` | `passed` / `fresh` | MP-24: те же public surfaces, что MP-20/v47. MP-20 historical |
+| `account_profile` | `stale` | Classic Account; UTA isolated/hedge не подтверждён, приватный профиль не нужен для historical |
 | `data` | `failed` / `stale` | v47: 14/16 checks прошли; funding coverage `0.11578044596912522`, 270/2 332 |
-| `risk_engine` | `passed` / `fresh` | v31: bound `risk-parity-production-evidence-v1`; 35/35 gates. v30 historical |
+| `risk_engine` | `passed` / `fresh` | RE-24: bound `production-risk-evidence-2026-08-24-v1`; 35/35. RE-21 historical |
 | `risk_contract` | `failed` / `stale` | v55: `risk_model_surface_validated=false` |
-| `risk_grid` | `passed` / `stale` | `risk-grid-2026-08-18-v49`: локальные checks прошли; не путать с market-profile v49 |
+| `risk_grid` | `passed` / `stale` | `risk-grid-2026-08-18-v49`: локальные checks прошли; не путать с MP-20 |
 | `historical` | `blocked` / `stale` | v34: `check_status=failed`; blocker data/funding |
 | `account_risk_surface` | `not_started` | не запускался; нужен только перед техническим реальным этапом |
-| `shadow_readiness` (machine stage) | `passed` / `fresh` | v25: 40/40 gates, admission passed; evidence NAS v6. v24 historical, не перезаписан. v7 ещё не биндить |
-| `public shadow` (live evidence) | `running` | NAS `public-stream-process-24h-2026-08-21-v7` (`passivbot-shadow-v7`); v6 сдан и не перезаписывать; exam `passivbot-shadow` не стартовать |
+| `shadow_readiness` (machine stage) | `passed` / `fresh` | SR-24: 40/40, admission passed; evidence EX-7. SR-21/v24 historical, не перезаписаны |
+| `public shadow` (live evidence) | `completed` | EX-7 `passed`; EX-6 сдан и не перезаписывать; exam-контейнеры не стартовать |
 | `paper_runtime` | `blocked` | historical не пройден; 90-дневный период не начинался |
 | `technical_live`, `controlled_live` | `blocked` | запрещены до historical, paper и account surface; реальные заявки не выполнялись |
 | `portfolio_historical`, `portfolio_paper` | `blocked` | BTC ещё не прошёл обязательные проверки |
@@ -123,36 +140,36 @@ Bitget UTA поддерживает isolated futures с 19 мая 2026 года,
 
 Сроки считаются от прохождения gates, а не от календарной даты. Независимые исследовательские пакеты можно вести параллельно, но связанные `research-gates` запускаются последовательно: сначала базовый пакет, затем зависящий от него пакет. Один интегратор отвечает за общие файлы и машинный статус.
 
-Актуальный ускоренный порядок после ревью 1.71:
+Актуальный ускоренный порядок после ревью 1.74:
 
-1. **P0 — freeze на время v7.** Не менять восемь shadow `CODE_PATHS`. Не останавливать `passivbot-shadow-v7`. Не стартовать exam `passivbot-shadow`. Не писать `status.json` вручную. Не использовать `v83`. Не начинать queue/depth, ETH rerun, optimizer, paper/live, покупку данных и ключи.
-2. **P1–P6 закрыты.** P0-E, P0-D, `p1-paper` без queue/depth, `p1f-timestamps`, baseline v85, market_profile v49, `risk_engine v31`, `shadow-readiness v25` (NAS v6).
-3. **P7 — live 24h v7 запущен.** Каталог `public-stream-process-24h-2026-08-21-v7`. Новый `docker run`, не `docker start`. Сбор snapshots подтверждён. `research-gates` shadow для v7 — только после `result.json` и `process_supervisor.json`.
-4. **P8 — funding** остаётся внешним blocker для data/historical/paper/live.
+1. **P0 — freeze CODE_PATHS.** Не менять восемь shadow файлов без нового 24h. Не стартовать exam-контейнеры. Не писать `status.json` вручную. Не использовать `v83`/`v86`/`v26`. Не начинать queue/depth, ETH rerun, optimizer, paper/live.
+2. **P1–P8 закрыты.** BL-24/MP-24/RE-24/SR-24 bound на `f5af0643…`.
+3. **P9 — funding.** Публичный полный архив 24 августа не найден (248/2332). Не повторять исчерпанные GET без нового источника. Нужен пользовательский файл или явное разрешение на платный провайдер. Затем `bitget-funding-archive` и `bitget-funding-promote` в **новый** путь. Frozen input не перезаписывать.
 
-Окно 1.70 (v31/v25) закрыто. Окно 1.69 (v85/v49) закрыто. Окно 1.68 (p1-paper / p1f) закрыто. Окно 1.67 (P0-E/P0-D merge) закрыто. Окно 1.66 (v84/v48/v30/v24) закрыто как historical freshness. NAS v6 и v23 — факты 1.65. Live v7 — текущий 24h.
+Окно 1.72 (v7 сдан, bind ждал baseline) закрыто. Окно 1.71 (запуск v7) закрыто. Окно 1.70 (v31/v25) закрыто. Окно 1.69 (v85/v49) закрыто. Окно 1.68 (p1-paper / p1f) закрыто. Окно 1.67 (P0-E/P0-D merge) закрыто. Окно 1.66 (v84/v48/v30/v24) закрыто как historical freshness. NAS v6 и v23 — факты 1.65.
 
 ### 0. Закрепить воспроизводимую базу
 
-Статус проверки: **baseline v85, market_profile v49, risk_engine v31 и shadow-readiness v25 passed и fresh**. Fingerprint `d46be477b12a4876fbcf65c55a5c84f62e93b7ce86608756422d22c7fd3f21f8`. v85: 2 641/2 523/118 Python, 20 fake-live, 145 Rust; raw hash `9a4a1346…`. v31: 35/35 production-path gates. v25: 40/40 на NAS v6. v24/`dcae540a…` — historical. v83 не существовал.
+Статус проверки: **BL-24, MP-24, RE-24 и SR-24 passed и fresh**. Fingerprint `f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78`, commit `7a8be7892`, `git_dirty=false`. BL-24: 2 641/2 523/118 Python, 20 fake-live, 145 Rust; progress-dot hash `9a4a1346…`. RE-24: 35/35 production-path. SR-24: 40/40 на EX-7. BL-20/MP-20/RE-21/SR-21 — historical. v83 не существовал.
 
 Сделано в текущем пакете:
 
 1. Статус свежести и автоматическая проверка соответствия текущих хэшей последнему прошедшему запуску.
 2. Паспорт среды с версиями Python/Rust/CCXT-зависимостей и хэшем загруженного Rust-расширения.
 3. Защита от попадания файла блокировки `status.json.lock` в контрольную точку.
-4. Baseline v78 исторически фиксировал 2 573/2 455/118; канон текущего дерева — v85.
+4. Baseline v78 исторически фиксировал 2 573/2 455/118; канон текущего дерева — BL-24.
 5. Окно 1.66 закрыто: v84 / v48 / v30 / v24 тогда `passed`/`fresh`; сейчас v30/v24 stale.
 6. Окно 1.69 закрыто для baseline/market_profile: v85 / v49 `passed`/`fresh`.
 7. Окно 1.70 закрыто для risk_engine/shadow: v31 / v25 `passed`/`fresh`.
-8. Окно 1.71: live 24h v7 запущен; machine-bind v7 ещё нет.
+8. Окно 1.71: live 24h v7 запущен.
+9. Окно 1.72: v7 сдан и скопирован; machine-bind отложен до нового baseline.
+10. Окно 1.73: BL-24/MP-24/RE-24/SR-24 bound на `f5af0643…`.
 
 Остаётся:
 
-1. Не менять shadow `CODE_PATHS` до финала v7. Document-only правки допустимы и не меняют implementation fingerprint.
-2. Не останавливать `passivbot-shadow-v7` и не биндить `shadow-readiness` до финальных `result.json` + `process_supervisor.json`.
-3. Funding archive. Неполный архив не открывает data gate. Не v83. `status.json` только штатной командой.
-4. `risk_grid` stale; не считать его текущим admission. Queue/depth не стартовать.
+1. Не менять shadow `CODE_PATHS` без нового 24h. Document-only правки допустимы и не меняют implementation fingerprint.
+2. Канцелярия доказательств закрыта. Следующий внешний blocker — funding archive. Неполный архив не открывает data gate. `status.json` только штатной командой.
+3. `risk_grid` stale; не считать его текущим admission. Queue/depth не стартовать.
 
 Допуск:
 
@@ -177,7 +194,7 @@ Bitget UTA поддерживает isolated futures с 19 мая 2026 года,
 5. Разделять `shadow_readiness` и 90-дневный `paper_runtime` — схема внедрена; NAS v6 и v24 закрыты (`passed`/`fresh`); v23 historical.
 6. Проверять реальный `market_profile_sha256`; строка `pending_run_manifest` запрещена — реализовано и прошло в market profile v38.
 7. Добавить subprocess-регрессию для документированного CLI и использовать модульный entrypoint, пока конфликт прямого импорта не исправлен — CLI supervisor зарегистрирован, документированный `--help` smoke проходит.
-8. Явно различать frozen funding dataset и свежую скользящую выборку endpoint: последний public horizon rerun дал 266/2 332 в точном окне; ни один из них не открывает data gate без полного проверенного архива.
+8. Явно различать frozen funding dataset и свежую скользящую выборку endpoint: 18 августа public horizon дал 266/2 332; сбор 24 августа дал 248/2 332. Ни один не открывает data gate без полного проверенного архива.
 9. Передавать для `shadow_readiness` machine `result.json`, а не копировать его `readiness_metrics` в отдельный ручной файл; gate должен отдельно проверять evidence schema, candidate admission, read-only boundary, нулевые внешние/торговые операции, provenance и deterministic replay. Counters должны выводиться из фактов вызовов; константные нули запрещены.
 10. Хранить shadow policy и `max_source_gap_seconds` в `strategy_shadow_stream_config_v1.json`, не задавать зачётные пороги CLI-аргументами и блокировать несовпадение hash; реализовано и проверено. Supervisor обязан запускать каждый child в отдельной process group и удалять её при остановке; targeted-регрессия cleanup и crash/replay прошла. v2–v5 сохранены как историческое partial/aborted evidence и не передаются в readiness. Текущий зачётный run — NAS Docker v6; второй экземпляр на Mac не запускается. `--resume-existing-output` не обходит 300-секундный source-gap и не принимает завершённый `process_supervisor.json`.
 
@@ -245,18 +262,19 @@ Bitget UTA поддерживает isolated futures с 19 мая 2026 года,
 - публичные уровни поддерживаемой маржи сохранены;
 - фактический кэш HLCV повторно проверен quality-командой: `bitget_btc_ohlcv_quality_2024-07-01_to_2026-08-17-v1.json` и `bitget_eth_ohlcv_quality_2024-07-01_to_2026-08-17-v1.json` имеют статус `passed`; оба отчёта теперь явно содержат канонический cache path, `remote_fetch_policy=local_only` и `remote_fetch_count=0`;
 - public BTC/ETH market profiles собраны отдельной локальной командой из сохранённых `bitget-public-execution-inputs-v1`; профиль не содержит private/account fields и сохраняет хэши исходных public responses;
-- замороженный локальный funding-файл содержит 270 строк из 2 332 ожидаемых; актуальный data metrics v47 подтверждает coverage `0.11578044596912522`. Аудиты `03:14 UTC` и `09:54 UTC` получили соответственно 267 и 266 строк в точном окне — это разные rolling snapshots, все они неполны и сохраняются раздельно.
-- отдельный аудит 18 августа сохранил raw public-файлы и не нашёл полного внешнего архива; официальный UTA v3 и Classic v2 дали одинаковые страницы `100, 100, 70, 0`, Tardis покрывает только часть окна, Amberdata/Laevitas требуют ключ. Дополнительный аудит официальной страницы загрузки подтверждает отсутствие funding archive в каталоге: [`funding_archive_current_audit_2026-08-18-v1.md`](../../analysis_reports/crypto_bot_roadmap/inputs/funding_archive_current_audit_2026-08-18-v1.md), [`funding_archive_official_download_audit_2026-08-18.md`](../../analysis_reports/crypto_bot_roadmap/inputs/funding_archive_official_download_audit_2026-08-18.md).
+- замороженный локальный funding-файл содержит 270 строк из 2 332 ожидаемых и **не перезаписывался**; data metrics v47 по этому frozen снимку даёт coverage `0.11578044596912522`. Аудиты 18 августа `03:14 UTC` и `09:54 UTC` получили соответственно 267 и 266 строк в точном окне — это разные rolling snapshots, все они неполны и сохраняются раздельно.
+- публичная сборка 24 августа снова дала `100, 100, 70, 0` (270 строк), из которых **248 / 2 332** попадают в фиксированное окно (coverage `0.10635`). Полного публичного архива нет. Evidence: [`funding_archive_collect_attempt_2026-08-24.md`](../../analysis_reports/crypto_bot_roadmap/inputs/funding_archive_collect_attempt_2026-08-24.md).
+- исторический аудит 18 августа сохранил raw public-файлы и не нашёл полного внешнего архива; официальный UTA v3 и Classic v2 дали одинаковые страницы `100, 100, 70, 0`, Tardis покрывает только часть окна, Amberdata/Laevitas требуют ключ. Дополнительный аудит официальной страницы загрузки подтверждает отсутствие funding archive в каталоге: [`funding_archive_current_audit_2026-08-18-v1.md`](../../analysis_reports/crypto_bot_roadmap/inputs/funding_archive_current_audit_2026-08-18-v1.md), [`funding_archive_official_download_audit_2026-08-18.md`](../../analysis_reports/crypto_bot_roadmap/inputs/funding_archive_official_download_audit_2026-08-18.md).
 
 Нужно:
 
-1. Получить полный Bitget funding-архив от 1 июля 2024 года до 17 августа 2026 года. Аудит 18 августа не нашёл доступного полного источника; data gate остаётся закрыт. Ожидание 2 332 расчётных моментов основано на точной границе `[2024-07-01T00:00:00Z, 2026-08-17T00:00:00Z]`; это не полный календарный день 17 августа. Если границу изменят, ожидаемое число событий должно быть изменено явно и до запуска optimizer. Поскольку Bitget прямо указывает, что funding interval зависит от символа, историческое изменение расписания допускается только при отдельном официальном доказательстве. Допустимый результат содержит исходник, лицензию, хэш и список ответов, а не только обновлённый count: [Funding history](https://www.bitget.com/api-doc/uta/public/Get-History-Funding-Rate).
+1. Получить полный Bitget funding-архив от 1 июля 2024 года до 17 августа 2026 года. Публичный сбор 24 августа не нашёл полного источника (248/2332); data gate остаётся закрыт. Следующий вход — файл пользователя или явное разрешение на платный источник, затем `bitget-funding-archive` и `bitget-funding-promote` в **новый** путь; frozen input не перезаписывать. Ожидание 2 332 расчётных моментов основано на точной границе `[2024-07-01T00:00:00Z, 2026-08-17T00:00:00Z]`; это не полный календарный день 17 августа. Если границу изменят, ожидаемое число событий должно быть изменено явно и до запуска optimizer. Поскольку Bitget прямо указывает, что funding interval зависит от символа, историческое изменение расписания допускается только при отдельном официальном доказательстве. Допустимый результат содержит исходник, лицензию, хэш и список ответов, а не только обновлённый count: [Funding history](https://www.bitget.com/api-doc/uta/public/Get-History-Funding-Rate).
 2. Проверить символ, историческую временную сетку, дубликаты, пропуски, числовые пределы и совпадение пересекающихся строк с независимым источником.
 3. Не заполнять пропуски нулём, переносом соседнего значения или скрытой синтетикой.
 4. Хранить источник, лицензию/условия использования, дату получения и хэш исходного файла.
 5. Продолжать локальную запись bid/ask, mark/index, funding и глубины стакана BTC и ETH с ежедневной проверкой целостности.
 6. Калибровать задержку, пропущенные касания, очередь и частичные исполнения по записанным данным.
-7. Не покупать внешний архив и не использовать API-ключ без отдельного решения пользователя; до этого сохранять только read-only audit и формальный blocker.
+7. Не покупать внешний архив и не использовать API-ключ без отдельного решения пользователя; исчерпанные публичные GET не повторять. До нового файла или явного платного разрешения сохранять только уже записанный audit и формальный blocker.
 
 Проверку локального HLCV-кэша выполнять отдельной командой до каждого исторического запуска:
 
@@ -280,7 +298,7 @@ passivbot tool bitget-ohlcv-quality \
 
 ### 4. Довести paper-контур до готовности
 
-Актуальный verdict: **NAS `public-stream-process-24h-2026-08-21-v7` запущен и пишет public snapshots.** v6 сдан; `shadow-readiness-2026-08-21-v25` остаётся последним bound machine-пакетом на v6. v24/v23 — historical. v2–v5 и Mac v22 — historical. v7 не биндить до финала. Exam-контейнер `passivbot-shadow` не стартовать.
+Актуальный verdict: **NAS `public-stream-process-24h-2026-08-21-v7` сдан (`passed`, 25.52 ч wall-clock).** SR-24 (`shadow-readiness-2026-08-24-exam7`) 40/40, admission passed, freshness fresh на `f5af0643…`. EX-6 и SR-21 historical, не перезаписывать. Exam-контейнеры не стартовать.
 
 ### Synology Docker, public-only
 
@@ -326,7 +344,29 @@ macOS `openrsync` не передаёт порт 20022; копировать ч�
 - есть стратегия, плановые заявки и фактические paper events; простой ticker heartbeat не считается strategy shadow;
 - отдельный 7-дневный технический shadow-run проходит без необъяснённых расхождений, сохраняет source-hashed inputs и воспроизводимый WAL/ledger. Эти семь дней не входят в 90-дневный зачёт.
 
-### Новые находки редакции 1.71 — live 24h v7 запущен
+### Новые находки редакции 1.74 — полный funding-архив публично не собран
+
+- Свежий UTA v3: страницы `100, 100, 70, 0`, 270 строк на `BTCUSDT` и `ETHUSDT`. В окно плана входят 248 точек, отсутствуют 2 084, coverage `0.10635`. Oldest `2026-05-26T16:00:00Z`. Classic v2 тот же горизонт; `startTime` не открывает 2024–2025. V1 decommissioned.
+- Tardis без ключа: нет данных до `2024-11-08`, остальные дни 401. Amberdata 403, Laevitas/Coinank без ключа, d3lta mirror недоступен, Hugging Face `bitget funding` пуст, data-download без funding. CryptoStruct платный.
+- Raw страницы сохранены как `funding_collect_2026-08-24_bitget_uta_v3_*`. Сводка: [`funding_archive_collect_attempt_2026-08-24.md`](../../analysis_reports/crypto_bot_roadmap/inputs/funding_archive_collect_attempt_2026-08-24.md). Frozen execution input не менялся. `bitget-funding-archive` и `bitget-funding-promote` не запускались. Следующий вход — файл пользователя или явное разрешение на платный источник, затем обе команды в **новый** путь.
+
+### Исторические находки редакции 1.73 — bound-срез BL-24/MP-24/RE-24/SR-24
+
+- `baseline-2026-08-24-rebind`: Rust stamp совпал, rebuild не делался. Три последовательных полных pytest: 2641 collected / 2523 passed / 118 skipped; progress-dot hash `9a4a1346…` совпал с BL-20. fake-live 20 passed. `cargotest.sh` 145 passed. Gates 5/5, admission passed, freshness fresh. `created_at_utc=2026-08-23T22:21:03Z`.
+- `market-profile-2026-08-24-rebind`: те же public surfaces (`public_only_2026-08-17.json` sha256 `aa7038a7…`). Gates 4/4. `created_at_utc=2026-08-23T22:21:15Z`.
+- `risk-engine-2026-08-24-rebind`: новый probe `production-risk-evidence-2026-08-24-v1` на текущем fingerprint. Snapshot `cb50c9a1…`, invocation `Passivbot._apply_crypto_portfolio_risk_limits` + Rust Backtest, `fixture_mode=false`, `trading_operations_count=0`. Не `p0d_local`. Probe читает `bitget_btc_market_profile_read_only.json` (sha256 `7c36c253…`); stage `market_profile` остаётся public_only. Gates 35/35. `created_at_utc=2026-08-23T22:21:33Z`.
+- `shadow-readiness-2026-08-24-exam7`: 40/40, admission passed, freshness fresh. Evidence — Mac path-bind EX-7. Исходный NAS `result.json` SHA-256 `5b427211…` не менялся. SR-21/v24/EX-6 не перезаписывались. `process_code_hash_matches_current=true`. `status.json` `updated_at_utc=2026-08-23T22:21:42Z`.
+- Торговая готовность ноль. Следующий внешний blocker — funding 270/2332. Queue/depth не стартовать. ETH не перезапускать. Восемь `CODE_PATHS` не менять без нового 24h.
+
+### Исторические находки редакции 1.72 — v7 сдан; bind ждал новый baseline
+
+- Supervisor `2026-08-20T23:58:39Z`–`2026-08-22T01:29:38Z`, wall-clock 91858.7 с (25.52 ч), coverage 24.25 ч, 1397 snapshots/events, 0 stream errors, max source gap 72.052 с, funding continuity passed, 51 planned и 51 paper fill, 5 process restarts / 6 сегментов `return_code=0`, recovery 0.058 с / 2.29 с, replay 3/3 hashes equal, `candidate_admission=false`, `fixture_mode=false`, 0 trading ops. Контейнер `exit=0`, OOM=false.
+- Исходный NAS `result.json` SHA-256 `5b42721121e541c6a203527e4ba4aed074e8f873b6eee9abbf8d53d060ebb442`. Не менять. Копия: `analysis_reports/crypto_bot_roadmap/shadow_runs/public-stream-process-24h-2026-08-21-v7/`. Mac path-bind заменил 56 путей `/data/...` → локальный каталог; artifact hashes совпали. v6/v24/v25 не перезаписывались.
+- In-memory `evaluate_candidate_gates`: 40/40 passed. Штатный `research-gates` не запускался и `status.json` не писался (`updated_at_utc` остаётся `2026-08-20T23:26:05Z`).
+- Коммит overlay `7a8be7892` сделал дерево чистым. Текущий fingerprint `f5af06437b13dd7baaa6c20d144fb76884cc45dc93d2620735838b8679b40e78`. CODE_PATHS hash всё ещё `b6c53f50…`. Admission v7 сейчас был бы `blocked` из-за stale baseline/market_profile/risk_engine.
+- Нового кода перед тестами нет: queue/depth запрещён, funding закрыт, `CODE_PATHS` нельзя менять до bind v26. Luna-Max не вызывался.
+
+### Исторические находки редакции 1.71 — live 24h v7 запущен
 
 - Пользователь явно попросил следующий 24h и проверку сбора данных. Это снимает freeze «второй 24h не нужен» из 1.70, но не разрешает `docker start` exam-контейнера, ключи, заявки, ETH rerun или queue/depth.
 - Targeted shadow tests перед запуском: 38 passed (`test_strategy_shadow*.py`). Восемь `CODE_PATHS` не патчились.
@@ -334,7 +374,7 @@ macOS `openrsync` не передаёт порт 20022; копировать ч�
 - Сбор на срезе `2026-08-21T00:03:06Z`: 5 строк `market_snapshots.jsonl`, 40 `events.ndjson`, `ingest_seq=5`, `fixture_mode=false`, last ≈73026.5→73086.1, source span 248.4 с, `trading_operations_count=0`. Первый срез `00:00:47Z` уже имел 3 snapshots. `result.json` и `process_supervisor.json` отсутствуют — run живой.
 - `shadow-readiness` для v7 не создавать до финала. `status.json` не писать. v25 остаётся последним bound shadow на v6.
 
-### Новые находки редакции 1.70 — production-path risk_engine v31 и shadow v25
+### Исторические находки редакции 1.70 — production-path risk_engine v31 и shadow v25
 
 - Live probe `production-risk-evidence-2026-08-21-v1`: schema `risk-parity-production-evidence-v1`, snapshot `cb50c9a1…`, invocation `Passivbot._apply_crypto_portfolio_risk_limits` + Rust `Backtest`, `fixture_mode=false`, `trading_operations_count=0`. Не `p0d_local`. Targeted `test_live_probe_records_invocation_after_calling_both_engines` passed.
 - `risk-engine-2026-08-21-v31`: 35/35 gates, `passed`/`fresh`. Research-matrix 14/14 остаётся fixture и сама по себе не открывает parity; v30 historical.
@@ -342,24 +382,24 @@ macOS `openrsync` не передаёт порт 20022; копировать ч�
 - `shadow-readiness-2026-08-21-v25`: 40/40, admission passed, freshness fresh. Evidence — тот же NAS v6. Mac path-bind только заменил `/data/...` на локальную копию; исходный `result.json` SHA-256 `027ddba0…` не менялся. v24 не перезаписывать. Восемь `CODE_PATHS` hash `b6c53f50…` совпал, второй 24h не запускался.
 - `status.json` `updated_at_utc=2026-08-20T23:26:05Z`. Следующий внешний blocker — funding 270/2332.
 
-### Новые находки редакции 1.69 — честный baseline v85 и market_profile v49
+### Исторические находки редакции 1.69 — честный baseline v85 и market_profile v49
 
 - `baseline-2026-08-20-v85`: Rust extension rebuilt (`cargo clean` + `maturin develop --release`); stamp `1b9d2604…` совпал с sources; полный pytest три раза подряд, identical hash `9a4a1346…`; 2641 collected / 2523 passed / 118 skipped; fake-live 20 passed; `cargotest.sh` 145 passed. Fingerprint `d46be477…`. Не v83. Не reuse v78/`a1105ac4…`.
 - `market-profile-2026-08-20-v49`: те же public inputs, что v47/v48. 4/4 gates passed. `status.json` `updated_at_utc=2026-08-20T22:11:12Z`.
 - `risk_engine v30` и `shadow-readiness v24` stale на этом дереве. v24 не перезаписывать. Контейнер `passivbot-shadow` не стартовать. `p0d_local/` не кормить в shared status.
 - Следующий шаг — новый `risk_engine` с bound production-path evidence. Queue/depth не стартовать.
 
-### Новые находки редакции 1.68 — p1-paper и p1f после P0-E/P0-D
+### Исторические находки редакции 1.68 — p1-paper и p1f после P0-E/P0-D
 
-- `p1-paper` перенесён точечно из `TLI-Setka-p1-paper` / `p1/paper-execution-calibration` @ `9dee208e5`. Live `paper.py` сохранил P0-E passport. `fetch_positions()` требует named mark/index и bound tiers. Evidence writer пишет `crypto-paper-execution-evidence-v1`. Queue/depth в `create_order` не проводён; `qualifying=false`.
-- `p1f-timestamps` перенесён точечно из `TLI-Setka-p1f-timestamps`. `_integer()` отклоняет float `1.9`, `"1.9"`, bool, NaN и overflow. `bitget.py` из p1f не копировался (live больше и уже разошёлся).
+- `p1-paper` перенесён точечно из `TLI-Wings/p1-paper-execution-calibration` / `p1/paper-execution-calibration` @ `9dee208e5`. Live `paper.py` сохранил P0-E passport. `fetch_positions()` требует named mark/index и bound tiers. Evidence writer пишет `crypto-paper-execution-evidence-v1`. Queue/depth в `create_order` не проводён; `qualifying=false`.
+- `p1f-timestamps` перенесён точечно из `TLI-Wings/p1f-strict-timestamps`. `_integer()` отклоняет float `1.9`, `"1.9"`, bool, NaN и overflow. `bitget.py` из p1f не копировался (live больше и уже разошёлся).
 - Targeted tests: 111 passed (`test_paper_*`, `test_data_passport`, `test_bitget_paper_shadow*`, `test_bitget_market_surfaces`).
 - Следующий шаг на момент 1.68 — один новый baseline, не v83. Закрыто в 1.69 как v85.
 
-### Новые находки редакции 1.67 — P0-E и P0-D после v24
+### Исторические находки редакции 1.67 — P0-E и P0-D после v24
 
 - v24: 40/40 shadow-gates, admission passed, freshness fresh. Evidence — тот же NAS v6. Manifest `plan_sha256` на NAS `null`, потому что `gate-repo` без `docs/plans/`; это не gate. v84 хранит plan hash.
-- P0-E перенесён точечно из `TLI-Setka-p0e-clean`. Frozen funding 270/2332 по-прежнему `qualifying=false`.
+- P0-E перенесён точечно из `TLI-Wings/p0e-data-passport-clean`. Frozen funding 270/2332 по-прежнему `qualifying=false`.
 - P0-D перенесён точечно: `src/research/risk_evidence.py`, `tests/test_risk_evidence.py`, проводка `experiment_manifest` / `research_gates` / `risk_parity_actual_probe`. `passivbot.py` не копировался (уже совпадал). Kitchen-sink overlay не копировался. Исторический `p0d_local/` не кормить в shared `status.json`.
 - `risk_limits_enforced_in_live_and_tester` теперь ставит только validator production-path. Surface 14/14 остаётся research fixture. v30 в `status.json` ещё показывает старую метрику — это historical run, не перезапускать в этом окне.
 - Следующий шаг — `p1-paper` без queue/depth, затем `p1f-timestamps`. Новый baseline после этого пакета.
@@ -590,19 +630,22 @@ Bitget отдаёт через UTA API исполнения только за п
 8. Изменение исполняемого кода, применяемой конфигурации или входных данных делает зависимые run-пакеты stale. Правка канонического плана меняет отдельный `plan_sha256`, но сама по себе не должна менять implementation fingerprint и заставлять повторять полный baseline.
 9. В передаче следующей модели указывать один безопасный следующий шаг, точные команды, свежесть evidence и явные запреты. Никогда не передавать ей полномочия на заявки, переводы, изменение счёта или работу с секретами.
 10. Luna Max является разрешённым superpower этого плана: использовать его для независимого research, аудита и поэтапных инженерных пакетов с непересекающимися областями записи; общий интегратор один отвечает за canonical plan, status, Rust contracts и release gates.
-11. Для external funding сначала использовать `bitget-funding-promote` в новый output path. Никогда не перезаписывать frozen execution input и не считать report `passed` доказательством, пока не проверены raw archive, normalized payload, symbol, exact window и provenance hashes.
+11. Для external funding сначала `bitget-funding-archive`, затем `bitget-funding-promote` в **новый** output path. Никогда не перезаписывать frozen execution input и не считать report `passed` доказательством, пока не проверены raw archive, normalized payload, symbol, exact window и provenance hashes.
 
 ## Ближайшая измеримая передача следующей модели
 
-Цель ближайшего рабочего окна редакции 1.70 — внешний funding archive после уже закрытых v85/v49/v31/v25. Не `p0d_local`. Не v83. Контейнер `passivbot-shadow` не стартовать. Восемь `CODE_PATHS` не патчить. v24 не перезаписывать. Queue/depth не стартовать. Shared `status.json` не писать вручную.
+Цель ближайшего рабочего окна редакции 1.74 — вход полного funding archive от пользователя после уже закрытых BL-24/MP-24/RE-24/SR-24. Публичный полный архив 24 августа не найден (248/2332). Не `p0d_local`. Не v83. Контейнеры `passivbot-shadow` / `passivbot-shadow-v7` не стартовать. Восемь `CODE_PATHS` не патчить без нового 24h. EX-6/EX-7 `result.json`, SR-21 и v24 не перезаписывать. Queue/depth не стартовать. Shared `status.json` не писать вручную. Frozen input не перезаписывать.
 
-Команды (один интегратор). Fingerprint живого дерева `d46be477…`. Не запускать v83. Не стартовать exam-контейнер.
+Команды (один интегратор). Fingerprint живого дерева `f5af0643…` / `7a8be7892`. Не запускать v83. Не стартовать exam-контейнер. Не повторять исчерпанные публичные GET.
 
 ```shell
-# v85, v49, v31 и v25 уже bound штатной командой.
-# data/historical закрыты funding 270/2332.
-# не docker start passivbot-shadow.
+# BL-24, MP-24, RE-24 и SR-24 уже bound штатной командой.
+# публичный полный архив не найден: 248/2332 в окне плана.
+# следующий вход: файл пользователя или явное разрешение на платный источник,
+# затем bitget-funding-archive и bitget-funding-promote в НОВЫЙ путь.
+# не docker start passivbot-shadow или passivbot-shadow-v7.
 # не кормить p0d_local в shared status.
+# не писать status.json вручную.
 ```
 
 | Пакет | Измеримый результат | Проверка | Владелец |
@@ -610,15 +653,15 @@ Bitget отдаёт через UTA API исполнения только за п
 | P0-A: fingerprint | `implementation_fingerprint_v2` не включает runtime/generated outputs; план, config и data имеют отдельные hashes | принято в baseline v78; fingerprint `bbd19e7d…` | выполнено |
 | P0-B: тестовые выходы | fake-live/monitor используют отдельный временный root | принято: 2 последовательных и 2 параллельных subprocess-проверки без новых файлов в `monitor/fake` и общего `metadata.tmp` | выполнено |
 | P0-C: process boundary | direct child и его потомок исчезают после остановки; аварийный exit восстанавливается без дублей | принято: targeted process/shadow набор и fault-injection регрессии прошли | выполнено |
-| Интеграция | дерево заморожено и baseline принят | v85: 2 641 Python (2 523 passed, 118 skipped), 20 fake-live, 145 Rust, 3 одинаковых output hash `9a4a1346…` | v85 passed/fresh на `d46be477…`; v84 historical |
+| Интеграция | дерево заморожено и baseline принят | BL-24: 2 641 Python (2 523 passed, 118 skipped), 20 fake-live, 145 Rust, 3 одинаковых progress-dot hash `9a4a1346…` | BL-24 passed/fresh на `f5af0643…`; BL-20/v84 historical |
 | Funding research | новый источник или формальный внешний blocker | raw source, условия использования, exact-window coverage, hashes и отчёт; frozen input не меняется | Luna Max read-only audit завершён: blocker подтверждён |
-| Shadow readiness | NAS v6 сдан; v25 admission passed на `d46be477…`; live v7 пишет snapshots | 40/40 shadow-gates v25; nested supervisor; 92638.6 с; 65 planned; 5 process restarts | **v25 факт принят.** v7 запущен `2026-08-20T23:58:33Z` как `passivbot-shadow-v7`. Не `docker start` exam. Не биндить v7 до финала |
+| Shadow readiness | EX-7 сдан; SR-24 admission passed на `f5af0643…` | 40/40 shadow-gates SR-24; wall-clock 91858.7 с; 51 planned/fill; 5 process restarts | **SR-24 факт принят.** EX-6/SR-21 historical. Не `docker start` exam |
 | ETH public sidecar | проверить recorder/integrity без открытия portfolio gate | фактическая длительность 4,017 ч; integrity `failed`; имя с `24h` не является доказательством длительности | завершён; процесс мёртв; не перезапускать; только exploratory |
 | Воспроизводимость Rust | единая рабочая команда для PyO3 test binary | `PYO3_PYTHON=<absolute .venv python> passivbot-rust/cargotest.sh` даёт 145/145; прямой `cargo test` не используется как каноническая команда на macOS | документация уже исправлена в `docs/ai/commands.md` и `docs/ai/build_pitfalls.md` |
-| P0-D: production-path risk evidence | новый run вызывает `Passivbot._apply_crypto_portfolio_risk_limits` и настоящий Rust `Backtest`, связывает actual probe, snapshot, config, market profile, code fingerprint и report hash в одном manifest | fixture/research-policy не могут выставить `risk_limits_enforced_in_live_and_tester=true`; mismatch, отсутствующий artifact или неполная матрица дают fail-closed verdict | **v31 bound 21 августа:** `production-risk-evidence-2026-08-21-v1`. `p0d_local/` historical, не admission. v30 historical. |
-| P0-E: общий data passport | historical и qualifying paper используют один неизменяемый паспорт: symbol, UTC start/end, cadence, expected/actual, missing, duplicate, foreign/future rows, mark-before-settlement coverage и source hashes | неполный feed явно `qualifying=false`; settlement без mark не пропускается молча; reconciliation не считает один имеющийся funding event доказательством полного окна | **перенесён в live 20 августа:** `src/research/data_passport.py`, targeted tests. Frozen feed 270/2332, `qualifying=false`. Грязный sibling `TLI-Setka-p0e` не использовать |
+| P0-D: production-path risk evidence | новый run вызывает `Passivbot._apply_crypto_portfolio_risk_limits` и настоящий Rust `Backtest`, связывает actual probe, snapshot, config, market profile, code fingerprint и report hash в одном manifest | fixture/research-policy не могут выставить `risk_limits_enforced_in_live_and_tester=true`; mismatch, отсутствующий artifact или неполная матрица дают fail-closed verdict | **RE-24 bound 24 августа:** `production-risk-evidence-2026-08-24-v1`. `p0d_local/` historical, не admission. RE-21/v30 historical. |
+| P0-E: общий data passport | historical и qualifying paper используют один неизменяемый паспорт: symbol, UTC start/end, cadence, expected/actual, missing, duplicate, foreign/future rows, mark-before-settlement coverage и source hashes | неполный feed явно `qualifying=false`; settlement без mark не пропускается молча; reconciliation не считает один имеющийся funding event доказательством полного окна | **перенесён в live 20 августа:** `src/research/data_passport.py`, targeted tests. Frozen feed 270/2332, `qualifying=false`. Грязный sibling `TLI-Wings/p0e-data-passport` не использовать |
 | P1-F: строгий timestamp parser | public market surface отклоняет дробные timestamps вместо `int(1.9) -> 1` | отдельные тесты для float, numeric string, bool, NaN и overflow; валидные целые значения не меняются | **перенесён в live 20 августа:** `_integer()` в `src/research/bitget_market_surfaces.py`. `bitget.py` из p1f не копировался |
-| P1-G: paper calibration (prepare-only) | изолированная подготовка реальных mark/index, maintenance tiers, queue/depth calibration и обязательного evidence writer | mark/index/tiers/evidence writer в live; queue/depth calibration artifact отсутствует; `create_order` не моделирует очередь. Qualifying paper не открыт | **перенесён в live 20 августа без queue/depth:** `src/research/paper_market_surfaces.py`, проводка `src/exchanges/paper.py`. `qualifying=false`. Имя `TLI-Setka-p1-paper-cal` не использовать |
+| P1-G: paper calibration (prepare-only) | изолированная подготовка реальных mark/index, maintenance tiers, queue/depth calibration и обязательного evidence writer | mark/index/tiers/evidence writer в live; queue/depth calibration artifact отсутствует; `create_order` не моделирует очередь. Qualifying paper не открыт | **перенесён в live 20 августа без queue/depth:** `src/research/paper_market_surfaces.py`, проводка `src/exchanges/paper.py`. `qualifying=false`. Имя `TLI-Wings/p1-paper-execution-calibration-cal` не использовать |
 
 ## Полное промежуточное ревью после 1 дня 6 часов 23 минут — 18 августа 2026 года, 16:39 UTC
 
@@ -643,8 +686,8 @@ shadow evidence, но торговая готовность остаётся н�
 
 - Luna Max research-agent возвращается к funding только при новом проверяемом источнике либо явном решении пользователя о лицензированном export; он не покупает доступ и не работает с секретами.
 - Runtime reviewer — единственный обязательный саб-агент до v22. Read-only контроль v5: PIDs, counters, mtime `result.json` vs `process_supervisor.json`, лог watcher. ETH recorder не перезапускать. Второй экземпляр shadow не запускать. `status.json` не обновлять.
-- Queue/depth calibration разрешена только в существующем `TLI-Setka-p1-paper` (`qualifying=false`), но **не стартует в этой пачке**.
-- Risk-evidence пакет готов только в `TLI-Setka-p0d` (uncommitted, kitchen-sink, не merge-ready до v22; после v22 вынимать только P0-D файлы). Data-passport уже готов в `TLI-Setka-p0e-clean` и не merge до v22. Paper-калибровка готова только в `TLI-Setka-p1-paper` (`qualifying=false`, calibration artifact queue/depth отсутствует) и не merge до v22. P1-F timestamp parser готов только в `TLI-Setka-p1f-timestamps` и не merge до v22. Общий интегратор не объединяет пакеты до v22 и после него идёт в порядке P0-E → P0-D → paper → P1-F. Не копировать пакеты в live-дерево.
+- Queue/depth calibration разрешена только в существующем `TLI-Wings/p1-paper-execution-calibration` (`qualifying=false`), но **не стартует в этой пачке**.
+- Risk-evidence пакет готов только в `TLI-Wings/p0d-production-risk-evidence` (uncommitted, kitchen-sink, не merge-ready до v22; после v22 вынимать только P0-D файлы). Data-passport уже готов в `TLI-Wings/p0e-data-passport-clean` и не merge до v22. Paper-калибровка готова только в `TLI-Wings/p1-paper-execution-calibration` (`qualifying=false`, calibration artifact queue/depth отсутствует) и не merge до v22. P1-F timestamp parser готов только в `TLI-Wings/p1f-strict-timestamps` и не merge до v22. Общий интегратор не объединяет пакеты до v22 и после него идёт в порядке P0-E → P0-D → paper → P1-F. Не копировать пакеты в live-дерево.
 - Канонический план, общий Rust-контракт, machine status и release gates остаются у одного интегратора.
 
 ## Erratum после plan-binding v82 — 18 августа 2026 года, 17:32 UTC
@@ -664,26 +707,26 @@ shadow evidence, но торговая готовность остаётся н�
 
 ### Сейчас — до машинного v22
 
-Live checkout `TLI-Setka` на `master` (`9dee208e5`) заморожен для `src/`, `tests/`, `passivbot-rust/` и `configs/`. Документация и generated reports вне implementation fingerprint.
+Live checkout `TLI-Wings/main` на `master` (`9dee208e5`) заморожен для `src/`, `tests/`, `passivbot-rust/` и `configs/`. Документация и generated reports вне implementation fingerprint.
 
 1. Не останавливать и не дублировать `public-stream-process-24h-2026-08-18-v5`. Watcher создаёт ровно один `shadow-readiness-2026-08-18-v22`, когда появятся и `result.json`, и `process_supervisor.json`.
 2. Не запускать `baseline-2026-08-18-v83`, не пересобирать public/risk/data/historical пакеты и не писать `status.json` вручную.
 3. Принять будущий v22 как `passed`, `failed` или `blocked` без перетолкования. Порог `shadow_planned_orders >= 20` не ослаблять, даже если часть `order.planned` относится к skip/hold.
-4. P0-E не merge: worktree `/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka-p0e-clean`, ветка `p0e/data-passport-clean`, файлы uncommitted. Грязный sibling `TLI-Setka-p0e` / `p0e/data-passport` не использовать для merge review.
-5. P0-D изолированная копия готова и uncommitted в `/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka-p0d` на `codex/p0d-production-risk-evidence-20260818`. Local bundle `analysis_reports/crypto_bot_roadmap/p0d_local/production-risk-evidence-2026-08-18/` (schema `risk-parity-production-evidence-v1`) связывает invocation `Passivbot._apply_crypto_portfolio_risk_limits` и Rust `Backtest` с actual probe v3 как регрессией, не как admission. Не merge-ready до v22; в live-дерево не копировать; shared `status.json` этим bundle не обновлять. Shared `risk_engine v29` по-прежнему завышает метрику: 14-сценарная матрица идёт в research `evaluate_order()` и не может выставить `risk_limits_enforced_in_live_and_tester`.
-6. Paper mark/index/tiers/queue и обязательный evidence writer — изолированная копия готова и uncommitted в `/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka-p1-paper` на `p1/paper-execution-calibration` @ `9dee208e5`. `qualifying=false`; queue/depth не смоделированы. Пакет не открывает 90-дневный paper. В live-дерево не переносить. Каталог `TLI-Setka-p1-paper-cal` не создавался и не является путём merge.
+4. P0-E не merge: worktree `/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Wings/p0e-data-passport-clean`, ветка `p0e/data-passport-clean`, файлы uncommitted. Грязный sibling `TLI-Wings/p0e-data-passport` / `p0e/data-passport` не использовать для merge review.
+5. P0-D изолированная копия готова и uncommitted в `/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Wings/p0d-production-risk-evidence` на `codex/p0d-production-risk-evidence-20260818`. Local bundle `analysis_reports/crypto_bot_roadmap/p0d_local/production-risk-evidence-2026-08-18/` (schema `risk-parity-production-evidence-v1`) связывает invocation `Passivbot._apply_crypto_portfolio_risk_limits` и Rust `Backtest` с actual probe v3 как регрессией, не как admission. Не merge-ready до v22; в live-дерево не копировать; shared `status.json` этим bundle не обновлять. Shared `risk_engine v29` по-прежнему завышает метрику: 14-сценарная матрица идёт в research `evaluate_order()` и не может выставить `risk_limits_enforced_in_live_and_tester`.
+6. Paper mark/index/tiers/queue и обязательный evidence writer — изолированная копия готова и uncommitted в `/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Wings/p1-paper-execution-calibration` на `p1/paper-execution-calibration` @ `9dee208e5`. `qualifying=false`; queue/depth не смоделированы. Пакет не открывает 90-дневный paper. В live-дерево не переносить. Каталог `TLI-Wings/p1-paper-execution-calibration-cal` не создавался и не является путём merge.
 7. Funding research не повторять по исчерпанным публичным источникам. Historical optimizer, 90-дневный paper и любой live остаются закрытыми.
-8. P1-F timestamp parser изолированная копия готова и uncommitted в `/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka-p1f-timestamps` на `p1f/strict-timestamp-parser` @ `9dee208e5`. Live `_integer()` по-прежнему коэрцирует `int(1.9) -> 1`. В live-дерево не копировать. Второй P1-F не запускать. Не merge-ready до v22. Новый engineering-пакет до v22 не запускать.
+8. P1-F timestamp parser изолированная копия готова и uncommitted в `/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Wings/p1f-strict-timestamps` на `p1f/strict-timestamp-parser` @ `9dee208e5`. Live `_integer()` по-прежнему коэрцирует `int(1.9) -> 1`. В live-дерево не копировать. Второй P1-F не запускать. Не merge-ready до v22. Новый engineering-пакет до v22 не запускать.
 
 Проверено 18 августа 2026 года, 19:44 UTC, без merge и без `research-gates` на shared status: live `master` не содержит `src/research/risk_evidence.py`; live `p0d_local` отсутствует; `status.json` `updated_at_utc` остаётся `2026-08-18T17:27:50Z`; v5 жив (PID `81180`). Worktree держит uncommitted `risk_evidence.py`, wiring `experiment_manifest`/`research_gates`, тесты и local bundle. Fixture/research-policy и actual probe v3 не являются production admission; production schema — `risk-parity-production-evidence-v1`. Не merge-ready до v22.
 
-Проверено 18 августа 2026 года, 19:50 UTC, document-only: live `master` не содержит `src/research/paper_market_surfaces.py`; в `TLI-Setka-p1-paper` нет `data_passport.py` и `risk_evidence.py`. v5: `result.json` существует, `status=failed`, `candidate_admission=false`, `shadow_duration_hours≈4.032`, `shadow_planned_orders=5`, `shadow_determinism_runs=0`, `shadow_replay_count=0`; `process_supervisor.json` отсутствует; `runs/shadow-readiness-2026-08-18-v22` отсутствует. Supervisor PID `81180` жив, текущий child `61667` (`strategy_shadow_stream`, `--duration-seconds 14520`); прежний child `81189` уже не жив. Watcher PID `57680` жив и в логе имеет только `watcher_started`; он ждёт оба файла и не застрял. Failed `result.json` не переписывать и не принимать как v22. Порог `shadow_planned_orders >= 20` не ослаблять. `status.json` `updated_at_utc` по-прежнему `2026-08-18T17:27:50Z`.
+Проверено 18 августа 2026 года, 19:50 UTC, document-only: live `master` не содержит `src/research/paper_market_surfaces.py`; в `TLI-Wings/p1-paper-execution-calibration` нет `data_passport.py` и `risk_evidence.py`. v5: `result.json` существует, `status=failed`, `candidate_admission=false`, `shadow_duration_hours≈4.032`, `shadow_planned_orders=5`, `shadow_determinism_runs=0`, `shadow_replay_count=0`; `process_supervisor.json` отсутствует; `runs/shadow-readiness-2026-08-18-v22` отсутствует. Supervisor PID `81180` жив, текущий child `61667` (`strategy_shadow_stream`, `--duration-seconds 14520`); прежний child `81189` уже не жив. Watcher PID `57680` жив и в логе имеет только `watcher_started`; он ждёт оба файла и не застрял. Failed `result.json` не переписывать и не принимать как v22. Порог `shadow_planned_orders >= 20` не ослаблять. `status.json` `updated_at_utc` по-прежнему `2026-08-18T17:27:50Z`.
 
 Проверено 18 августа 2026 года, 19:53 UTC, document-only plan review: 1.62 совпадает с machine truth. `result.json` — промежуточный сегментный файл при живом supervisor/child, не финал. P1-F timestamp parser тогда ещё считался in-flight. P1-G не закрывает queue/depth. Production risk и qualifying paper не утверждаются. Подробный срез — в implementation review, секция 19:53 UTC.
 
-Проверено 18 августа 2026 года, 20:14 UTC, document-only: live `master` @ `9dee208e5` сохраняет старый `_integer()` (`int(1.9) -> 1`); live `src/`/`tests/`/`passivbot-rust/`/`configs/` этим пакетом не менялись (live `bitget_market_surfaces.py` mtime `2026-08-17 16:33`). Worktree `TLI-Setka-p1f-timestamps` / `p1f/strict-timestamp-parser` @ `9dee208e5` uncommitted; нет `data_passport.py` / `risk_evidence.py` / `paper_market_surfaces.py`. Parser отклоняет float/bool/NaN/overflow и принимает digit strings / int64 bounds. v5: supervisor `81180`, child `61667`, watcher `57680` живы; `result.json` `status=failed`, `planned_order_count=5`, `covered_duration_hours≈4.032`, `candidate_admission=false`; `process_supervisor.json` нет; `runs/shadow-readiness-2026-08-18-v22` нет. Freeze остаётся «ждать v22». Порог `shadow_planned_orders >= 20` не ослаблять. `status.json` `updated_at_utc` по-прежнему `2026-08-18T17:27:50Z`.
+Проверено 18 августа 2026 года, 20:14 UTC, document-only: live `master` @ `9dee208e5` сохраняет старый `_integer()` (`int(1.9) -> 1`); live `src/`/`tests/`/`passivbot-rust/`/`configs/` этим пакетом не менялись (live `bitget_market_surfaces.py` mtime `2026-08-17 16:33`). Worktree `TLI-Wings/p1f-strict-timestamps` / `p1f/strict-timestamp-parser` @ `9dee208e5` uncommitted; нет `data_passport.py` / `risk_evidence.py` / `paper_market_surfaces.py`. Parser отклоняет float/bool/NaN/overflow и принимает digit strings / int64 bounds. v5: supervisor `81180`, child `61667`, watcher `57680` живы; `result.json` `status=failed`, `planned_order_count=5`, `covered_duration_hours≈4.032`, `candidate_admission=false`; `process_supervisor.json` нет; `runs/shadow-readiness-2026-08-18-v22` нет. Freeze остаётся «ждать v22». Порог `shadow_planned_orders >= 20` не ослаблять. `status.json` `updated_at_utc` по-прежнему `2026-08-18T17:27:50Z`.
 
-Проверено 18 августа 2026 года, 20:42 UTC, document-only: следующего изолированного engineering-пакета кроме wait-for-v22 и хвоста queue/depth в `TLI-Setka-p1-paper` нет. `account_risk_surface` по плану нужен только перед technical live — сейчас не начинать. Новый worktree не создавался. v5: supervisor `81180` (~5 ч), child `61667` (~57 мин, `--duration-seconds 14520`, `--side long`), watcher `57680` живы и ждут оба файла. Промежуточный `result.json` / `segments/segment-001-result.json` по-прежнему `status=failed`, `planned_order_count=5`, `covered_duration_hours≈4.032`, `candidate_admission=false`, replay/determinism 0; mtime `result.json` не двигался после сегмента 1, тогда как `stream_state.json` уже `market_event_count=284`, `checkpoint.json` `event_count=2282`. `process_supervisor.json` нет. `runs/shadow-readiness-2026-08-18-v22` нет. Это не финал и не повод ослаблять `shadow_planned_orders >= 20` или запускать второй shadow. `status.json` `updated_at_utc` по-прежнему `2026-08-18T17:27:50Z`.
+Проверено 18 августа 2026 года, 20:42 UTC, document-only: следующего изолированного engineering-пакета кроме wait-for-v22 и хвоста queue/depth в `TLI-Wings/p1-paper-execution-calibration` нет. `account_risk_surface` по плану нужен только перед technical live — сейчас не начинать. Новый worktree не создавался. v5: supervisor `81180` (~5 ч), child `61667` (~57 мин, `--duration-seconds 14520`, `--side long`), watcher `57680` живы и ждут оба файла. Промежуточный `result.json` / `segments/segment-001-result.json` по-прежнему `status=failed`, `planned_order_count=5`, `covered_duration_hours≈4.032`, `candidate_admission=false`, replay/determinism 0; mtime `result.json` не двигался после сегмента 1, тогда как `stream_state.json` уже `market_event_count=284`, `checkpoint.json` `event_count=2282`. `process_supervisor.json` нет. `runs/shadow-readiness-2026-08-18-v22` нет. Это не финал и не повод ослаблять `shadow_planned_orders >= 20` или запускать второй shadow. `status.json` `updated_at_utc` по-прежнему `2026-08-18T17:27:50Z`.
 
 ## Следующий этап 1.63 — полный промежуточный срез 21:37 UTC, freeze до v22 — 18 августа 2026 года
 
@@ -697,17 +740,17 @@ Freeze implementation подтверждён: в `src/` / `tests/` / `configs/` 
 
 ### Сейчас — до машинного v22
 
-Live checkout `TLI-Setka` на `master` (`9dee208e5`) заморожен для `src/`, `tests/`, `passivbot-rust/` и `configs/`. Документация и generated reports вне implementation fingerprint.
+Live checkout `TLI-Wings/main` на `master` (`9dee208e5`) заморожен для `src/`, `tests/`, `passivbot-rust/` и `configs/`. Документация и generated reports вне implementation fingerprint.
 
 1. Не останавливать и не дублировать `public-stream-process-24h-2026-08-18-v5`. Не перезаписывать сегментный `result.json`. Не писать `process_supervisor.json` вручную.
 2. Не запускать `baseline-2026-08-18-v83`, не пересобирать public/risk/data/historical пакеты и не писать `status.json` вручную.
 3. Принять будущий v22 как `passed`, `failed` или `blocked` без перетолкования. Порог `shadow_planned_orders >= 20` не ослаблять. Сегмент 1 уже имеет 4 stream errors; финальный v5/v22 скорее `failed`.
 4. После появления `process_supervisor.json` сразу проверить, что принятый `result.json` содержит nested `process_supervisor` и cumulative wall-clock, а не payload сегмента 1 (`covered_duration_hours≈4.032`, mtime `19:45:30Z`). Если v22 сгорел на stale result — принять фактический failed/blocked, не запускать второй shadow и не патчить live `CODE_PATHS`.
-5. P0-E не merge: worktree `/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka-p0e-clean`, ветка `p0e/data-passport-clean`, файлы uncommitted. Грязный sibling `TLI-Setka-p0e` / `p0e/data-passport` не использовать для merge review.
-6. P0-D изолированная копия готова и uncommitted в `/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka-p0d` на `codex/p0d-production-risk-evidence-20260818`. Kitchen-sink: после v22 вынимать только production-path файлы. Schema `risk-parity-production-evidence-v1`. Shared `risk_engine v29` по-прежнему завышает метрику.
-7. Paper mark/index/tiers/evidence writer — изолированная копия в `/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka-p1-paper` на `p1/paper-execution-calibration` @ `9dee208e5`. `qualifying=false`; queue/depth модель есть при bound book, calibration artifact отсутствует. Queue/depth **не стартовать в этой пачке**. Каталог `TLI-Setka-p1-paper-cal` не использовать.
+5. P0-E не merge: worktree `/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Wings/p0e-data-passport-clean`, ветка `p0e/data-passport-clean`, файлы uncommitted. Грязный sibling `TLI-Wings/p0e-data-passport` / `p0e/data-passport` не использовать для merge review.
+6. P0-D изолированная копия готова и uncommitted в `/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Wings/p0d-production-risk-evidence` на `codex/p0d-production-risk-evidence-20260818`. Kitchen-sink: после v22 вынимать только production-path файлы. Schema `risk-parity-production-evidence-v1`. Shared `risk_engine v29` по-прежнему завышает метрику.
+7. Paper mark/index/tiers/evidence writer — изолированная копия в `/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Wings/p1-paper-execution-calibration` на `p1/paper-execution-calibration` @ `9dee208e5`. `qualifying=false`; queue/depth модель есть при bound book, calibration artifact отсутствует. Queue/depth **не стартовать в этой пачке**. Каталог `TLI-Wings/p1-paper-execution-calibration-cal` не использовать.
 8. Funding research не повторять по исчерпанным публичным источникам. Historical optimizer, 90-дневный paper, ETH rerun и любой live остаются закрытыми.
-9. P1-F timestamp parser изолированная копия готова и uncommitted в `/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Setka-p1f-timestamps`. Live `_integer()` по-прежнему коэрцирует `int(1.9) -> 1`. Второй P1-F не запускать.
+9. P1-F timestamp parser изолированная копия готова и uncommitted в `/Users/ivan/Documents/Projects-SaaS/Trading/TLI-Wings/p1f-strict-timestamps`. Live `_integer()` по-прежнему коэрцирует `int(1.9) -> 1`. Второй P1-F не запускать.
 10. Единственный обязательный саб-агент до v22 — read-only runtime reviewer. Новый worktree не создавать. `account_risk_surface` не начинать.
 
 Проверено 18 августа 2026 года, 22:04 UTC, document-only после записи 1.63: supervisor `81180`, child `61667`, watcher `57680` живы. Live counters уже 364 market events / 2922 typed events; сегментный `result.json` без nested `process_supervisor`, mtime `19:45:30Z`; `process_supervisor.json` нет; v22 нет; v83 нет. Watcher спит по 60 с, пока нет обоих файлов, затем делает три SHA-256 пробы `result`/`supervisor`/`events`/`dataset` с паузой 5 с; это сужает, но не отменяет гонку. ETH не перезапускался. Queue/depth, merge и второй shadow не запускались. `status.json` `updated_at_utc` по-прежнему `2026-08-18T17:27:50Z`.
@@ -720,14 +763,30 @@ Live checkout `TLI-Setka` на `master` (`9dee208e5`) заморожен для 
 
 Один интегратор принял immutable bundle v23 как есть: `check_status=passed`, admission `blocked`. v23 читал финальный NAS `result.json` (nested `process_supervisor`, wall-clock 92638.6 с), не Mac сегмент 1 и не `pre-resume-result.json`. Контейнер `exit=0` в `2026-08-20T00:38:00Z`. `status.json` обновлён штатно в `2026-08-20T00:43:04Z`.
 
-### Ближайшее окно 1.71 — дождаться финала v7
+### Ближайшее окно 1.74 — вход funding от пользователя
 
-Один интегратор, без `docker start` exam-контейнера и без ослабления gates:
+Один интегратор, без ослабления gates и без повторных исчерпанных GET:
 
-1. Не останавливать `passivbot-shadow-v7`. Не менять восемь `CODE_PATHS` до финала.
-2. Не биндить новый `shadow-readiness` и не писать `status.json`, пока нет финальных `result.json` и `process_supervisor.json`.
-3. v6/v24/v25 не перезаписывать. Не делать `docker start` контейнера `passivbot-shadow`.
-4. Data/historical по-прежнему ждут полный funding archive. Queue/depth не стартовать. ETH не перезапускать.
+1. Публичный полный архив 24 августа не найден (248/2332). Не покупать данные без явного разрешения.
+2. Когда появится файл или ключ: `bitget-funding-archive`, затем `bitget-funding-promote` в **новый** output path. Frozen input не перезаписывать.
+3. BL-24/MP-24/RE-24/SR-24 уже bound. Exam-контейнеры не стартовать. CODE_PATHS не менять без нового 24h.
+
+### Историческое окно 1.73 — funding
+
+Закрыто в 1.74 как неудачная публичная сборка. BL-24/MP-24/RE-24/SR-24 остались bound. Data/historical ждут полный архив.
+
+### Историческое окно 1.72 — следующие тесты
+
+Закрыто в 1.73: BL-24 5/5, MP-24 4/4, RE-24 35/35, SR-24 40/40 admission passed на `f5af0643…`. Один интегратор, без `docker start` exam-контейнеров и без ослабления gates:
+
+1. Честный `BL-24` (`baseline-2026-08-24-rebind`) на `7a8be7892` / `f5af0643…`. Три последовательных полных pytest, fake-live, `cargotest.sh`. Не v83. Не reuse BL-20/`d46be477…`.
+2. Затем `MP-24` на тех же public surfaces и `RE-24` production-path (не `p0d_local`).
+3. Затем `SR-24` (`shadow-readiness-2026-08-24-exam7`) на `result.mac-path-bind-2026-08-24.json`. Не перезаписывать SR-21/v24/EX-6/EX-7 `result.json`.
+4. Не менять восемь `CODE_PATHS`. Queue/depth не стартовать. ETH не перезапускать. `status.json` только штатной командой.
+
+### Историческое окно 1.71 — дождаться финала v7
+
+Закрыто в 1.72: v7 `passed`, файлы на месте, локальная копия и path-bind готовы. Штатный bind выполнен в 1.73 как SR-24.
 
 ### Историческое окно 1.70 — funding, затем явный 24h
 
@@ -759,8 +818,8 @@ Live checkout `TLI-Setka` на `master` (`9dee208e5`) заморожен для 
 
 Закрыто в 1.68: P0-E, P0-D, `p1-paper` без queue/depth и `p1f-timestamps` перенесены. Один интегратор, без второго 24h shadow и без ослабления gates:
 
-1. P0-E `data_passport` уже перенесён точечно. Не копировать грязный `TLI-Setka-p0e`.
-2. P0-D production-path из `TLI-Setka-p0d`. Kitchen-sink не копировать.
+1. P0-E `data_passport` уже перенесён точечно. Не копировать грязный `TLI-Wings/p0e-data-passport`.
+2. P0-D production-path из `TLI-Wings/p0d-production-risk-evidence`. Kitchen-sink не копировать.
 3. Затем `p1-paper` без queue/depth, затем `p1f-timestamps`.
 4. Один новый baseline после всего пакета. Не v83. Не писать `status.json` вручную.
 5. Новый 24-часовой shadow — только если принятый код/config hash больше не совпадает с тем, что сверял v24.
