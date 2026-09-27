@@ -71,6 +71,14 @@ or order-construction work; it is not mandatory for unrelated documentation or t
 5. Preserve EMA spans as floats, including derived spans.
 6. Keep changes narrow. Preserve unrelated user files and pre-existing worktree changes.
 
+## TLI-Wings Scope
+
+TLI-specific code belongs only in `src/tli_wings/`, `tests/tli_wings/`, `configs/tli/`,
+`container/tli/`, and `docs/tli/`. Do not edit upstream Passivbot files; synchronize with
+`git fetch origin` and `git merge origin/master`. Keep paper execution on public market data with
+locally simulated private state; paper must reject credentials and must never submit real orders.
+Use `docs/tli/PLAN.md` as the only active TLI plan and `docs/tli/HISTORY.md` for archival context.
+
 ## Working And Validation
 
 Before broad edits, inspect the branch, recent commits, worktree status, and relevant callers/tests.
