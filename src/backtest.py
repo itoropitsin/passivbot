@@ -39,6 +39,7 @@ import pandas as pd
 import json
 import asyncio
 import numbers
+import threading
 from dataclasses import dataclass
 from typing import Any, Iterable, Sequence
 from cli_utils import (
@@ -177,6 +178,28 @@ DISABLE_PLOTTING_HELP = (
 HLCVS_CACHE_ROOT = Path("caches") / "hlcvs_data"
 HLCVS_CACHE_HASH_LEN = 16
 HLCVS_CACHE_DIR_SEP = "__"
+_CACHE_HASH_CWD_LOCK = threading.RLock()
+
+
+def _resolve_cache_market_identity(coin, venue):
+    """Resolve a market using the checkout's metadata, independent of cwd.
+
+    Backtest cache files are relative to the caller's working directory, while
+    market maps belong to the checkout.  Resolving through the checkout keeps a
+    cache hash identical when a caller creates a cache key before changing
+    into a temporary output directory and loads it afterwards.
+    """
+    project_root = Path(__file__).resolve().parent.parent
+    current_root = Path.cwd().resolve()
+    if current_root == project_root:
+        return coin_to_symbol(coin, venue, verbose=False)
+    with _CACHE_HASH_CWD_LOCK:
+        original_cwd = os.getcwd()
+        try:
+            os.chdir(project_root)
+            return coin_to_symbol(coin, venue, verbose=False)
+        finally:
+            os.chdir(original_cwd)
 
 
 @dataclass(frozen=True)
@@ -1501,7 +1524,7 @@ def get_cache_hash(config, exchange):
     for venue in identity_exchanges:
         for coin in data_coins:
             try:
-                symbol = coin_to_symbol(coin, venue, verbose=False)
+                symbol = _resolve_cache_market_identity(coin, venue)
             except MarketIdentifierResolutionError:
                 symbol = None
             resolved_market_identities.append((venue, str(coin), symbol))

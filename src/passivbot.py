@@ -4640,9 +4640,6 @@ class Passivbot:
                 paths=(
                     ("entry", "threshold_volatility_1h_weight"),
                     ("entry", "retracement_volatility_1h_weight"),
-                    ("entry", "grid_spacing_volatility_weight"),
-                    ("entry", "trailing_threshold_volatility_weight"),
-                    ("entry", "trailing_retracement_volatility_weight"),
                     ("entry_weight_volatility_1h",),
                     ("offset_volatility_1h_weight",),
                 ),
@@ -4653,7 +4650,7 @@ class Passivbot:
                 symbol=symbol,
                 pside=pside,
                 error_label="live warmup",
-                optional=strategy_kind == "trailing_grid_v7",
+                optional=False,
                 paths=(
                     ("close", "threshold_volatility_1h_weight"),
                     ("close", "retracement_volatility_1h_weight"),
@@ -8619,11 +8616,6 @@ class Passivbot:
             else None
         )
         strategy_cfg = self._strategy_params_to_rust_dict(pside, symbol)
-        if strategy_kind == "trailing_grid_v7":
-            return (
-                float(strategy_cfg.get("entry", {}).get("trailing_grid_ratio", 0.0) or 0.0) != 0.0
-                or float(strategy_cfg.get("close", {}).get("trailing_grid_ratio", 0.0) or 0.0) != 0.0
-            )
         return (
             float(strategy_cfg.get("entry", {}).get("retracement_base_pct", 0.0) or 0.0) > 0.0
             or float(strategy_cfg.get("close", {}).get("retracement_base_pct", 0.0) or 0.0) > 0.0
@@ -10964,7 +10956,7 @@ class Passivbot:
         strategy_cfg = self._strategy_params_to_rust_dict(pside, symbol)
         if strategy_kind == "ema_anchor":
             return float(strategy_cfg["base_qty_pct"])
-        if strategy_kind in {"trailing_martingale", "trailing_grid_v7"}:
+        if strategy_kind == "trailing_martingale":
             entry_cfg = strategy_cfg.get("entry")
             if not isinstance(entry_cfg, dict) or "initial_qty_pct" not in entry_cfg:
                 raise KeyError(f"missing required strategy key {pside}.entry.initial_qty_pct")

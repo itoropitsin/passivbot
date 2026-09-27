@@ -3393,28 +3393,6 @@ def test_console_format_compacts_trailing_status_with_long_identifiers():
     assert event.data["threshold_projection_retracement_price"] == 1030.0
 
 
-def test_console_format_summarizes_unsupported_trailing_status():
-    event = LiveEvent(
-        EventTypes.TRAILING_STATUS,
-        status="succeeded",
-        symbol="BTC/USDT:USDT",
-        pside="long",
-        reason_code="trailing_status",
-        data={
-            "kind": "position",
-            "diagnostics_supported": False,
-            "strategy_kind": "trailing_grid_v7",
-            "unsupported_reason": "monitor trailing diagnostics use trailing_martingale helper formulas",
-        },
-    )
-
-    assert format_console_event(event) == (
-        "[trailing] succeeded kind=position strategy=trailing_grid_v7 "
-        "unsupported=monitor trailing diagnostics use trailing_martingale helper "
-        "formulas symbol=BTC/USDT:USDT pside=long reason=trailing_status"
-    )
-
-
 def test_console_format_summarizes_unstuck_status():
     event = LiveEvent(
         EventTypes.UNSTUCK_STATUS,

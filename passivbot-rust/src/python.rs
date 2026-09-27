@@ -18,10 +18,9 @@ use crate::risk::{
 };
 use crate::strategies::ema_anchor::calc_quote_prices as calc_ema_anchor_quote_prices;
 use crate::strategies::registry::{strategy_kind_from_name, strategy_kind_names, strategy_spec};
-use crate::strategies::trailing_grid_v7::calc_trailing_grid_v7_diagnostics;
 use crate::strategies::{
-    EmaAnchorParams, EmaGateMode, StrategySide, TrailingGridV7Params,
-    TrailingMartingaleCloseParams, TrailingMartingaleEntryParams,
+    EmaAnchorParams, EmaGateMode, StrategySide, TrailingMartingaleCloseParams,
+    TrailingMartingaleEntryParams,
 };
 use crate::trailing::{
     trailing_bundle_to_tuple, tuple_to_trailing_bundle, update_trailing_bundle_sequence,
@@ -2231,80 +2230,6 @@ fn validate_py_dict_keys(dict: &PyDict, context: &str, allowed: &[&str]) -> PyRe
     Ok(())
 }
 
-fn trailing_grid_v7_strategy_params_from_dict(dict: &PyDict) -> PyResult<Value> {
-    validate_py_dict_keys(
-        dict,
-        "trailing_grid_v7 strategy params",
-        &["ema_span_0", "ema_span_1", "entry", "close"],
-    )?;
-    let entry = extract_value::<&PyDict>(dict, "entry")?;
-    let close = extract_value::<&PyDict>(dict, "close")?;
-    validate_py_dict_keys(
-        entry,
-        "trailing_grid_v7 entry params",
-        &[
-            "grid_double_down_factor",
-            "grid_spacing_pct",
-            "grid_spacing_we_weight",
-            "grid_spacing_volatility_weight",
-            "initial_ema_dist",
-            "initial_qty_pct",
-            "trailing_double_down_factor",
-            "trailing_grid_ratio",
-            "trailing_retracement_pct",
-            "trailing_retracement_we_weight",
-            "trailing_retracement_volatility_weight",
-            "trailing_threshold_pct",
-            "trailing_threshold_we_weight",
-            "trailing_threshold_volatility_weight",
-            "volatility_ema_span_hours",
-        ],
-    )?;
-    validate_py_dict_keys(
-        close,
-        "trailing_grid_v7 close params",
-        &[
-            "grid_markup_start",
-            "grid_markup_end",
-            "grid_qty_pct",
-            "trailing_grid_ratio",
-            "trailing_qty_pct",
-            "trailing_retracement_pct",
-            "trailing_threshold_pct",
-        ],
-    )?;
-    Ok(serde_json::json!({
-        "ema_span_0": extract_value::<f64>(dict, "ema_span_0")?,
-        "ema_span_1": extract_value::<f64>(dict, "ema_span_1")?,
-        "entry": {
-            "grid_double_down_factor": extract_value::<f64>(entry, "grid_double_down_factor")?,
-            "grid_spacing_pct": extract_value::<f64>(entry, "grid_spacing_pct")?,
-            "grid_spacing_we_weight": extract_value::<f64>(entry, "grid_spacing_we_weight")?,
-            "grid_spacing_volatility_weight": extract_value::<f64>(entry, "grid_spacing_volatility_weight")?,
-            "initial_ema_dist": extract_value::<f64>(entry, "initial_ema_dist")?,
-            "initial_qty_pct": extract_value::<f64>(entry, "initial_qty_pct")?,
-            "trailing_double_down_factor": extract_value::<f64>(entry, "trailing_double_down_factor")?,
-            "trailing_grid_ratio": extract_value::<f64>(entry, "trailing_grid_ratio")?,
-            "trailing_retracement_pct": extract_value::<f64>(entry, "trailing_retracement_pct")?,
-            "trailing_retracement_we_weight": extract_value::<f64>(entry, "trailing_retracement_we_weight")?,
-            "trailing_retracement_volatility_weight": extract_value::<f64>(entry, "trailing_retracement_volatility_weight")?,
-            "trailing_threshold_pct": extract_value::<f64>(entry, "trailing_threshold_pct")?,
-            "trailing_threshold_we_weight": extract_value::<f64>(entry, "trailing_threshold_we_weight")?,
-            "trailing_threshold_volatility_weight": extract_value::<f64>(entry, "trailing_threshold_volatility_weight")?,
-            "volatility_ema_span_hours": extract_value::<f64>(entry, "volatility_ema_span_hours")?,
-        },
-        "close": {
-            "grid_markup_start": extract_value::<f64>(close, "grid_markup_start")?,
-            "grid_markup_end": extract_value::<f64>(close, "grid_markup_end")?,
-            "grid_qty_pct": extract_value::<f64>(close, "grid_qty_pct")?,
-            "trailing_grid_ratio": extract_value::<f64>(close, "trailing_grid_ratio")?,
-            "trailing_qty_pct": extract_value::<f64>(close, "trailing_qty_pct")?,
-            "trailing_retracement_pct": extract_value::<f64>(close, "trailing_retracement_pct")?,
-            "trailing_threshold_pct": extract_value::<f64>(close, "trailing_threshold_pct")?,
-        },
-    }))
-}
-
 fn strategy_params_pair_from_dict(
     dict: &PyDict,
     strategy_kind: &str,
@@ -2327,10 +2252,6 @@ fn strategy_params_pair_from_dict(
         "ema_anchor" => (
             ema_anchor_strategy_params_from_dict(long_dict)?,
             ema_anchor_strategy_params_from_dict(short_dict)?,
-        ),
-        "trailing_grid_v7" => (
-            trailing_grid_v7_strategy_params_from_dict(long_dict)?,
-            trailing_grid_v7_strategy_params_from_dict(short_dict)?,
         ),
         _ => {
             return Err(PyValueError::new_err(format!(
@@ -2970,7 +2891,7 @@ fn json_bool(value: &Value, key: &str, default: bool) -> bool {
     value.get(key).and_then(Value::as_bool).unwrap_or(default)
 }
 
-fn bot_params_from_trailing_grid_v7_diagnostic_json(value: &Value) -> PyResult<BotParams> {
+fn bot_params_from_diagnostic_json(value: &Value) -> PyResult<BotParams> {
     let mut bot = BotParams::default();
     bot.wallet_exposure_limit = json_f64(value, "wallet_exposure_limit", 0.0);
     bot.total_wallet_exposure_limit = json_f64(value, "total_wallet_exposure_limit", 0.0);
@@ -2991,74 +2912,6 @@ fn bot_params_from_trailing_grid_v7_diagnostic_json(value: &Value) -> PyResult<B
             })?;
     }
     Ok(bot)
-}
-
-#[pyfunction]
-pub fn calc_trailing_grid_v7_diagnostic_py(input_json: &str) -> PyResult<String> {
-    let input: Value = serde_json::from_str(input_json).map_err(|err| {
-        PyValueError::new_err(format!("invalid trailing_grid_v7 diagnostic json: {err}"))
-    })?;
-    let side = match input.get("pside").and_then(Value::as_str).unwrap_or("long") {
-        "long" => StrategySide::Long,
-        "short" => StrategySide::Short,
-        other => {
-            return Err(PyValueError::new_err(format!(
-                "pside must be long or short; got {other:?}"
-            )))
-        }
-    };
-    let exchange: ExchangeParams = serde_json::from_value(
-        input
-            .get("exchange")
-            .cloned()
-            .ok_or_else(|| PyValueError::new_err("missing exchange"))?,
-    )
-    .map_err(|err| PyValueError::new_err(format!("invalid exchange: {err}")))?;
-    let state: StateParams = serde_json::from_value(
-        input
-            .get("state")
-            .cloned()
-            .ok_or_else(|| PyValueError::new_err("missing state"))?,
-    )
-    .map_err(|err| PyValueError::new_err(format!("invalid state: {err}")))?;
-    let position: Position = serde_json::from_value(
-        input
-            .get("position")
-            .cloned()
-            .ok_or_else(|| PyValueError::new_err("missing position"))?,
-    )
-    .map_err(|err| PyValueError::new_err(format!("invalid position: {err}")))?;
-    let trailing: TrailingPriceBundle = serde_json::from_value(
-        input
-            .get("trailing")
-            .cloned()
-            .ok_or_else(|| PyValueError::new_err("missing trailing"))?,
-    )
-    .map_err(|err| PyValueError::new_err(format!("invalid trailing: {err}")))?;
-    let params: TrailingGridV7Params = serde_json::from_value(
-        input
-            .get("strategy_params")
-            .cloned()
-            .ok_or_else(|| PyValueError::new_err("missing strategy_params"))?,
-    )
-    .map_err(|err| PyValueError::new_err(format!("invalid strategy_params: {err}")))?;
-    let bot = bot_params_from_trailing_grid_v7_diagnostic_json(
-        input
-            .get("bot_params")
-            .ok_or_else(|| PyValueError::new_err("missing bot_params"))?,
-    )?;
-    let runtime = RuntimeOrderContext {
-        effective_wallet_exposure_limit: input
-            .get("runtime")
-            .and_then(|runtime| runtime.get("effective_wallet_exposure_limit"))
-            .and_then(Value::as_f64)
-            .unwrap_or(bot.wallet_exposure_limit),
-    };
-    let out = calc_trailing_grid_v7_diagnostics(
-        side, &exchange, &state, &bot, &runtime, &params, &position, &trailing,
-    );
-    serde_json::to_string(&out)
-        .map_err(|err| PyValueError::new_err(format!("failed to serialize diagnostic: {err}")))
 }
 
 #[pyfunction]
@@ -3112,7 +2965,7 @@ pub fn calc_trailing_martingale_close_diagnostic_py(input_json: &str) -> PyResul
             .ok_or_else(|| PyValueError::new_err("missing close_params"))?,
     )
     .map_err(|err| PyValueError::new_err(format!("invalid close_params: {err}")))?;
-    let bot = bot_params_from_trailing_grid_v7_diagnostic_json(
+    let bot = bot_params_from_diagnostic_json(
         input
             .get("bot_params")
             .ok_or_else(|| PyValueError::new_err("missing bot_params"))?,

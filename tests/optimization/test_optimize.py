@@ -1537,44 +1537,6 @@ class TestIndividualToConfig:
         with pytest.raises(ValueError, match="Unknown optimize.enable_overrides value"):
             optimize.validate_optimizer_overrides(["mirror_short_from_long", "typo_override"])
 
-    @pytest.mark.parametrize(
-        ("override", "expected_start", "expected_end"),
-        [
-            ("forward_tp_grid", 0.001, 0.01),
-            ("backward_tp_grid", 0.01, 0.001),
-        ],
-    )
-    def test_trailing_grid_v7_tp_grid_overrides_reorder_close_markup(
-        self, override, expected_start, expected_end
-    ):
-        config = {
-            "live": {"strategy_kind": "trailing_grid_v7"},
-            "bot": {
-                "long": {
-                    "strategy": {
-                        "trailing_grid_v7": {
-                            "close": {
-                                "grid_markup_start": 0.01,
-                                "grid_markup_end": 0.001,
-                            }
-                        }
-                    }
-                }
-            },
-        }
-
-        result = optimize.optimizer_overrides([override], deepcopy(config), "long")
-        close = result["bot"]["long"]["strategy"]["trailing_grid_v7"]["close"]
-
-        assert close["grid_markup_start"] == pytest.approx(expected_start)
-        assert close["grid_markup_end"] == pytest.approx(expected_end)
-
-    def test_trailing_grid_v7_tp_grid_overrides_reject_other_strategies(self):
-        config = load_prepared_config("configs/examples/ema_anchor.json", verbose=False)
-
-        with pytest.raises(ValueError, match="live.strategy_kind = 'trailing_grid_v7'"):
-            optimize.optimizer_overrides(["forward_tp_grid"], deepcopy(config), "long")
-
     def test_accepts_precomputed_key_paths(self):
         individual = [10.0, 20.0, 30.0, 40.0]
         template = {

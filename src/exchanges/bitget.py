@@ -12,8 +12,9 @@ from bitget_normalization import (
     normalize_uta_fill_payload,
 )
 from utils import symbol_to_coin, utc_ms, ts_to_date
-from config.access import require_live_value
+from config.access import get_optional_live_value, require_live_value
 import passivbot_rust as pbr
+from tli_wings.bitget_public import build_uta_isolated_order_params
 
 calc_order_price_diff = pbr.calc_order_price_diff
 
@@ -51,6 +52,27 @@ class BitgetBot(CCXTBot):
         # is_uta == False and every code path below behaves exactly as before.
         self.is_uta = False
         self._account_mode_detected = False
+
+    def _get_margin_mode_preference(self) -> str:
+        """Allow the TLI Bitget path to request isolated hedge mode."""
+        raw = get_optional_live_value(
+            getattr(self, "config", {}) or {}, "margin_mode_preference", "cross"
+        )
+        if str(raw).strip().lower() == "isolated":
+            return "isolated"
+        return super()._get_margin_mode_preference()
+
+    def _resolve_margin_policy_for_symbol(self, symbol: str) -> dict:
+        """Use isolated mode for TLI symbols when the market supports it."""
+        policy = super()._resolve_margin_policy_for_symbol(symbol)
+        if getattr(self, "_has_live_symbol_state", lambda _symbol: False)(symbol):
+            return policy
+        if self._get_margin_mode_preference() != "isolated":
+            return policy
+        capability = policy.get("capability", "both")
+        if capability == "cross_only":
+            return {**policy, "mode": "cross", "blocked": True}
+        return {**policy, "mode": "isolated", "blocked": False}
 
     def create_ccxt_sessions(self):
         """Bitget: set Passivbot channel code for broker rebate attribution."""
@@ -519,12 +541,12 @@ class BitgetBot(CCXTBot):
                     continue
             if start_time is None or fill_events[0]["timestamp"] < start_time:
                 logging.debug(
-                    f"broke loop private_mix_get_v2_mix_order_fill_history on start time exceeded"
+                    "broke loop private_mix_get_v2_mix_order_fill_history on start time exceeded"
                 )
                 break
             if params["endTime"] == fill_events[0]["timestamp"]:
                 logging.debug(
-                    f"broke loop private_mix_get_v2_mix_order_fill_history on two successive identical endTimes"
+                    "broke loop private_mix_get_v2_mix_order_fill_history on two successive identical endTimes"
                 )
                 break
             params["endTime"] = int(fill_events[0]["timestamp"])
@@ -713,10 +735,10 @@ class BitgetBot(CCXTBot):
                     )
                     continue
             if start_time is None or closed_orders[0]["timestamp"] < start_time:
-                logging.debug(f"broke loop fetch_closed_orders on start time exceeded")
+                logging.debug("broke loop fetch_closed_orders on start time exceeded")
                 break
             if params["until"] == closed_orders[0]["timestamp"]:
-                logging.debug(f"broke loop fetch_closed_orders on two successive identical endTimes")
+                logging.debug("broke loop fetch_closed_orders on two successive identical endTimes")
                 break
             params["until"] = int(closed_orders[0]["timestamp"])
         final_result = sorted(
@@ -756,6 +778,24 @@ class BitgetBot(CCXTBot):
                 "posSide": order["position_side"],
                 "clientOid": order["custom_id"],
             }
+            symbol = order.get("symbol")
+            if symbol and self._get_margin_mode_for_symbol(symbol) == "isolated":
+                profile = build_uta_isolated_order_params(
+                    symbol=symbol,
+                    hold_side=order["position_side"],
+                    leverage_by_position_side={
+                        "long": self._calc_leverage_for_symbol(symbol),
+                        "short": self._calc_leverage_for_symbol(symbol),
+                    },
+                    contract=self.get_symbol_id(symbol),
+                )
+                if profile.value is None:
+                    issue = profile.unavailable or profile.error
+                    raise ValueError(
+                        "bitget UTA isolated order parameters unavailable: "
+                        + str(getattr(issue, "message", issue))
+                    )
+                params.update(profile.value.as_params())
             if use_post_only:
                 params["postOnly"] = True
             else:
@@ -793,9 +833,24 @@ class BitgetBot(CCXTBot):
                         self._format_exchange_config_error(e),
                     )
             try:
-                coros_to_call_lev[symbol] = asyncio.create_task(
-                    self.cca.set_leverage(self._calc_leverage_for_symbol(symbol), symbol=symbol)
-                )
+                leverage = self._calc_leverage_for_symbol(symbol)
+                if getattr(self, "is_uta", False) and margin_mode == "isolated":
+                    for pside in ("long", "short"):
+                        coros_to_call_lev[(symbol, pside)] = asyncio.create_task(
+                            self.cca.set_leverage(
+                                leverage,
+                                symbol=symbol,
+                                params={
+                                    "uta": True,
+                                    "marginMode": "isolated",
+                                    "posSide": pside,
+                                },
+                            )
+                        )
+                else:
+                    coros_to_call_lev[(symbol, "both")] = asyncio.create_task(
+                        self.cca.set_leverage(self._calc_leverage_for_symbol(symbol), symbol=symbol)
+                    )
             except Exception as e:
                 logging.error(
                     "[config] %s leverage task creation failed | %s",
@@ -806,15 +861,19 @@ class BitgetBot(CCXTBot):
             log_symbol = symbol_to_coin(symbol, verbose=False) or symbol
             res = None
             to_print = ""
-            try:
-                res = await coros_to_call_lev[symbol]
-                to_print += f"leverage={format_exchange_config_response(res)} "
-            except Exception as e:
-                logging.error(
-                    "[config] %s leverage update failed | %s",
-                    log_symbol,
-                    self._format_exchange_config_error(e),
-                )
+            for key in ((symbol, "long"), (symbol, "short"), (symbol, "both")):
+                if key not in coros_to_call_lev:
+                    continue
+                try:
+                    res = await coros_to_call_lev[key]
+                    to_print += f"leverage_{key[1]}={format_exchange_config_response(res)} "
+                except Exception as e:
+                    logging.error(
+                        "[config] %s %s leverage update failed | %s",
+                        log_symbol,
+                        key[1],
+                        self._format_exchange_config_error(e),
+                    )
             res = None
             if symbol in coros_to_call_margin_mode:
                 try:

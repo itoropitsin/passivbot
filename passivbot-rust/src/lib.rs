@@ -10,6 +10,7 @@ mod orchestrator;
 mod python;
 mod risk;
 mod strategies;
+pub mod tli_risk;
 mod trailing;
 mod types;
 mod utils;
@@ -19,6 +20,7 @@ use pyo3::prelude::*;
 use pyo3::types::PyDict;
 use pyo3::wrap_pyfunction;
 use python::*;
+use tli_risk::evaluate_tli_portfolio_risk_py;
 use utils::*;
 
 #[pyfunction]
@@ -53,7 +55,6 @@ fn passivbot_rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(calc_wallet_exposure, m)?)?;
     m.add_function(wrap_pyfunction!(calc_new_psize_pprice, m)?)?;
     m.add_function(wrap_pyfunction!(calc_next_entry_long_py, m)?)?;
-    m.add_function(wrap_pyfunction!(calc_trailing_grid_v7_diagnostic_py, m)?)?;
     m.add_function(wrap_pyfunction!(
         calc_trailing_martingale_close_diagnostic_py,
         m
@@ -94,6 +95,7 @@ fn passivbot_rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(select_coin_indices_py, m)?)?;
     m.add_function(wrap_pyfunction!(select_forager_candidates_py, m)?)?;
     m.add_function(wrap_pyfunction!(calc_ema_anchor_quote_series_py, m)?)?;
+    m.add_function(wrap_pyfunction!(evaluate_tli_portfolio_risk_py, m)?)?;
 
     Ok(())
 }

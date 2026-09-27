@@ -4,6 +4,10 @@ All notable user-facing changes will be documented in this file.
 
 ## Unreleased
 
+- Start the TLI-Wings migration from the stable v8.1.0 tag with native
+  `trailing_martingale`, a separate TLI policy, explicit live authorization, and
+  a new paper WAL format. The old v7 trading state is not migrated.
+
 ## v8.1.0 - 2026-08-10
 
 - Scope coin-mode HSL fill-history readiness for `restart_after_red_policy=always` to the

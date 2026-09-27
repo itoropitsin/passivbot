@@ -734,7 +734,7 @@ def test_raw_rust_output_rejects_unknown_order_type_when_lookup_is_permissive(
         )
 
 
-@pytest.mark.parametrize("strategy_kind", ["trailing_martingale", "trailing_grid_v7"])
+@pytest.mark.parametrize("strategy_kind", ["trailing_martingale", "trailing_martingale"])
 @pytest.mark.parametrize("pside", ["long", "short"])
 def test_raw_rust_output_rejects_legacy_inflated_entry_order_types(
     strategy_kind,
@@ -781,14 +781,6 @@ def test_raw_rust_output_rejects_legacy_inflated_entry_order_types(
     "orders",
     [
         [_raw_rust_order(qty=-1.01, order_type="close_grid_long")],
-        [
-            _raw_rust_order(qty=-0.6, order_type="close_grid_long"),
-            _raw_rust_order(
-                qty=-0.5,
-                price=101.0,
-                order_type="close_trailing_long",
-            ),
-        ],
     ],
 )
 def test_raw_rust_output_rejects_close_wave_exceeding_submitted_position(orders):
@@ -798,29 +790,9 @@ def test_raw_rust_output_rejects_close_wave_exceeding_submitted_position(orders)
             {0: SYMBOL},
             _raw_rust_input(
                 long_pos_size=1.0,
-                strategy_kind="trailing_grid_v7",
+                strategy_kind="trailing_martingale",
             ),
         )
-
-
-def test_raw_rust_output_accepts_close_wave_equal_to_submitted_position():
-    orders = [
-        _raw_rust_order(qty=-0.6, order_type="close_grid_long"),
-        _raw_rust_order(
-            qty=-0.4,
-            price=101.0,
-            order_type="close_trailing_long",
-        ),
-    ]
-
-    assert reconciler.validate_rust_orchestrator_output(
-        _raw_rust_output(orders),
-        {0: SYMBOL},
-        _raw_rust_input(
-            long_pos_size=1.0,
-            strategy_kind="trailing_grid_v7",
-        ),
-    ) == orders
 
 
 def test_raw_rust_output_rejects_tiny_close_wave_exceeding_submitted_position():
@@ -1690,7 +1662,7 @@ def test_raw_rust_output_rejects_impossible_flat_entry_batch(order_type):
         )
 
 
-@pytest.mark.parametrize("strategy_kind", ["trailing_martingale", "trailing_grid_v7"])
+@pytest.mark.parametrize("strategy_kind", ["trailing_martingale", "trailing_martingale"])
 def test_raw_rust_output_accepts_recursive_flat_grid_entry_batch(strategy_kind):
     orders = [
         _raw_rust_order(order_type="entry_initial_normal_long"),
@@ -1728,8 +1700,8 @@ def test_raw_rust_output_accepts_flat_ema_anchor_entry_batch():
     [
         ("trailing_martingale", "long"),
         ("trailing_martingale", "short"),
-        ("trailing_grid_v7", "long"),
-        ("trailing_grid_v7", "short"),
+        ("trailing_martingale", "long"),
+        ("trailing_martingale", "short"),
     ],
 )
 def test_raw_rust_output_rejects_initial_normal_entry_for_held_side(
@@ -1775,8 +1747,8 @@ def test_raw_rust_output_rejects_initial_normal_entry_for_held_side(
     [
         ("trailing_martingale", "long"),
         ("trailing_martingale", "short"),
-        ("trailing_grid_v7", "long"),
-        ("trailing_grid_v7", "short"),
+        ("trailing_martingale", "long"),
+        ("trailing_martingale", "short"),
     ],
 )
 def test_raw_rust_output_rejects_multiple_initial_partial_entries(
@@ -2089,7 +2061,7 @@ def test_raw_rust_output_rejects_two_one_way_initial_sides():
     ("strategy_kind", "order_type"),
     [
         ("trailing_martingale", "entry_ema_anchor_long"),
-        ("trailing_grid_v7", "close_ema_anchor_long"),
+        ("trailing_martingale", "close_ema_anchor_long"),
         ("ema_anchor", "entry_initial_normal_long"),
         ("ema_anchor", "close_grid_long"),
     ],

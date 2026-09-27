@@ -13,7 +13,7 @@ from .strategy_spec import (
 )
 
 
-TRAILING_GRID_V7_FLAT_ONLY_KEYS = {
+LEGACY_FLAT_STRATEGY_KEYS = {
     "close_grid_markup_end",
     "close_grid_markup_start",
     "close_grid_qty_pct",
@@ -214,19 +214,16 @@ def reject_legacy_flat_strategy_fields(config: dict) -> None:
         bot_side = bot_cfg.get(pside)
         if not isinstance(bot_side, dict):
             continue
-        legacy_keys = sorted(TRAILING_GRID_V7_FLAT_ONLY_KEYS & set(bot_side))
+        legacy_keys = sorted(LEGACY_FLAT_STRATEGY_KEYS & set(bot_side))
         if legacy_keys:
             joined = ", ".join(f"bot.{pside}.{key}" for key in legacy_keys)
             raise ValueError(
                 f"{joined} are legacy flat strategy fields and cannot be used at "
                 f"bot.<side> in v8 configs with live.strategy_kind={normalized_kind!r}. "
-                "Run `passivbot tool migrate-config-v7` for v7 configs, or move active "
+                "Move active "
                 "v8 strategy parameters under "
                 f"bot.<side>.strategy.{normalized_kind} before loading."
             )
-
-
-reject_trailing_grid_v7_flat_fields_for_trailing_martingale = reject_legacy_flat_strategy_fields
 
 
 def sync_canonical_strategy_config(config: dict, *, tracker: Optional[object] = None) -> None:

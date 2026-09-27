@@ -2552,7 +2552,6 @@ mod core {
                 }
             }
             StrategyParams::EmaAnchor(_) => wants_entries || wants_closes,
-            StrategyParams::TrailingGridV7(_) => wants_entries,
         }
     }
 
@@ -2591,10 +2590,7 @@ mod core {
         pside: PositionSide,
         runtime_budget: RuntimeBudgetState,
     ) -> Option<IdealOrder> {
-        if !matches!(
-            input.global.strategy_kind,
-            StrategyKind::TrailingMartingale | StrategyKind::TrailingGridV7
-        ) {
+        if !matches!(input.global.strategy_kind, StrategyKind::TrailingMartingale) {
             return None;
         }
         let side = match pside {

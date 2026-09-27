@@ -297,41 +297,6 @@ class TestPerCoinWarmupCalculation:
         # Warmup = 3000 * 3.0 = 9000
         assert per_coin_warmup["BTC"] == 9000
 
-    def test_per_coin_warmup_with_trailing_grid_v7_nested_entry_volatility_hours(
-        self, base_config
-    ):
-        base_config["live"]["strategy_kind"] = "trailing_grid_v7"
-        for pside in ("long", "short"):
-            side = base_config["bot"][pside]
-            side["forager_volume_ema_span_1m"] = 1.0
-            side["forager_volatility_ema_span_1m"] = 1.0
-            side["strategy"] = {
-                "trailing_grid_v7": {
-                    "ema_span_0": 1.0,
-                    "ema_span_1": 1.0,
-                    "entry": {"volatility_ema_span_hours": 4.0},
-                }
-            }
-        base_config["coin_overrides"] = {
-            "BTC": {
-                "bot": {
-                    "long": {
-                        "strategy": {
-                            "trailing_grid_v7": {
-                                "entry": {"volatility_ema_span_hours": 10.0}
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        per_coin = compute_per_coin_warmup_minutes(base_config)
-
-        assert per_coin["__default__"] == 720
-        assert per_coin["BTC"] == 1800
-
-
 # ============================================================================
 # Test Class: EMA Span Extraction
 # ============================================================================
@@ -394,28 +359,6 @@ class TestEMASpanExtraction:
 
         # New max is 20000, warmup = 60000
         assert warmup == 60000
-
-    def test_trailing_grid_v7_entry_volatility_hours_bound_is_considered(self, base_config):
-        base_config["live"]["strategy_kind"] = "trailing_grid_v7"
-        for pside in ("long", "short"):
-            side = base_config["bot"][pside]
-            side["forager_volume_ema_span_1m"] = 1.0
-            side["forager_volatility_ema_span_1m"] = 1.0
-            side["strategy"] = {
-                "trailing_grid_v7": {
-                    "ema_span_0": 1.0,
-                    "ema_span_1": 1.0,
-                    "entry": {"volatility_ema_span_hours": 1.0},
-                }
-            }
-        base_config["optimize"]["bounds"] = {
-            "long_entry_volatility_ema_span_hours": [4.0, 20.0, 1.0],
-        }
-
-        warmup = compute_backtest_warmup_minutes(base_config)
-
-        assert warmup == 3600
-
 
 # ============================================================================
 # Test Class: Edge Cases

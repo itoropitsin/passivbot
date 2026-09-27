@@ -139,41 +139,6 @@ def adaptive_strategy_params(**overrides):
     return base
 
 
-def trailing_grid_v7_strategy_params(*, close_overrides=None, **entry_overrides):
-    entry = {
-        "grid_double_down_factor": 1.0,
-        "grid_spacing_pct": 0.02,
-        "grid_spacing_we_weight": 0.0,
-        "grid_spacing_volatility_weight": 0.0,
-        "initial_ema_dist": 0.0,
-        "initial_qty_pct": 0.1,
-        "trailing_double_down_factor": 1.0,
-        "trailing_grid_ratio": -0.072114,
-        "trailing_retracement_pct": 0.037427,
-        "trailing_retracement_we_weight": 0.0,
-        "trailing_retracement_volatility_weight": 0.0,
-        "trailing_threshold_pct": 0.01,
-        "trailing_threshold_we_weight": 0.0,
-        "trailing_threshold_volatility_weight": 0.0,
-        "volatility_ema_span_hours": 1.0,
-    }
-    entry.update(entry_overrides)
-    close = {
-        "grid_markup_start": 0.01,
-        "grid_markup_end": 0.01,
-        "grid_qty_pct": 1.0,
-        "trailing_grid_ratio": 0.0,
-        "trailing_qty_pct": 1.0,
-        "trailing_retracement_pct": 0.0,
-        "trailing_threshold_pct": 0.0,
-    }
-    close.update(close_overrides or {})
-    return {
-        "ema_span_0": 10.0,
-        "ema_span_1": 20.0,
-        "entry": entry,
-        "close": close,
-    }
 
 
 def _split_bot_and_adaptive_strategy_overrides(overrides):
@@ -446,30 +411,18 @@ def test_execution_validation_matches_rust_for_representation_noisy_aligned_book
     assert close["execution_type"] == "market"
 
 
-@pytest.mark.parametrize("strategy_kind", ["trailing_martingale", "trailing_grid_v7"])
+@pytest.mark.parametrize("strategy_kind", ["trailing_martingale"])
 def test_short_close_rounds_to_positive_minimum_tick(strategy_kind):
     import passivbot_rust as pbr
 
-    short_strategy = (
-        adaptive_strategy_params(
-            entry={"initial_qty_pct": 0.0},
-            close={"threshold_base_pct": 0.6, "qty_pct": 1.0},
-        )
-        if strategy_kind == "trailing_martingale"
-        else trailing_grid_v7_strategy_params(
-            initial_qty_pct=0.0,
-            close_overrides={
-                "grid_markup_start": 0.6,
-                "grid_markup_end": 0.6,
-                "grid_qty_pct": 1.0,
-            },
-        )
+    short_strategy = adaptive_strategy_params(
+        entry={"initial_qty_pct": 0.0},
+        close={"threshold_base_pct": 0.6, "qty_pct": 1.0},
     )
-    symbol_kwargs = {"short_strategy": short_strategy}
-    if strategy_kind == "trailing_grid_v7":
-        symbol_kwargs["long_strategy"] = trailing_grid_v7_strategy_params(
-            initial_qty_pct=0.0
-        )
+    symbol_kwargs = {
+        "short_strategy": short_strategy,
+        "long_strategy": adaptive_strategy_params(entry={"initial_qty_pct": 0.0}),
+    }
     symbol = make_symbol(
         0,
         bid=0.1,
@@ -507,22 +460,17 @@ def test_short_close_rounds_to_positive_minimum_tick(strategy_kind):
     assert close["qty"] == 1.0
 
 
-@pytest.mark.parametrize("strategy_kind", ["trailing_martingale", "trailing_grid_v7"])
+@pytest.mark.parametrize("strategy_kind", ["trailing_martingale"])
 def test_limit_close_minimum_uses_emitted_price_and_exact_remaining_position(
     strategy_kind,
 ):
     import passivbot_rust as pbr
 
-    short_strategy = (
-        adaptive_strategy_params(entry={"initial_qty_pct": 0.0})
-        if strategy_kind == "trailing_martingale"
-        else trailing_grid_v7_strategy_params(initial_qty_pct=0.0)
-    )
-    symbol_kwargs = {"short_strategy": short_strategy}
-    if strategy_kind == "trailing_grid_v7":
-        symbol_kwargs["long_strategy"] = trailing_grid_v7_strategy_params(
-            initial_qty_pct=0.0
-        )
+    short_strategy = adaptive_strategy_params(entry={"initial_qty_pct": 0.0})
+    symbol_kwargs = {
+        "short_strategy": short_strategy,
+        "long_strategy": adaptive_strategy_params(entry={"initial_qty_pct": 0.0}),
+    }
     symbol = make_symbol(
         0,
         bid=1.50,
@@ -989,37 +937,6 @@ def test_live_authorized_missing_ema_does_not_scope_unaffected_pside():
         {"symbol_idx": 0, "pside": "long", "scope": "strategy_orders"}
     ]
 
-
-def test_trailing_grid_v7_close_only_ignores_entry_only_emas():
-    import passivbot_rust as pbr
-
-    strategy = trailing_grid_v7_strategy_params(
-        grid_spacing_volatility_weight=1.0,
-        volatility_ema_span_hours=4.0,
-    )
-    symbol = make_symbol(
-        0,
-        bid=100.0,
-        ask=100.0,
-        long_mode="tp_only",
-        long_pos_size=1.0,
-        long_pos_price=100.0,
-        long_strategy=strategy,
-        short_strategy=strategy,
-        emas=ema_bundle(m1_close=[], h1_log_range=[]),
-    )
-    inp = make_input(
-        balance=1_000.0,
-        strategy_kind="trailing_grid_v7",
-        symbols=[symbol],
-    )
-
-    out = compute(pbr, inp)
-
-    assert any(
-        order["pside"] == "long" and order["order_type"] == "close_grid_long"
-        for order in out["orders"]
-    )
 
 
 def test_live_authorization_does_not_tolerate_malformed_ema_values():
@@ -1571,55 +1488,6 @@ def test_entry_retracement_throttles_ladder_even_with_zero_cooldown():
     assert long_add_orders[0]["order_type"] == "entry_initial_normal_long"
 
 
-@pytest.mark.parametrize(
-    ("cooldown_minutes", "expected_order_count"),
-    [(0.0, None), (0.05, 1)],
-)
-def test_trailing_grid_v7_preserves_zero_cooldown_grid_ladder_but_not_positive_cooldown(
-    cooldown_minutes, expected_order_count
-):
-    import passivbot_rust as pbr
-
-    inp = make_input(
-        balance=1_000.0,
-        strategy_kind="trailing_grid_v7",
-        global_bp=bot_params_pair(
-            long_overrides={"risk_entry_cooldown_minutes": cooldown_minutes}
-        ),
-        symbols=[
-            make_symbol(
-                0,
-                bid=100.0,
-                ask=100.0,
-                long_pos_size=1.0,
-                long_pos_price=100.0,
-                long_bp={"risk_entry_cooldown_minutes": cooldown_minutes},
-                long_strategy=trailing_grid_v7_strategy_params(),
-                short_strategy=trailing_grid_v7_strategy_params(),
-            )
-        ],
-    )
-    inp["timestamp_ms"] = 120_000
-    inp["peek_hints"] = {
-        "expand_grid_long": [0],
-        "expand_grid_short": [],
-        "expand_close_long": [],
-        "expand_close_short": [],
-    }
-
-    out = compute(pbr, inp)
-    long_add_orders = [
-        order
-        for order in out["orders"]
-        if order["pside"] == "long" and order["qty"] > 0.0
-    ]
-
-    if expected_order_count is None:
-        assert len(long_add_orders) >= 2
-        assert all(order["order_type"].startswith("entry_grid_") for order in long_add_orders)
-    else:
-        assert len(long_add_orders) == expected_order_count
-
 
 def test_entry_cooldown_blocks_position_adding_orders_until_exact_window_expires():
     import passivbot_rust as pbr
@@ -1914,7 +1782,7 @@ def test_ema_anchor_market_close_uses_executable_touch_minimum():
     assert close["qty"] == pytest.approx(-1.001)
 
 
-@pytest.mark.parametrize("strategy_kind", ["trailing_martingale", "trailing_grid_v7"])
+@pytest.mark.parametrize("strategy_kind", ["trailing_martingale", "trailing_martingale"])
 def test_grid_market_close_uses_executable_touch_minimum(strategy_kind):
     import passivbot_rust as pbr
 
@@ -1927,7 +1795,7 @@ def test_grid_market_close_uses_executable_touch_minimum(strategy_kind):
             }
         )
         if strategy_kind == "trailing_martingale"
-        else trailing_grid_v7_strategy_params(
+        else adaptive_strategy_params(
             close_overrides={
                 "grid_qty_pct": 0.1,
                 "grid_markup_start": 0.005,
@@ -2015,7 +1883,7 @@ def test_off_tick_ema_anchor_touch_prices_pass_live_validation():
     assert prices["close_ema_anchor_long"] == 102.01
 
 
-@pytest.mark.parametrize("strategy_kind", ["trailing_martingale", "trailing_grid_v7"])
+@pytest.mark.parametrize("strategy_kind", ["trailing_martingale", "trailing_martingale"])
 def test_off_tick_strategy_entry_recomputes_minimum_after_price_quantization(
     strategy_kind,
 ):
@@ -2024,7 +1892,7 @@ def test_off_tick_strategy_entry_recomputes_minimum_after_price_quantization(
     strategy = (
         adaptive_strategy_params(entry={"initial_qty_pct": 0.0})
         if strategy_kind == "trailing_martingale"
-        else trailing_grid_v7_strategy_params(initial_qty_pct=0.0)
+        else adaptive_strategy_params(initial_qty_pct=0.0)
     )
     symbol = make_symbol(
         0,
@@ -2060,8 +1928,8 @@ def test_off_tick_strategy_entry_recomputes_minimum_after_price_quantization(
     [
         ("trailing_martingale", "long", 100.006, 100.014, 100.0),
         ("trailing_martingale", "short", 100.006, 100.014, 100.02),
-        ("trailing_grid_v7", "long", 100.006, 100.014, 100.0),
-        ("trailing_grid_v7", "short", 100.006, 100.014, 100.02),
+        ("trailing_martingale", "long", 100.006, 100.014, 100.0),
+        ("trailing_martingale", "short", 100.006, 100.014, 100.02),
     ],
 )
 @pytest.mark.parametrize("next_only", [False, True])
@@ -2073,7 +1941,7 @@ def test_off_tick_strategy_entries_quantize_away_from_the_spread(
     strategy = (
         adaptive_strategy_params()
         if strategy_kind == "trailing_martingale"
-        else trailing_grid_v7_strategy_params()
+        else adaptive_strategy_params()
     )
     disabled = {"n_positions": 0, "total_wallet_exposure_limit": 0.0}
     enabled = {"n_positions": 1, "total_wallet_exposure_limit": 1.0}
@@ -2119,14 +1987,14 @@ def test_off_tick_strategy_entries_quantize_away_from_the_spread(
         assert entry["price"] >= ask
 
 
-@pytest.mark.parametrize("strategy_kind", ["trailing_martingale", "trailing_grid_v7"])
+@pytest.mark.parametrize("strategy_kind", ["trailing_martingale", "trailing_martingale"])
 def test_next_only_short_entry_recrops_quantity_after_price_quantization(strategy_kind):
     import passivbot_rust as pbr
 
     strategy = (
         adaptive_strategy_params(entry={"initial_qty_pct": 1.0})
         if strategy_kind == "trailing_martingale"
-        else trailing_grid_v7_strategy_params(initial_qty_pct=1.0)
+        else adaptive_strategy_params(initial_qty_pct=1.0)
     )
     disabled = {"n_positions": 0, "total_wallet_exposure_limit": 0.0}
     enabled = {"n_positions": 1, "total_wallet_exposure_limit": 1.0}
@@ -2167,14 +2035,14 @@ def test_next_only_short_entry_recrops_quantity_after_price_quantization(strateg
     assert abs(entry["qty"]) * entry["price"] / inp["balance"] <= 1.0
 
 
-@pytest.mark.parametrize("strategy_kind", ["trailing_martingale", "trailing_grid_v7"])
+@pytest.mark.parametrize("strategy_kind", ["trailing_martingale", "trailing_martingale"])
 def test_short_market_entry_uses_executable_bid_minimum(strategy_kind):
     import passivbot_rust as pbr
 
     strategy = (
         adaptive_strategy_params(entry={"initial_qty_pct": 0.0})
         if strategy_kind == "trailing_martingale"
-        else trailing_grid_v7_strategy_params(initial_qty_pct=0.0)
+        else adaptive_strategy_params(initial_qty_pct=0.0)
     )
     disabled = {"n_positions": 0, "total_wallet_exposure_limit": 0.0}
     enabled = {"n_positions": 1, "total_wallet_exposure_limit": 1.0}
@@ -3589,62 +3457,6 @@ def test_unstuck_and_ordinary_close_coexist_and_are_capped():
     total_close_qty = -sum(o["qty"] for o in closes if o["qty"] < 0.0)
     assert total_close_qty <= 10.0 + 1e-9
 
-
-def test_trailing_grid_v7_emits_compatible_unstuck_and_trailing_closes_together():
-    import passivbot_rust as pbr
-
-    long_bp = {
-        "wallet_exposure_limit": 10.0,
-        "total_wallet_exposure_limit": 10.0,
-        "risk_wel_enforcer_enabled": False,
-        "risk_twel_enforcer_enabled": False,
-        "unstuck_ema_gating_enabled": False,
-        "unstuck_close_pct": 0.0195,
-        "unstuck_threshold": 0.9,
-        "unstuck_loss_allowance_pct": 0.01,
-    }
-    strategy = trailing_grid_v7_strategy_params(
-        close_overrides={
-            "trailing_grid_ratio": 1.0,
-            "trailing_qty_pct": 0.2624,
-            "trailing_retracement_pct": 0.005,
-            "trailing_threshold_pct": 0.01,
-        }
-    )
-    sym = make_symbol(
-        0,
-        bid=100.0,
-        ask=100.0,
-        long_pos_size=95.6,
-        long_pos_price=100.0,
-        long_bp=long_bp,
-        long_strategy=strategy,
-        short_strategy=strategy,
-    )
-    sym["long"]["trailing"] = {
-        "min_since_open": 99.0,
-        "max_since_min": 102.0,
-        "max_since_open": 102.0,
-        "min_since_max": 100.0,
-    }
-    inp = make_input(
-        balance=1_000.0,
-        strategy_kind="trailing_grid_v7",
-        global_bp=bot_params_pair(long_overrides=long_bp),
-        symbols=[sym],
-    )
-    inp["global"]["unstuck_allowance_long"] = 1e9
-
-    out = compute(pbr, inp)
-    closes = {
-        order["order_type"]: order
-        for order in out["orders"]
-        if order["pside"] == "long" and order["qty"] < 0.0
-    }
-
-    assert closes["close_unstuck_long"]["qty"] == pytest.approx(-1.95)
-    assert closes["close_trailing_long"]["qty"] == pytest.approx(-26.24)
-    assert sum(abs(order["qty"]) for order in closes.values()) <= 95.6 + 1e-9
 
 
 def test_unstuck_uses_symbol_loss_allowance_pct_for_loss_cap():

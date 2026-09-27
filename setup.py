@@ -60,7 +60,12 @@ setup(
         "dev": FULL_REQUIREMENTS + DEV_REQUIREMENTS,
     },
     setup_requires=["setuptools-rust>=1.9.0", "wheel"],
-    entry_points={"console_scripts": ["passivbot=passivbot_cli.main:console_main"]},
+    entry_points={
+        "console_scripts": [
+            "passivbot=passivbot_cli.main:console_main",
+            "tli-wings=tli_wings.cli:main",
+        ]
+    },
     include_package_data=True,
     zip_safe=False,
 )

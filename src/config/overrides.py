@@ -14,7 +14,7 @@ from .schema import get_template_config
 from .coerce import normalize_hsl_signal_mode
 from .shared_bot import BOT_GROUP_FIELD_MAP, canonicalize_shared_bot_side
 from .strategy import (
-    TRAILING_GRID_V7_FLAT_ONLY_KEYS,
+    LEGACY_FLAT_STRATEGY_KEYS,
     get_strategy_param_keys,
     normalize_strategy_kind,
 )
@@ -145,7 +145,7 @@ _UNSUPPORTED_FLAT_STRATEGY_OVERRIDE_KEYS = {
     "entry_weight_volatility_1h",
     "entry_weight_volatility_1m",
     "entry_we_weight",
-} | TRAILING_GRID_V7_FLAT_ONLY_KEYS
+} | LEGACY_FLAT_STRATEGY_KEYS
 
 def _reject_flat_strategy_coin_overrides(overrides: dict, *, coin: str) -> None:
     if not isinstance(overrides, dict):
@@ -170,7 +170,7 @@ def _reject_flat_strategy_coin_overrides(overrides: dict, *, coin: str) -> None:
             joined = ", ".join(bad_keys)
             raise ValueError(
                 f"coin_overrides.{coin}.bot.{pside} contains unsupported flat strategy "
-                f"override key(s): {joined}. Run `passivbot tool migrate-config-v7`, "
+                f"override key(s): {joined}. Move the values under "
                 f"or use coin_overrides.{coin}.bot.{pside}.strategy.<strategy_kind>.* in v8."
             )
 
